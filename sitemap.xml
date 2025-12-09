@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://xanderharris.github.io/blog.html</loc>
-    <lastmod>2025-12-09T04:49:21.546Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xanderharris.github.io/index.html</loc>
-    <lastmod>2025-12-09T04:49:21.546Z</lastmod>
+    <loc>https://xanderharris.github.io/about.html</loc>
+    <lastmod>2025-12-09T04:56:48.169Z</lastmod>
   </url>
   <url>
     <loc>https://xanderharris.github.io/posts/Hello-World/index.html</loc>
-    <lastmod>2025-12-09T04:49:21.546Z</lastmod>
+    <lastmod>2025-12-09T04:56:48.170Z</lastmod>
   </url>
   <url>
     <loc>https://xanderharris.github.io/work.html</loc>
-    <lastmod>2025-12-09T04:49:21.547Z</lastmod>
+    <lastmod>2025-12-09T04:56:48.170Z</lastmod>
   </url>
   <url>
-    <loc>https://xanderharris.github.io/about.html</loc>
-    <lastmod>2025-12-09T04:49:21.544Z</lastmod>
+    <loc>https://xanderharris.github.io/index.html</loc>
+    <lastmod>2025-12-09T04:56:48.170Z</lastmod>
+  </url>
+  <url>
+    <loc>https://xanderharris.github.io/blog.html</loc>
+    <lastmod>2025-12-09T04:56:48.170Z</lastmod>
   </url>
 </urlset>

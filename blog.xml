@@ -10,7 +10,7 @@
 <atom:link href="https://xanderharris.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.8.26</generator>
-<lastBuildDate>Mon, 08 Dec 2025 08:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 08 Dec 2025 00:00:00 GMT</lastBuildDate>
 <item>
   <title>Hello World</title>
   <dc:creator>Xander Harris</dc:creator>
@@ -32,7 +32,7 @@
  ]]></description>
   <category>news</category>
   <guid>https://xanderharris.github.io/posts/Hello-World/</guid>
-  <pubDate>Mon, 08 Dec 2025 08:00:00 GMT</pubDate>
+  <pubDate>Mon, 08 Dec 2025 00:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
