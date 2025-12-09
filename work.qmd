@@ -1,0 +1,10 @@
+---
+title: "Work"
+---
+
+This is my work page. Here I will showcase some of my projects and accomplishments.
+
+## OR Tax Volunteer Online Calculators and Tools
+![](assets/tax_tools.png){.float-left width="100px"}
+
+I develop and maintain tax calculation tools for [Oregon VITA volunteers](https://ortaxvolunteers.org), helping preparers navigate Oregon-specific deductions and credits. These tools support free tax preparation services for families earning under $67,000. **(Volunteer)**

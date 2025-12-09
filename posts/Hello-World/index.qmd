@@ -1,0 +1,11 @@
+---
+title: "Hello World"
+author: "Xander Harris"
+date: "2025-12-08"
+categories: [news]
+---
+
+## Getting started
+Here's a test post to see what happens now.
+
+And I've now added some content to it here!

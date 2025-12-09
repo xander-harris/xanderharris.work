@@ -1,0 +1,34 @@
+project:
+  type: website
+
+website:
+  title: "Xander Harris"
+  favicon: favicon.svg
+  site-url: "https://xanderharris.github.io/"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: work.qmd
+        text: Work
+      - href: blog.qmd
+        text: Blog
+      - href: about.qmd
+        text: About
+    right:
+      - icon: github
+        href: https://github.com/xander-harris
+      - icon: linkedin
+        href: https://www.linkedin.com/in/xander-harris/
+
+format:
+  html:
+    theme:
+      light: flatly 
+      dark: darkly
+    respect-user-color-scheme: true
+    css: styles.css
+    toc: true
+
+execute:
+  freeze: auto
