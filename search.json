@@ -1,0 +1,86 @@
+[
+  {
+    "objectID": "blog.html",
+    "href": "blog.html",
+    "title": "Thoughts and murmurs",
+    "section": "",
+    "text": "Hello World\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nDec 8, 2025\n\n\nXander Harris\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Hello!",
+    "section": "",
+    "text": "I’m Xander Harris, a software product manager in Portland, Oregon. I like understanding how things work: the forces, decisions, and inertia that shape systems, whether technical, political, or social. This is where I document what I’m exploring, tinkering with, and occasionally trying to fix."
+  },
+  {
+    "objectID": "index.html#active-work",
+    "href": "index.html#active-work",
+    "title": "Hello!",
+    "section": "Active Work",
+    "text": "Active Work\n\nI develop and maintain tax calculation tools for Oregon VITA volunteers, helping preparers navigate Oregon-specific deductions and credits. These tools support free tax preparation services for families earning under $67,000. (Volunteer)\n\nSee all works →"
+  },
+  {
+    "objectID": "index.html#recent-writing",
+    "href": "index.html#recent-writing",
+    "title": "Hello!",
+    "section": "Recent Writing",
+    "text": "Recent Writing\n\n\n\n\n\n\n\n\n\n\nHello World\n\n\n\n\n\n\n\n\nDec 8, 2025\n\n\nXander Harris\n\n\n\n\n\nNo matching items\n\nSee all posts →"
+  },
+  {
+    "objectID": "posts/Hello-World/index.html",
+    "href": "posts/Hello-World/index.html",
+    "title": "Hello World",
+    "section": "",
+    "text": "Here’s a test post to see what happens now.\nAnd I’ve now added some content to it here!"
+  },
+  {
+    "objectID": "posts/Hello-World/index.html#getting-started",
+    "href": "posts/Hello-World/index.html#getting-started",
+    "title": "Hello World",
+    "section": "",
+    "text": "Here’s a test post to see what happens now.\nAnd I’ve now added some content to it here!"
+  },
+  {
+    "objectID": "work.html",
+    "href": "work.html",
+    "title": "Work",
+    "section": "",
+    "text": "This is my work page. Here I will showcase some of my projects and accomplishments."
+  },
+  {
+    "objectID": "work.html#or-tax-volunteer-online-calculators-and-tools",
+    "href": "work.html#or-tax-volunteer-online-calculators-and-tools",
+    "title": "Work",
+    "section": "OR Tax Volunteer Online Calculators and Tools",
+    "text": "OR Tax Volunteer Online Calculators and Tools\n\nI develop and maintain tax calculation tools for Oregon VITA volunteers, helping preparers navigate Oregon-specific deductions and credits. These tools support free tax preparation services for families earning under $67,000. (Volunteer)"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Xander Harris",
+    "section": "",
+    "text": "Xander Harris is a Principal Product Manager with a decade of experience in B2B SaaS, specializing in healthcare staffing and HR technology. He builds tools and structures that center and empower people doing the day-to-day work that makes businesses thrive.\nXander lives in Portland, Oregon with his wife, dog, and too many plants."
+  },
+  {
+    "objectID": "about.html#education",
+    "href": "about.html#education",
+    "title": "Xander Harris",
+    "section": "Education",
+    "text": "Education\nOregon State University | Corvallis, OR\nB.S. in Computer Science | Sept 2024 - Dec 2025\nReed College | Portland, OR\nB.A. in Political Science | Sept 2011 - May 2016"
+  },
+  {
+    "objectID": "about.html#experience",
+    "href": "about.html#experience",
+    "title": "Xander Harris",
+    "section": "Experience",
+    "text": "Experience\nSimpliant | Principal Product Manager | Aug 2022 - Dec 2025\nNoyo | Senior Product Manager | Mar 2022 - Aug 2022\nInflection (GoodHire) | Senior Product Manager | Mar 2021 - Sept 2021\nAMN Healthcare (ShiftWise) | Product Manager | Jun 2016 - Mar 2021"
+  },
+  {
+    "objectID": "about.html#volunteer-experience",
+    "href": "about.html#volunteer-experience",
+    "title": "Xander Harris",
+    "section": "Volunteer Experience",
+    "text": "Volunteer Experience\nIRS VITA Program | Tax Preparation Volunteer, Site Quality Reviewer, & Web Developer | Nov 2021 - Present\nPortland Neighborhood Emergency Teams (NET) | Emergency Management Volunteer | Jan 2025 - Present"
+  }
+]
