@@ -2,7 +2,7 @@
 title: "Xander Harris"
 about:
   template: solana
-  image: assets/profile-pic.jpg
+  image: assets/profile_pic.jpg
   links:
     - icon: github
       text: Github
