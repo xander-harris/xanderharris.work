@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<!-- ************************************************************************************************ -->
+<!-- ***************** CALCULATE TY 2016-2019 OREGON FEDERAL PENSION SUBTRACTION ******************** -->
+<!-- ************************************************************************************************ -->
+<html>
+
+<head>
+	<title>Oregon Federal Pension Subtraction Calculator</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="author" content="V. Joseph Bowman Jr. OR1 Eugene TY2018+" />
+	<meta name="author" content="Barbara Smith-Thomas, OR Portland Metro 2017-" />
+	<meta name="description" content="Calculates Oregon Federal Pension Subtraction" />
+
+	<style type="text/css">
+		table,
+		td {
+			border: 1px solid black;
+			border-collapse: collapse;
+		}
+
+		button {
+			font-size: 105%;
+			font-weight: bold;
+		}
+
+		.instructions {
+			font-size: 110%;
+			font-weight: bold;
+		}
+
+		.versiondisplay {
+			font-weight: bold;
+			margin-left: 4em;
+			margin-right: 4em
+		}
+
+		.tooltitle {
+			font-size: 125%;
+			font-weight: bold;
+		}
+
+		.workaroundtitle {
+			font-weight: bold;
+		}
+
+		.headerfield {
+			width: 8em;
+			text-align: center;
+		}
+
+		.inputfield {
+			background-color: yellow;
+		}
+
+		.inputfield #TPName {
+			width: 25em;
+			text-align: center;
+		}
+
+		.inputfieldbold {
+			background-color: yellow;
+			font-weight: bold;
+		}
+
+		.commentfield {
+			text-align: right;
+		}
+
+		.resultsfield {
+			background-color: lightgreen;
+			font-weight: bold;
+		}
+
+		.resultsfield2 {
+			width: 4em;
+			background-color: lightgreen;
+			font-weight: bold;
+		}
+
+		.resultsfieldinfo {
+			color: darkred;
+			font-weight: bold;
+		}
+
+		.flex-container {
+			display: -webkit-flex;
+			display: flex;
+			-webkit-justify-content: center;
+			justify-content: center;
+		}
+
+		.flex-item {
+			width: 700px;
+			margin: 10px;
+			text-align: left;
+		}
+
+		#StartDate,
+		#EndDate {
+			width: 8em;
+			text-align: right;
+		}
+
+		#PensionAmount {
+			width: 8em;
+			text-align: right;
+		}
+
+		#OregonAmount,
+		#OregonPercent {
+			width: 8em;
+			text-align: right;
+		}
+
+		#ExclMonths,
+		#TotalMonths {
+			width: 8em;
+			text-align: right;
+		}
+
+		#ExclPercent,
+		#ExclAmount,
+		#StateExclPercent,
+		#StateExclAmount {
+			width: 8em;
+			text-align: right;
+		}
+
+		#inExclMonths,
+		#inTotalMonths {
+			width: 8em;
+			text-align: right;
+		}
+
+		button {
+			background-color: lightblue;
+		}
+
+		#ButtonBox {
+			margin-bottom: 0.5em;
+		}
+
+		#PYInstructions,
+		#NRInstructions {
+			display: none;
+		}
+
+		html {
+			background-color: #cccccc;
+		}
+
+		body {
+			background-color: #eeeeee;
+			font-family: sans-serif;
+			font-size: 0.9em;
+			text-align: center;
+		}
+
+		h1 {
+			text-align: center;
+			font-size: 1.1em;
+			font-weight: bold;
+			text-decoration: underline;
+		}
+
+		.printalternative {
+			display: none;
+		}
+
+		.donotuse {
+			font-size: 300%;
+			position: relative;
+			top: -7em;
+			right: -2em;
+			font-weight: bold;
+			z-index: 2;
+		}
+
+		#userInput {
+			margin-top: 0.5em;
+			margin-bottom: 0.5em;
+		}		
+		
+		.question {
+			border: 1px solid green;
+			background-color: lightgray;
+			border-radius: 0.5em;
+			font-weight: bold;
+			color: navy;
+			cursor: help;
+		}
+
+		.email {
+			unicode-bidi: bidi-override;
+			direction: rtl;
+		}
+		
+		@media print {
+			html {
+				background-color: transparent;
+			}
+
+			body {
+				background-color: transparent;
+				font-size: 80%;
+			}
+
+			.printalternative {
+				display: inline;
+			}
+
+			.printhide {
+				display: none;
+			}
+
+			#Disclaimer {
+				display: none;
+			}
+		}
+	</style>
+
+	<script type="text/javascript">
+		// *************** HOW TO DO YEARLY UPDATE *****************
+		//	Change TAX_YR 
+		//	Display of radio button tax year selection is based on the value of TAX_YR. Beginning with TY2019.
+		//	Check for changes in instructions.
+		//
+		// ***************Contributors *****************************
+		// 		Paul Dickey
+		//
+		// ***************Versions *****************************
+
+		var VERSION = "(Version TY2025.1.0 12/08/2025)";
+		///////////////////////////////////////////////////////////////////////
+		// Todo:
+		//		Change Alert Checking so runs through all and displays them above the click button in red
+		//		After Oregon goes live--Recheck Warning Text at Bottom .
+		//		After Oregon goes live--Recheck Step text at bottom
+		// Known Bugs:
+		///////////////////////////////////////////////////////////////////////
+
+		var TAX_YR = "2025";
+		var residency = "FY";
+		var MO, DY, YR;
+		var START_MO, START_DY, START_YR, END_MO, END_DY, END_YR;
+
+		// days per month for date checking
+
+		var DPM = "0,31,29,31,30,31,30,31,31,30,31,30,31";
+		DPM = DPM.split(",");   // Creates array for days of each month
+
+		var FIRST_YR = 1900;	// minimum date, for some limited date checking
+
+		var taxYearSelected = true;
+
+		var OregonPercentProvided = false;
+
+		var NEWDATE = "";	// builds the date to be displayed, remembers the last one
+
+		var EDIT_MODE = new Array;	// date is being edited, don't evaluate yet
+		EDIT_MODE["StartDate"] = 0;
+		EDIT_MODE["EndDate"] = 0;
+
+		var inputFormatType
+		inputFormatType = "D"
+
+		//----------------------------------------------------------------------------------------
+		//                                   Initialize()
+		//----------------------------------------------------------------------------------------
+		function Initialize() {
+			Version.innerHTML = VERSION;
+			changeTableDisplay();
+			settaxYearDisplay();
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   settaxYearDisplay()
+		// This function sets the display amd valies for th tax year based on the value of taxYear.
+		// This makes the system easy to change from year to year.
+		//----------------------------------------------------------------------------------------
+		function settaxYearDisplay() {
+			radioTY_0.value = labelTY_0.innerHTML = TAX_YR;
+			radioTY_1.value = labelTY_1.innerHTML = TAX_YR - 1;
+			radioTY_2.value = labelTY_2.innerHTML = TAX_YR - 2;
+			radioTY_3.value = labelTY_3.innerHTML = TAX_YR - 3;
+
+			// Set the checked radio button
+			var todaydate = new Date()
+
+			if (todaydate.getFullYear() == TAX_YR) {
+				radioTY_1.checked = true
+			} else {
+				radioTY_0.checked = true
+			}
+		}
+		//----------------------------------------------------------------------------------------
+		//                                   changeTableDisplay()
+		// Sets up the table based on residency, Input Type and Year.
+		//----------------------------------------------------------------------------------------
+		function changeTableDisplay() {
+			document.getElementById("dateInputRow1").style.display = "none";
+			document.getElementById("dateInputRow2").style.display = "none";
+			document.getElementById("mosInputRow1").style.display = "none";
+			document.getElementById("mosInputRow2").style.display = "none";
+			document.getElementById("OregonRow1").style.display = "none";
+			document.getElementById("OregonAmountRow").style.display = "none";
+			document.getElementById("mosWorkedRow").style.display = "none";
+			document.getElementById("totMosWorkedRow").style.display = "none";
+			document.getElementById("pctOregonExclRow").style.display = "none";
+			document.getElementById("OregonExclRow").style.display = "none";
+
+			// Clear  Calculated Amounts
+			ExclPercent.innerHTML = TotalMonths.innerHTML = "";
+			ExclMonths.innerHTML = ExclAmount.innerHTML = "";
+			StateExclPercent.innerHTML = StateExclAmount.innerHTML = "";
+
+			//toggle altCalculation and show the one we want
+			if (inputFormatType == "D") {				//Date Format
+				document.getElementById("dateInputRow1").style.display = "table-row";
+				document.getElementById("dateInputRow2").style.display = "table-row";
+				document.getElementById("mosWorkedRow").style.display = "table-row";
+				document.getElementById("totMosWorkedRow").style.display = "table-row";
+				inputRow2Info.innerHTML = "Must be on or before 12/31/" + TAX_YR;
+
+			} else if (inputFormatType == "M") {			// Months Format
+				document.getElementById("mosInputRow1").style.display = "table-row";
+				document.getElementById("mosInputRow2").style.display = "table-row";
+				inExclMonthsDescr.innerHTML = "*Months Worked Prior to 10/1/1991";
+				inTotalMonthsDescr.innerHTML = "*Total Months Worked";
+
+			} else {			// Points Format
+				document.getElementById("mosInputRow1").style.display = "table-row";
+				document.getElementById("mosInputRow2").style.display = "table-row";
+				inExclMonthsDescr.innerHTML = "*Points Earned Prior to 10/1/1991";
+				inTotalMonthsDescr.innerHTML = "*Total Points Earned";
+			}
+
+			// Display Rows for Part-Year
+			if (residency == "PY") {
+				document.getElementById("OregonRow1").style.display = "table-row";
+				document.getElementById("OregonAmountRow").style.display = "table-row";
+				document.getElementById("pctOregonExclRow").style.display = "table-row";
+				document.getElementById("OregonExclRow").style.display = "table-row";
+				TotalExclDescr.innerHTML = "Subtraction amount for <br><b>Federal</b> column ";
+				TotalExclInfo.innerHTML = "Enter as <b>Federal Amount</b> on Oregon<br />Part Year Subtractions worksheet. ";
+			} else {
+				TotalExclDescr.innerHTML = "Subtraction Amount ";
+				TotalExclInfo.innerHTML = "Enter on Oregon ASCE worksheet. ";
+
+			}
+
+			//Display the relevant instructions
+			document.getElementById("FYInstructions").style.display = "none";
+			document.getElementById("PYInstructions").style.display = "none";
+			document.getElementById("NRInstructions").style.display = "none";
+			if (residency == "FY") {
+				document.getElementById("FYInstructions").style.display = "block";
+			}
+			if (residency == "PY") {
+				document.getElementById("PYInstructions").style.display = "block";
+			}
+			if (residency == "NR") {
+				document.getElementById("NRInstructions").style.display = "block";
+			}
+
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   setFormat()
+		// Set the format for Date Input, Month Input or Point Input
+		//----------------------------------------------------------------------------------------
+		function setFormat(code) {
+			inputFormatType = code
+			changeTableDisplay()
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   setResidency()
+		// toggle between resident and PY resident displays
+		//----------------------------------------------------------------------------------------
+		function setResidency(code) {
+			residency = code;
+			changeTableDisplay()
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   setTaxYear(code)
+		// This function records the tax year choice
+		//----------------------------------------------------------------------------------------
+		function setTaxYear(code) {
+			TAX_YR = code;
+			changeTableDisplay()
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   Edit_date(index)
+		// index = "StartDate", or "EndDate" for corresponding date fields
+		// This function captures the current value of the field in NEWDATE 
+		//----------------------------------------------------------------------------------------
+		function Edit_date(index) {
+			var bdvar = document.getElementById(index);
+
+			NEWDATE = bdvar.value;
+			if (bdvar.value != "") {
+				EDIT_MODE[index] = 1;
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   Build_date(index)
+		// index = "StartDate" or "EndDate" for corresponding date fields
+		// This function constructs a date for display as characters are entered
+		//----------------------------------------------------------------------------------------
+		function Build_date(index) {
+			var bdvar = document.getElementById(index);
+
+			// Get the characters in the text box
+			var x_val = bdvar.value;
+			var x_len = x_val.length;
+
+			if (x_len < 2) {
+				NEWDATE = "";
+				EDIT_MODE[index] = 0;
+				return;
+			} // nothing there so clear EDIT_MODE flag and return
+
+			if (EDIT_MODE[index] == 1) return; // date is being edited, wait until done to validate
+
+			// See if the last character was a "/".
+			var x_char = x_val.slice(-1); // get the last character
+			var x_brk = (x_char == "/") ? 1 : 0;
+
+			// Check conditions for an invalid character typed at the wrong time.
+			if (((!x_brk) && isNaN(x_char)) || ((x_brk) && (x_len > 6))) {
+				bdvar.value = x_val.substring(0, x_len - 1);
+				return;
+			}
+
+			// See if a "/" or some other character was just deleted by using the backspace.
+			if (((x_val + "/") == NEWDATE) || ((NEWDATE != "") && (x_len < NEWDATE.length))) {
+				NEWDATE = x_val; // remember the value of the edited field
+				return; // return with no formating or validation of the field
+			}
+
+			// Ignore arrows used to move cursor for editing
+			if (x_val == NEWDATE) { return; }
+
+			// Get the Mo, Dy, Yr from the date string.
+			x_val += "//"; // Forces DY and YR to be defined to null below
+			var x_date = x_val.split("/"); // Creates array from date entered by user
+			MO = DY = YR = ""; // Clear any earlier values
+			MO = x_date[0];
+			DY = x_date[1];
+			YR = x_date[2];
+			if (isNaN(MO) || isNaN(DY) || isNaN(YR)) {
+				bdvar.value = NEWDATE; // restore the previous valid entry
+				return;
+			}
+
+			// Adjust the Month characters
+			if (DY.length == 0) {
+				if ((MO.length == 1) && (x_brk || (MO > 2))) MO = "0" + MO; // single digit month
+				if (MO > 12) { // must be a 1-digit month followed by 1st digit of the day
+					DY = MO.substring(1);
+					MO = "0" + MO.substring(0, 1);
+				}
+			}
+
+			if ((DY.length > 0) && (MO.length != 2)) {
+				MO = "0" + MO;
+				MO = MO.slice(-2);
+			}
+
+			// Adjust the Day characters
+			if (YR.length == 0) {
+				if ((DY.length == 1) && (x_brk || (DY > 3))) DY = "0" + DY; // single digit day
+				if (DY > 31) { // must be a 1-digit day followed by 1st digit of the year
+					YR = DY.substring(1);
+					DY = "0" + DY.substring(0, 1);
+				}
+			}
+
+			if ((YR.length > 0) && (DY.length != 2)) {
+				DY = "0" + DY;
+				DY = DY.slice(-2);
+			}
+
+			// Adjust the Year characters
+			if (YR.length > 4) YR = YR.substring(0, 4);
+
+			// Build the string to be displayed
+			NEWDATE = MO;
+			if (MO.length == 2) NEWDATE += "/";
+			NEWDATE += DY;
+			if (DY.length == 2) NEWDATE += "/";
+			NEWDATE += YR;
+			// Write the date string into the variable field
+			// NEWDATE saves the string for possible future use (e.g. was a "/" deleted)
+			bdvar.value = NEWDATE;
+
+			// If the full date has been entered, set the edit flag.
+			if (NEWDATE.length == 10) {
+				EDIT_MODE[index] = 1;
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   checkNumeric(index)
+		// This function verifies that the input is numeric
+		//----------------------------------------------------------------------------------------
+		function checkNumeric(index) {
+			var bdvar = document.getElementById(index);
+			var a = bdvar.value + ""; // This forces bdvar.value to be a string
+
+			if (bdvar.value === "") { // OK not to enter 0
+				return;
+			}
+			if (isNaN(bdvar.value)) {
+				alert("Entry is not a valid number. \n \n$, Spaces or commas are not permitted in the number." +
+					" \n \nEntry may be a whole or decimal number. \nDecimal numbers will be rounded to the nearest whole number.");
+				return;
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                            SetDateArrays()
+		// This function checks that a valid dates have been entered and sets date arrays
+		// Called for date based calculations
+		//----------------------------------------------------------------------------------------
+		function SetDateArrays() {
+			// clear any earlier values
+			START_MO = START_DY = START_YR = END_MO = END_DY = END_YR = "";
+
+			var bdvar = document.getElementById("StartDate");
+
+			var y_date = bdvar.value;
+			var x_date = y_date.split("/"); // Creates array from date entered by user
+
+			START_MO = x_date[0];
+
+			START_DY = x_date[1];
+			START_YR = x_date[2];
+
+			// Check the validity of the start date
+			if ((y_date.length != 10) || isNaN(START_MO) || isNaN(START_DY) || isNaN(START_YR)
+				|| (START_MO < 1) || (START_MO > 12) || (START_DY < 1) || (START_DY > +DPM[+START_MO])) {
+				alert("START DATE value invalid. \n\nPlease check entry values and format. Should be MM/DD/YYYY");
+				return 0;
+			}
+
+			// Check Date Range
+			if (START_YR < FIRST_YR) {
+				alert("START DATE year must be after 1900");
+				return 0;
+			}
+
+			if (START_YR > TAX_YR) {
+				alert("START DATE Cannot be after tax year ");
+				return 0;
+			}
+
+			var bdvar = document.getElementById("EndDate");
+
+			y_date = bdvar.value;
+			x_date = y_date.split("/"); // Creates array from date entered by user
+
+			END_MO = x_date[0];
+			END_DY = x_date[1];
+			END_YR = x_date[2];
+
+			// Check the validity of the end date
+			if ((y_date.length != 10) || isNaN(END_MO) || isNaN(END_DY) || isNaN(END_YR)
+				|| (END_MO < 1) || (END_MO > 12) || (END_DY < 1) || (END_DY > +DPM[+END_MO])) {
+				alert("END DATE value invalid. \n\nPlease check entry values and format. Should be MM/DD/YYYY");
+				return 0;
+			}
+
+			// Check Date Range
+			if (END_YR > TAX_YR) {
+				alert("END DATE Cannot be after tax year ");
+				return 0;
+			}
+
+			// date checks passed and date array values set
+			return 1;
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   PensionEntered()
+		// This function checks that a valid pension amount has been entered
+		// Called for date based calculations
+		//----------------------------------------------------------------------------------------
+		function PensionEntered() {
+			var a = PensionAmount.value + ""; // This forces a.value to be a string
+
+			if (a === "0") {
+				return 0; // PensionAmount must be a non-zero number
+			}
+			if (a == "") {
+				return 0; // PensionAmount must be provided
+			}
+			if (isNaN(a)) {
+				return 0;
+			}
+			if (a + 0 <= 0) { // force a to numeric
+				return 0; // In fact, it must be positive
+			}
+
+			return 1;
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   monthsEntered()
+		// This function checks that a valid values have been entered for months prior to 10/01/1991
+		// and total months worked
+		//----------------------------------------------------------------------------------------
+		function monthsEntered() {
+			var a = inExclMonths.value + ""; // This forces a to be a string
+			var b = inTotalMonths.value + ""; // This forces a.value to be a string
+
+			if (a === "0") {
+				// continue; excluded months equal 0 is OK (if weird)
+			} else {
+				if (a == "") {
+					return 0; // excluded months must be provided
+				}
+
+				if (isNaN(a)) {
+					return 0;
+				}
+
+				if (a + 0 < 0) { // force a to numeric
+					return 0; // In fact, it must be non negative
+				}
+			}
+
+			if (b === "0") {
+				return 0; // total months must be a non-zero number
+			}
+
+			if (b == "") {
+				return 0; // total months must be provided
+			}
+
+			if (isNaN(b)) {
+				return 0;
+			}
+
+			if (b + 0 <= 0) { // force b to numeric
+				return 0; // In fact, it must be positive
+			}
+
+			if (b * 1 < a * 1) { //not sure why + 0 didn't work to force numeric compare
+				return 0; // Total months must be >= excluded months
+			}
+
+			return 1;
+		}
+
+		//----------------------------------------------------------------------------------------
+		//				OregonPortionEntered()
+		// Verify that ONE of OregonAmount or OregonPercent is entered for PY calculation
+		// As a side effect record whether OregonAmount or OregonPercent is provided
+		//----------------------------------------------------------------------------------------
+		function OregonPortionEntered() {
+			var a = OregonAmount.value + ""; // This forces a.value to be a string
+			var b = OregonPercent.value + "";
+
+			if (a == "") {
+				// Oregon Amount not provided; check percent
+				if (b == "") {
+					alert("ONE of Oregon Amount or Oregon Percent must be provided.");
+					return 0; // excluded months must be provided
+				}
+				if (isNaN(b)) {
+					alert("Oregon Percent is not a valid number. \nDo not provide % sign.");
+					return 0;
+				}
+				if (b + 0 <= 0) { // force b to numeric
+					alert("Oregon Percent cannot be negative.");
+					return 0; // In fact, it must be positive
+				}
+				if (b + 0 <= 1) { // force b to numeric
+					alert("Oregon Percent less than 1.\nIf this is not correct, re-enter percent as xx.x and recalculate");
+				}
+
+				OregonPercentProvided = true;
+				return 1;
+
+			} else {
+				// Oregon Amount Provided
+				if (isNaN(a)) {
+					alert("Oregon Taxable Amount not a valid number. \n$, spaces or commas are not permitted in the number.");
+					return 0;
+				}
+				if (a + 0 <= 0) { // force a to numeric
+					alert("Oregon Taxable Amount cannot be a negative number.");
+					return 0; // In fact, it must be positive
+				}
+				if (b !== "") {
+					alert("Please enter only ONE of Oregon Taxable Amount and Oregon Percent");
+					return 0;
+				}
+				if (a - PensionAmount.value > 0) {
+					alert("Oregon Taxable Amount cannot be greater than Pension Amount");
+					return 0;
+				}
+
+				OregonPercentProvided = false;
+				return 1;
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   calcPensionSub()
+		// This function calculates the Oregon Pension Subtraction
+		//----------------------------------------------------------------------------------------
+		function calcPensionSub() {
+			// clear any existing values
+			ExclPercent.innerHTML = TotalMonths.innerHTML = "";
+			ExclMonths.innerHTML = ExclAmount.innerHTML = "";
+
+			// Check for Pension 
+			if (!PensionEntered()) {
+				alert("Pension amount not entered or not a valid positive number. \n$, Spaces or commas are not permitted in the number.");
+				return;
+			}
+
+			if (residency == "PY") {
+				if (!OregonPortionEntered()) {
+					// let function display error messages
+					return;
+				}
+			}
+
+			var pension_amt = document.getElementById("PensionAmount");
+			var excludable_months, total_months, percent_excludable, excl_amount;
+
+			if (inputFormatType == "D") {
+				// only continue the calculation if the entered dates are valid and the date arrays are set
+				if (!SetDateArrays()) { //Check this
+					return;
+				}
+
+				var magic_date = new Date(1991, 9, 1); // 0 based indexing for month
+				var start_date = new Date(START_YR, START_MO - 1, START_DY);
+				var end_date = new Date(END_YR, END_MO - 1, END_DY);
+
+				if (start_date.valueOf() >= end_date.valueOf()) {
+					alert("Pension start date must be before pension end date.");
+					return;
+				}
+
+				if (start_date.valueOf() >= magic_date.valueOf()) {
+					// Pension start date is after 10/1/1991. Entire pension is taxable
+					excludable_months = 0;
+					total_months = 1;			// Make Total_montus greater than Excludable Months so will generate none.
+
+				} else if (end_date.valueOf() <= magic_date.valueOf()) {
+					// Pension end date is before 10/1/1991. Entire pension is excludable
+					excludable_months = 1;		// Make Excludable months equal to each other so can exclude all.
+					total_months = 1;
+				} else {
+					// Calculate and display exclusion amount
+
+					// Months worked prior to 10/1/1991
+					if (START_DY <= 15) {
+						excludable_months = 10 - START_MO + (12 * (1991 - START_YR));
+					} else {
+						excludable_months = 9 - START_MO + (12 * (1991 - START_YR));
+					}
+
+					// Total months worked
+					if (END_DY >= 16) {
+						total_months = END_MO - 9 + (12 * (END_YR - 1991)) + excludable_months;
+					} else {
+						total_months = END_MO - 10 + (12 * (END_YR - 1991)) + excludable_months;
+					}
+
+					ExclMonths.innerHTML = excludable_months;
+					TotalMonths.innerHTML = total_months;
+				}
+			} else {    // Data was entered by points or months
+
+				if (!monthsEntered()) {	// Check this
+					alert("Months worked prior to 10/01/1991 and total months worked must be entered." +
+						"\nMonths worked cannot be negative and total months must be greater than" +
+						"\nor equal to excluded months.");
+					return;
+				}
+
+				excludable_months = inExclMonths.value
+				total_months = inTotalMonths.value
+			}
+			if (excludable_months == 0) {         //  none is excludable
+				ExclMonths.innerHTML = "none";
+				ExclPercent.innerHTML = "0%";
+				ExclAmount.innerHTML = 0;
+
+			} else if (excludable_months == total_months) {	// All is excludable
+				ExclMonths.innerHTML = "all";
+				ExclPercent.innerHTML = "100%";
+				ExclAmount.innerHTML = pension_amt.value;
+
+			} else {
+
+				// Percent excludable
+				percent_excludable = excludable_months / total_months;
+				percent_excludable = percent_excludable.toFixed(3);
+				ExclPercent.innerHTML = (percent_excludable * 100).toFixed(1) + "%";
+
+				// Amount to exclude
+				excl_amount = pension_amt.value * percent_excludable;
+				ExclAmount.innerHTML = excl_amount.toFixed(0);
+			}
+
+			// Calculate and display state exclusion amount
+			if (residency == "PY") {
+				if (OregonPercentProvided) {
+					StateExclPercent.innerHTML = OregonPercent.value + "%";
+					StateExclAmount.innerHTML =
+						(ExclAmount.innerHTML * OregonPercent.value / 100).toFixed(0);
+				} else {
+					StateExclPercent.innerHTML = ((OregonAmount.value / pension_amt.value) * 100).toFixed(1) + "%";
+					StateExclAmount.innerHTML =
+						(ExclAmount.innerHTML * OregonAmount.value / pension_amt.value).toFixed(0);  //Check this
+				}
+			}
+			return;
+		}
+	</script>
+</head>
+
+<!-- ************************************************************************************************ -->
+<!-- ********************************* START OF HTML ************************************************ -->
+<!-- ************************************************************************************************ -->
+<body onload="Initialize()">
+	<center>
+		<span class="tooltitle"> Oregon <em>"Federal Employee"</em> Pension Subtraction Calculator (Code 307)</span>
+
+		<br><button onclick="location.reload(true)"><b>Clear and reset calculator</b></button>
+		<span id="Version" class="versiondisplay"></span>
+		<script>Version.innerHTML = "VERSION";</script>
+		<button onclick="window.print()"> Print a taxpayer copy</button>
+		<br><br> <span id="required"> Items marked with an asterisk are required </span>
+		<br> <span id="disability"> <b>Do not include</b> disability payments if under the minimum retirement age
+		</span>
+		<br> <span id="reserves"> (Military Reserves Retirees use a point system; refer to Oregon Pub 17) </span>
+		<br><br>
+		<div id="PrimaryInput">
+			<table id="userinput">
+				<!--  tabindex is not used so browser will automatically go though input fields -->
+				<tbody>
+					<tr>
+						<td class="inputfieldbold">Taxpayer's Name</td>
+						<td class="inputfield" colspan="2">
+							<input id="TPName" title="Optionally, enter the Taxpayer&#39;s name." value="">
+						</td>
+					</tr>
+					<tr>
+						<td class="inputfieldbold">Tax Year</td>
+						<td class="inputfield" colspan="2">
+						<input id="radioTY_3" type="radio" name="Year" value=""
+							onclick="setTaxYear(this.value)" /><label id="labelTY_3" for="radioTY_3">0</label>
+						<input id="radioTY_2" type="radio" name="Year" value=""
+							onclick="setTaxYear(this.value)" /><label id="labelTY_2" for="radioTY_2">0</label>
+						<input id="radioTY_1" type="radio" name="Year" value=""
+							onclick="setTaxYear(this.value)" /><label id="labelTY_1" for="radioTY_1">0</label>
+						<input id="radioTY_0" type="radio" name="Year" value="" checked="checked"
+							onclick="setTaxYear(this.value)" /><label id="labelTY_0" for="radioTY_0">0</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="inputfieldbold">Select residency status </td>
+						<td colspan="2" class="inputfield"><input id="ResidencyStatus" type="radio" name="Res"
+								value="FY" checked="checked" onclick="setResidency('FY')" />Full Year
+							<input type="radio" name="Res" value="PY" onclick="setResidency('PY')" />Part Year
+							<input type="radio" name="Res" value="NR" onclick="setResidency('NR')" />Non Resident
+						</td>
+					</tr>
+					<tr>
+						<td class="inputfieldbold">Enter Data By: </td>
+						<td colspan="2" class="inputfield"><input id="InputFormat" type="radio" name="inFormat"
+								value="FY" checked="checked" onclick="setFormat('D')" />Date<br>
+							<input type="radio" name="inFormat" value="M" onclick="setFormat('M')" />Months<br>
+							<input type="radio" name="inFormat" value="P" onclick="setFormat('P')" />Retirement Points
+							(used by US Armed Services)
+						</td>
+					</tr>
+
+					<!--  INPUT Rows for  Date  Input	-->
+					<tr id="dateInputRow1">
+						<td id="inputRow1Descr" class="inputfield">*Federal Employment Start Date</td>
+						<td class="inputfield">
+							<input id="StartDate" title="Enter date as MM/DD/YYYY, M/D/YYYY or MMDDYYYY" value=""
+								onfocus="Edit_date(this.id)" onkeyup="Build_date(this.id)">
+						</td>
+						<td></td>
+					</tr>
+					<tr id="dateInputRow2">
+						<td id="inputRow2Descr" class="inputfield">*Federal Employment End Date</td>
+						<td class="inputfield">
+							<input id="EndDate" title="Enter date as MM/DD/YYYY, M/D/YYYY or MMDDYYYY" value=""
+								onfocus="Edit_date(this.id)" onkeyup="Build_date(this.id)">
+						</td>
+						<td id="inputRow2Info">Must be on before end of tax year</td>
+					</tr>
+
+					<!--  INPUT Rows for Month or Points Input   	-->
+					<tr id="mosInputRow1" style="display: none;">
+						<td id="inExclMonthsDescr" class="inputfield">*Months Worked prior to 10/1/1991</td>
+						<td class="inputfield">
+							<input id="inExclMonths" title="Enter number of months worked prior to 10/01/1991" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td></td>
+					</tr>
+					<tr id="mosInputRow2" style="display: none;">
+						<td id="inTotalMonthsDescr" class="inputfield">*Total Months Worked</td>
+						<td class="inputfield">
+							<input id="inTotalMonths" title="Enter total months worked" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td></td>
+					</tr>
+
+					<!--  INPUT taxable Income  	-->
+					<tr id="taxIncomeRow">
+						<td id="inputRow3Descr" class="inputfield">*Taxable Federal Pension income</td>
+						<td class="inputfield">
+							<input id="PensionAmount" title="Enter federally taxable portion of pension income"
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td></td>
+					</tr>
+
+					<!--  INPUT Rows Oregon Portion of Part Year   	-->
+					<tr id="OregonRow1">
+						<td colspan="3" align="center"><b>FOR OREGON ENTER EITHER</b></td>
+					</tr>
+					<tr id="OregonAmountRow">
+						<td class="inputfield" align="center">*Oregon Taxable Amount<br>
+							<input id="OregonAmount" title="Enter state taxable amount of pension income"
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td align="center"><b>OR</b></td>
+						<td class="inputfield" align="center">*Oregon Taxable Percentage<br>
+							<input id="OregonPercent" title="Enter percent of pension income taxable in Oregon"
+								onblur="checkNumeric(this.id)">
+						</td>
+					</tr>
+
+					<!--  DISPLAY Information  Rows				   	-->
+					<tr id="mosWorkedRow">
+						<td>Months Worked prior to 10/1/1991</td>
+						<td id="ExclMonths"></td>
+						<td></td>
+					</tr>
+					<tr id="totMosWorkedRow">
+						<td>Total Months Worked</td>
+						<td id="TotalMonths"></td>
+						<td></td>
+					</tr>
+
+					<tr id="pctExclRow">
+						<td id="pctExclDescr">Percentage of Income to Exclude</td>
+						<td id="ExclPercent"></td>
+						<td id="pctExclDescr"></td>
+					</tr>
+
+					<tr id="TotalExclRow">
+						<td id="TotalExclDescr">Subtraction Amount</td>
+						<td class="resultsfield" id="ExclAmount"></td>
+						<td id="TotalExclInfo" class="resultsfieldinfo">Enter on Oregon Subtractions
+							Worksheet<br />worksheet. </td>
+					</tr>
+
+					<tr id="pctOregonExclRow">
+						<td id="pctOregonExclDescr">Percentage of Federal Exclusion <br> to Exclude from Oregon Income
+						</td>
+						<td id="StateExclPercent"></td>
+						<td id="pctOregonExclDescr"></td>
+					</tr>
+
+					<tr id="OregonExclRow">
+						<td id="OregonExclDescr">Subtraction amount for <br><b>State</b> column</td>
+						<td class="resultsfield" id="StateExclAmount"></td>
+						<td id="OregonExclInfo" class="resultsfieldinfo">Enter as <b>Oregon Amount</b> on
+							Oregon<br />Part Year Subtractions worksheet.</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<br><br>
+		<button id="Calcbutton" tabindex="0" onclick="calcPensionSub()"><b>Click here to Calculate</b></button>
+		<br> <br>
+
+		<div id="FYInstructions" class="flex-container">
+			<span class="instructions">Instructions for Full Year Residents</span>
+			<div class="flex-item"><b>Steps</b>
+				<ol>
+					<li>For full year Oregon residents,
+						separately calculate the Oregon Federal Pension subtraction for each federal
+						pension 1099-R with service before 10/1/1991 using the worksheet
+						above. Print a copy of each calculation for the taxpayer's records.</li><br>
+					<li>Add the subtractions obtained in step 1 and record in Subtraction Line 307
+						of the <a target="_blank" src="">Oregon ASCE Worksheet.</a>.</li><br>
+					<li>Go to the "Subtraction from Income" page of the TaxSlayer Oregon return. Click the button
+						on the line "Federal Pension Income Subtraction" and enter
+						the sum obtained in <b>Step 2</b> in that box. <b>Do NOT use the Federal Pension Income
+							Subtraction Worksheet in TaxSlayer.</b></li><br>
+				</ol>
+			</div>
+		</div>
+
+		<div id="PYInstructions" class="flex-container">
+			<span class="instructions">Instructions for Part Year Residents</span>
+			<div class="flex-item"><b>Steps</b>
+				<ol>
+					<li>For part year residents, you need the Federal Pension subtraction as if the
+						taxpayer were a full year resident ("Subtraction Amount for Federal
+						column", above), plus the
+						portion of the Federal Pension subtraction
+						attributable to the period of residency ("Subtraction Amount for State column", above).</li>
+					<br>
+					<li>Separately calculate the Oregon Federal Pension 1099-R subtraction amounts for each federal
+						pension with service before 10/1/1991 using the worksheet.
+						Print a copy of each calculation for the taxpayer's records.</li>
+					<br>
+					<li>Add the subtraction amounts for the federal column obtained in step 2.</li>
+					<br>
+					<li>Add the subtraction amounts for the state column obtained in step 2.</li>
+					<br>
+					<li>Go to the "Subtraction from Income" page of the TaxSlayer Oregon return. Click the button
+						on the line "Federal Pension Income Subtraction". Enter the amount
+						obtained in <b>Step </b> in the box labeled "<b>Federal</b> - Amount of pension
+						eligible for the Federal Pension Income Subtraction" and the sum obtained in <b>Step 4</b>
+						in the box labeled "<b>Oregon</b> - Amount of pension eligible for the Federal
+						Pension Income Subtraction"</li>
+
+				</ol>
+			</div>
+		</div>
+
+		<div id="NRInstructions" class="flex-container">
+			<span class="instructions">Instructions for Part Year Residents</span>
+			<div class="flex-item"><b>Steps</b>
+				<ol>
+					<li>For non residents, none of the Federal Pension income is taxed in Oregon. However, you
+						still need to know the Federal Pension subtraction as if the
+						taxpayer were a full year resident in order to compute the non-resident tax.</li>
+					<br>
+					<li>Separately calculate the Oregon Federal Pension 1099-R subtraction amount for each federal
+						pension with service before 10/1/1991 using the worksheet above.
+						Print a copy of each calculation for the taxpayer's records.</li>
+					<br>
+					<li>Add the subtractions obtained in step 2 and record in Subtraction Line 307
+						of the <a target="_blank" src="">Oregon ASCE Worksheet.</a></li>
+					<br>
+					<li>Go to the "Subtraction from Income" page of the TaxSlayer Oregon return. Click the button
+						on the line "Federal Pension Income Subtraction" and enter
+						the sum obtained in <b>Step 3</b> in the box
+						labeled "Amount of pension eligible for the Federal Pension Income Subtraction."
+						Leave the box labeled
+						"Oregon - Amount of pension eligible for the Federal Pension Income Subtraction" blank.
+						<b>Do not use the Federal Pension
+							Income Worksheet in Tax Slayer</b>
+					</li>
+				</ol>
+			</div>
+		</div>
+
+		<br>
+		<div id="Disclaimer" class="flex-container">
+			<div class="flex-item">
+				Please report any bugs or discrepancies with current software to <span class="email">krow.sirrahrednax@rednax</span> 
+				with as much information as possible to help resolve the issue.
+			</div>
+		</div>
+	</center>
+</body>
+</html>

@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<!-- ************************************************************************************************ -->
+<!-- ***************** MEDICAID WAIVER PAYMENT SCENARIOS CALCULATOR ********************************* -->
+<!-- ************************************************************************************************ -->
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Medicaid Waiver Payment Scenarios Calculator</title>
+
+	<meta name="author" content="Xander Harris">
+	<meta name="description" content="Medicaid Waiver Payment Scenarios Calculator">
+
+	<!-- Alpine.js CDN -->
+	<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+	<style type="text/css">
+		/* Modern CSS Reset and Base Styles */
+		* {
+			box-sizing: border-box;
+		}
+
+		html {
+			background: #f5f5f5;
+		}
+
+		body {
+			background: #f5f5f5;
+			font-family: Arial, sans-serif;
+			font-size: 14px;
+			line-height: 1.5;
+			color: #333;
+			margin: 0;
+			padding: 20px 0;
+		}
+
+		/* Calculator Container */
+		.calculator-container {
+			max-width: 1000px;
+			margin: 0 auto;
+			background: white;
+			border: 1px solid #ddd;
+			border-radius: 8px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			overflow: hidden;
+			padding: 25px;
+		}
+
+		/* Header Styles */
+		.tooltitle {
+			font-size: 1.8rem;
+			font-weight: bold;
+			color: #2c3e50;
+			text-align: center;
+			margin-bottom: 15px;
+			border-bottom: 2px solid #3498db;
+			padding-bottom: 10px;
+		}
+
+		.versiondisplay {
+			font-weight: normal;
+			color: #666;
+			font-size: 0.85rem;
+			margin: 0 15px;
+		}
+
+		/* Button Styles */
+		button {
+			background: #3498db;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 4px;
+			font-weight: bold;
+			font-size: 0.9rem;
+			cursor: pointer;
+			transition: background-color 0.2s ease;
+			margin: 0 5px;
+		}
+
+		button:hover {
+			background: #2980b9;
+		}
+
+		/* Table Styles */
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 15px 0;
+			border: 1px solid #ddd;
+		}
+
+		td {
+			padding: 10px;
+			border: 1px solid #ddd;
+			vertical-align: top;
+		}
+
+		/* Input Field Styles */
+		.inputfield {
+			background: #f8f9fa;
+			font-weight: bold;
+			color: #333;
+			border: 1px solid #ddd;
+		}
+
+		.inputfield #TPName {
+			width: 100%;
+			max-width: 300px;
+			text-align: center;
+		}
+
+		.inputdata {
+			background: white;
+			border: 1px solid #ccc;
+			border-radius: 3px;
+			padding: 6px 8px;
+			width: 100px;
+			text-align: right;
+			font-size: 0.9rem;
+			transition: border-color 0.2s ease;
+			position: relative;
+		}
+
+		.inputdata:focus {
+			outline: none;
+			border-color: #3498db;
+			box-shadow: 0 0 3px rgba(52, 152, 219, 0.3);
+		}
+
+		.inputdata.error {
+			border-color: #e74c3c !important;
+			background-color: #fdf2f2 !important;
+		}
+
+		.inputdata.error:focus {
+			border-color: #e74c3c !important;
+			box-shadow: 0 0 3px rgba(231, 76, 60, 0.3) !important;
+		}
+
+		.error-message {
+			color: #e74c3c;
+			font-size: 0.8rem;
+			margin-top: 2px;
+			display: none;
+		}
+
+		.input-container {
+			position: relative;
+		}
+
+		.input-container:hover .error-message {
+			display: block;
+		}
+
+		/* Error message styling */
+		.error-message {
+			color: #e74c3c;
+			font-size: 0.75rem;
+			margin-top: 2px;
+			display: none;
+			font-style: italic;
+		}
+
+		.error-message.show {
+			display: block;
+		}
+
+		/* Results Field Styles */
+		.resultsfield {
+			background: #d4edda;
+			font-weight: bold;
+			color: #155724;
+			text-align: center;
+			font-size: 1rem;
+		}
+
+		/* Scenario Table Styles */
+		.scenario-header {
+			background: #3498db;
+			color: white;
+			font-weight: bold;
+			text-align: center;
+			font-size: 1rem;
+		}
+
+		.scenario-row {
+			background: #f8f9fa;
+		}
+
+		.scenario-row:nth-child(even) {
+			background: #ffffff;
+		}
+
+		.scenario-row:hover {
+			background: #e9ecef;
+		}
+
+		/* Flex Container Styles */
+		.flex-container {
+			display: flex;
+			justify-content: center;
+			margin: 15px 0;
+		}
+
+		.flex-item {
+			max-width: 800px;
+			width: 100%;
+			margin: 10px;
+			text-align: left;
+		}
+
+		/* Contact Info Styles */
+		.contact-info {
+			background: #fff3cd;
+			border: 1px solid #ffeaa7;
+			padding: 15px;
+			margin: 15px 0;
+			border-radius: 4px;
+		}
+
+		.contact-info b {
+			color: #856404;
+		}
+
+		/* Instructions Box */
+		.instructions-box {
+			background: #e3f2fd;
+			border: 1px solid #bbdefb;
+			padding: 20px;
+			margin: 15px 0;
+			border-radius: 4px;
+		}
+
+		.instructions-box b {
+			color: #1565c0;
+		}
+
+		.instructions-box ul {
+			margin: 10px 0;
+			padding-left: 20px;
+		}
+
+		.instructions-box li {
+			margin: 5px 0;
+			color: #1976d2;
+		}
+
+		/* Recommendation Box */
+		.recommendation-box {
+			background: #d4edda;
+			border: 1px solid #c3e6cb;
+			padding: 15px;
+			margin: 15px 0;
+			border-radius: 4px;
+		}
+
+		.recommendation-box .inputfield {
+			background: transparent;
+			color: #155724;
+			font-weight: bold;
+			border: none;
+		}
+
+		.recommendation-box .resultsfield {
+			background: #28a745;
+			color: white;
+			font-size: 1.1rem;
+		}
+
+		/* Print Styles */
+		@media print {
+			html {
+				background: white;
+			}
+
+			body {
+				background: white;
+				font-size: 10px;
+				line-height: 1.2;
+				margin: 0;
+				padding: 10px;
+			}
+
+			.calculator-container {
+				box-shadow: none;
+				border-radius: 0;
+				padding: 15px;
+				max-width: none;
+			}
+
+			.tooltitle {
+				font-size: 1.5rem;
+				margin-bottom: 10px;
+			}
+
+			.instructions-box {
+				padding: 10px;
+				margin: 10px 0;
+				font-size: 9px;
+			}
+
+			.instructions-box ul {
+				margin: 5px 0;
+				padding-left: 15px;
+			}
+
+			.instructions-box li {
+				margin: 3px 0;
+			}
+
+			table {
+				margin: 10px 0;
+				font-size: 9px;
+			}
+
+			td {
+				padding: 6px 8px;
+			}
+
+			.inputdata {
+				padding: 4px 6px;
+				width: 80px;
+				font-size: 9px;
+			}
+
+			.scenario-header {
+				font-size: 10px;
+				padding: 8px;
+			}
+
+			.recommendation-box {
+				padding: 10px;
+				margin: 10px 0;
+			}
+
+			.contact-info {
+				padding: 8px;
+				margin: 8px 0;
+				font-size: 9px;
+			}
+
+			button {
+				display: none;
+			}
+
+			.versiondisplay {
+				font-size: 8px;
+				margin: 0 10px;
+			}
+
+			.printalternative {
+				display: inline;
+			}
+
+			.printhide {
+				display: none;
+			}
+
+			/* Ensure tables don't break across pages */
+			table {
+				page-break-inside: avoid;
+			}
+
+			/* Reduce spacing between sections */
+			div {
+				margin: 5px 0;
+			}
+
+			/* Make sure the container fits on one page */
+			.calculator-container > * {
+				margin: 5px 0;
+			}
+		}
+
+		/* Responsive Design */
+		@media (max-width: 768px) {
+			.calculator-container {
+				margin: 10px;
+				padding: 20px;
+			}
+
+			.tooltitle {
+				font-size: 2rem;
+			}
+
+			table {
+				font-size: 14px;
+			}
+
+			td {
+				padding: 10px 8px;
+			}
+
+			.inputdata {
+				width: 100px;
+				padding: 8px;
+			}
+
+			button {
+				padding: 10px 20px;
+				font-size: 0.9rem;
+				margin: 5px;
+			}
+		}
+
+		/* Animation for results */
+		@keyframes fadeIn {
+			from { opacity: 0; transform: translateY(10px); }
+			to { opacity: 1; transform: translateY(0); }
+		}
+
+		.resultsfield {
+			animation: fadeIn 0.5s ease-out;
+		}
+	</style>
+</head>
+
+<!-- ************************************************************************************************ -->
+<!-- ********************************* START OF HTML ************************************************ -->
+<!-- ************************************************************************************************ -->
+
+<body>
+	<div x-data="medicaidWaiverCalculator()">
+		<div class="calculator-container">
+			<!-- Header Section -->
+			<div style="text-align: center; margin-bottom: 25px;">
+				<h1 class="tooltitle">Medicaid Waiver Payment Scenarios Calculator</h1>
+				<div style="margin: 15px 0;">
+					<button @click="resetCalculator()" tabindex="1">Clear and Reset Calculator</button>
+					<span class="versiondisplay">(Version TY2025.1.0 &nbsp &nbsp 07/30/2025)</span>
+					<button @click="window.print()" tabindex="2">Print Taxpayer Copy</button>
+				</div>
+			</div>
+
+			<!-- Instructions Box -->
+			<div class="instructions-box">
+				<b>Use this calculator to determine the optimal tax outcome for Medicaid Waiver Payments (MWP).</b>
+				<br><br>
+				<b>Instructions:</b>
+				<ul>
+					<li>Enter the Medicaid Waiver Payment amount below</li>
+					<li>Record the tax outcomes for each scenario in TaxSlayer</li>
+					<li>Compare the results to determine the best outcome for the taxpayer</li>
+				</ul>
+			</div>
+
+			<!-- Input Section -->
+			<table id="medExpInput">
+				<tbody>
+					<tr>
+						<td class="inputfield">Taxpayer's Name</td>
+						<td class="inputfield" colspan="1">
+							<input id="TPName" x-model="taxpayerName" tabindex="3" 
+								title="Optionally, enter the Taxpayer's name." 
+								placeholder="Enter taxpayer name">
+						</td>
+					</tr>
+					<tr>
+						<td class="inputfield">Medicaid Waiver Payment Amount</td>
+						<td class="inputfield" colspan="1">
+							<input id="MWPAmount" x-model.number="mwpAmount" class="inputdata" tabindex="4" 
+								title="Enter the total Medicaid Waiver Payment amount" 
+								placeholder="0"
+								@input="validateNumeric($event.target.value, 'mwpAmount')"
+								@blur="handleBlur($event.target.value, 'mwpAmount')">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<!-- Scenarios Table -->
+			<table>
+				<tbody>
+					<tr class="scenario-header">
+						<td></td>
+						<td><b>Taxable Income</b></td>
+						<td><b>Earned Income</b></td>
+						<td><b>AGI</b></td>
+						<td><b>Federal Refund or <br> Tax to Pay</b></td>
+						<td><b>State Refund or <br> Tax to Pay</b></td>
+						<td><b>Total Refund or <br> Tax to Pay</b></td>
+					</tr>
+					
+					<!-- Option 1 -->
+					<tr class="scenario-row">
+						<td class="scenario-header">Option 1</td>
+						<td>Include MWP</td>
+						<td>Include MWP</td>
+						<td>
+							<input x-model.number="option1.agi" class="inputdata" tabindex="5"
+								placeholder="0"
+								@input="validateNumeric($event.target.value, 'option1.agi')"
+								@blur="handleBlur($event.target.value, 'option1.agi')">
+						</td>
+						<td>
+							<input x-model.number="option1.federalTax" class="inputdata" tabindex="6"
+								placeholder="0"
+								@input="validateNumeric($event.target.value, 'option1.federalTax')"
+								@blur="handleBlur($event.target.value, 'option1.federalTax')">
+						</td>
+						<td>
+							<input x-model.number="option1.stateTax" class="inputdata" tabindex="7"
+								placeholder="0"
+								@input="validateNumeric($event.target.value, 'option1.stateTax')"
+								@blur="handleBlur($event.target.value, 'option1.stateTax')">
+						</td>
+						<td class="resultsfield" x-text="calculateTotal(option1)"></td>
+					</tr>
+
+					<!-- Option 2 -->
+					<tr class="scenario-row">
+						<td class="scenario-header">Option 2</td>
+						<td>Exclude MWP</td>
+						<td>Include MWP</td>
+						<td>
+							<input x-model.number="option2.agi" class="inputdata" tabindex="8"
+								placeholder="0"
+								@input="validateNumeric($event.target.value, 'option2.agi')"
+								@blur="handleBlur($event.target.value, 'option2.agi')">
+						</td>
+						<td>
+							<input x-model.number="option2.federalTax" class="inputdata" tabindex="9"
+								placeholder="0"
+								@input="validateNumeric($event.target.value, 'option2.federalTax')"
+								@blur="handleBlur($event.target.value, 'option2.federalTax')">
+						</td>
+						<td>
+							<input x-model.number="option2.stateTax" class="inputdata" tabindex="10"
+								placeholder="0"
+								@input="validateNumeric($event.target.value, 'option2.stateTax')"
+								@blur="handleBlur($event.target.value, 'option2.stateTax')">
+						</td>
+						<td class="resultsfield" x-text="calculateTotal(option2)"></td>
+					</tr>
+
+					<!-- Option 3 -->
+					<tr class="scenario-row">
+						<td class="scenario-header">Option 3</td>
+						<td>Exclude MWP</td>
+						<td>Exclude MWP</td>
+						<td>
+							<input x-model.number="option3.agi" class="inputdata" tabindex="11"
+								placeholder="0"
+								@input="validateNumeric($event.target.value, 'option3.agi')"
+								@blur="handleBlur($event.target.value, 'option3.agi')">
+						</td>
+						<td>
+							<input x-model.number="option3.federalTax" class="inputdata" tabindex="12"
+								placeholder="0"
+								@input="validateNumeric($event.target.value, 'option3.federalTax')"
+								@blur="handleBlur($event.target.value, 'option3.federalTax')">
+						</td>
+						<td>
+							<input x-model.number="option3.stateTax" class="inputdata" tabindex="13"
+								placeholder="0"
+								@input="validateNumeric($event.target.value, 'option3.stateTax')"
+								@blur="handleBlur($event.target.value, 'option3.stateTax')">
+						</td>
+						<td class="resultsfield" x-text="calculateTotal(option3)"></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<!-- Error Messages Section -->
+			<div id="error-section" style="display: none; background: #fdf2f2; border: 1px solid #e74c3c; border-radius: 4px; padding: 15px; margin: 15px 0;">
+				<h4 style="color: #e74c3c; margin: 0 0 10px 0;">Validation Errors:</h4>
+				<div id="error-messages"></div>
+			</div>
+
+			<!-- Best Option Display -->
+			<div class="recommendation-box">
+				<table style="width: 100%;">
+					<tbody>
+						<tr>
+							<td class="inputfield"><b>Recommended Option:</b></td>
+							<td class="resultsfield" x-text="getBestOption()"></td>
+						</tr>
+						<tr>
+							<td class="inputfield"><b>Total Tax Impact:</b></td>
+							<td class="resultsfield" x-text="getBestOptionAmount()"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Information Section -->
+			<div class="contact-info">
+				<b>Identification Clues:</b> W2's from the OR Department of Human Services or a 1099 from SEIU are clues to knowing if a payment is potentially a Medicaid Waiver.
+			</div>
+			
+			<div class="contact-info">
+				<b>Contact Information:</b> Taxpayer can contact Oregon Home Care Commission to seek assistance in this determination.<br>
+				Phone: 877-624-6080 or OHCC.CustomerRelations@odhsoha.oregon.gov
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function medicaidWaiverCalculator() {
+			return {
+				taxpayerName: '',
+				mwpAmount: null,
+				option1: { agi: null, federalTax: null, stateTax: null },
+				option2: { agi: null, federalTax: null, stateTax: null },
+				option3: { agi: null, federalTax: null, stateTax: null },
+				errorFields: new Set(), // Track which fields have errors
+
+				validateNumeric(value, field) {
+					if (value === '' || value === null || value === undefined) {
+						this.clearError(field);
+						return;
+					}
+					
+					// Allow just a minus sign as valid input
+					if (value === '-') {
+						this.clearError(field);
+						return;
+					}
+					
+					// Check for valid number format (numbers, decimal point, and minus sign)
+					const validPattern = /^-?\d*\.?\d*$/;
+					const numValue = parseFloat(value);
+					
+					if (!validPattern.test(value) || (isNaN(numValue) && value !== '-')) {
+						this.setError(field, 'Please enter a valid whole number. You can start with a minus sign for amounts owed.');
+						return;
+					}
+					
+					// Clear any existing error
+					this.clearError(field);
+				},
+
+				setError(field, message) {
+					// Find the input element and add error class
+					const inputs = document.querySelectorAll('input.inputdata');
+					let targetInput = null;
+					
+					for (let input of inputs) {
+						// Check both x-model and x-model.number attributes
+						const xModel = input.getAttribute('x-model') || input.getAttribute('x-model.number');
+						if (xModel && xModel.includes(field)) {
+							targetInput = input;
+							break;
+						}
+					}
+					
+					if (targetInput) {
+						targetInput.classList.add('error');
+						
+						// Track this field as having an error
+						this.errorFields.add(field);
+						
+						// Add error to the centralized error section
+						this.addErrorToSection(field, message);
+					}
+				},
+
+				addErrorToSection(field, message) {
+					const errorSection = document.getElementById('error-section');
+					const errorMessages = document.getElementById('error-messages');
+					
+					if (errorSection && errorMessages) {
+						// Show the error section
+						errorSection.style.display = 'block';
+						
+						// Create or update error message
+						let errorElement = document.getElementById(`error-${field}`);
+						if (!errorElement) {
+							errorElement = document.createElement('div');
+							errorElement.id = `error-${field}`;
+							errorElement.style.cssText = 'color: #e74c3c; margin: 5px 0; font-size: 0.9rem;';
+							errorMessages.appendChild(errorElement);
+						}
+						
+						// Set the field name and message
+						const fieldName = this.getFieldDisplayName(field);
+						errorElement.textContent = `${fieldName}: ${message}`;
+					}
+				},
+
+				getFieldDisplayName(field) {
+					const fieldMap = {
+						'mwpAmount': 'Medicaid Waiver Payment Amount',
+						'option1.agi': 'Option 1 AGI',
+						'option1.federalTax': 'Option 1 Federal Tax',
+						'option1.stateTax': 'Option 1 State Tax',
+						'option2.agi': 'Option 2 AGI',
+						'option2.federalTax': 'Option 2 Federal Tax',
+						'option2.stateTax': 'Option 2 State Tax',
+						'option3.agi': 'Option 3 AGI',
+						'option3.federalTax': 'Option 3 Federal Tax',
+						'option3.stateTax': 'Option 3 State Tax'
+					};
+					return fieldMap[field] || field;
+				},
+
+				clearError(field) {
+					// Find the input element and remove error class
+					const inputs = document.querySelectorAll('input.inputdata');
+					let targetInput = null;
+					
+					for (let input of inputs) {
+						// Check both x-model and x-model.number attributes
+						const xModel = input.getAttribute('x-model') || input.getAttribute('x-model.number');
+						if (xModel && xModel.includes(field)) {
+							targetInput = input;
+							break;
+						}
+					}
+					
+					if (targetInput) {
+						targetInput.classList.remove('error');
+						
+						// Remove this field from error tracking
+						this.errorFields.delete(field);
+						
+						// Remove error from the centralized error section
+						this.removeErrorFromSection(field);
+					}
+				},
+
+				removeErrorFromSection(field) {
+					const errorElement = document.getElementById(`error-${field}`);
+					if (errorElement) {
+						errorElement.remove();
+						
+						// Check if there are any remaining errors
+						const errorMessages = document.getElementById('error-messages');
+						if (errorMessages && errorMessages.children.length === 0) {
+							// Hide the error section if no more errors
+							const errorSection = document.getElementById('error-section');
+							if (errorSection) {
+								errorSection.style.display = 'none';
+							}
+						}
+					}
+				},
+
+				handleBlur(value, field) {
+					if (value === '' || value === null || value === undefined) {
+						this.clearError(field);
+						return;
+					}
+					
+					// Handle just a minus sign
+					if (value === '-') {
+						// Set to null to indicate no value entered
+						if (field.includes('.')) {
+							const [obj, prop] = field.split('.');
+							this[obj][prop] = null;
+						} else {
+							this[field] = null;
+						}
+						this.clearError(field);
+						return;
+					}
+					
+					const numValue = parseFloat(value);
+					if (!isNaN(numValue)) {
+						// Round to nearest whole number when leaving the field
+						const wholeNumber = Math.round(numValue);
+						if (field.includes('.')) {
+							const [obj, prop] = field.split('.');
+							this[obj][prop] = wholeNumber;
+						} else {
+							this[field] = wholeNumber;
+						}
+						// Clear any error when successfully processing
+						this.clearError(field);
+					} else {
+						// Set error if invalid number
+						this.setError(field, 'Please enter a valid whole number. You can start with a minus sign for amounts owed.');
+					}
+				},
+
+				calculateTotal(option) {
+					// Check if federal and state tax values are valid (AGI is not required)
+					if (option.federalTax === null || option.federalTax === undefined || isNaN(option.federalTax) ||
+						option.stateTax === null || option.stateTax === undefined || isNaN(option.stateTax)) {
+						return '';
+					}
+					
+					// Check if federal or state tax fields have errors using reactive tracking
+					const optionNumber = option === this.option1 ? '1' : option === this.option2 ? '2' : '3';
+					const federalField = `option${optionNumber}.federalTax`;
+					const stateField = `option${optionNumber}.stateTax`;
+					
+					if (this.errorFields.has(federalField) || this.errorFields.has(stateField)) {
+						return '';
+					}
+					
+					const total = (option.federalTax || 0) + (option.stateTax || 0);
+					const roundedTotal = Math.round(total);
+					
+					// Format negative numbers as -$12 instead of $-12
+					if (roundedTotal < 0) {
+						return '-$' + Math.abs(roundedTotal);
+					} else {
+						return '$' + roundedTotal;
+					}
+				},
+
+				hasResults() {
+					return (this.option1.agi || this.option1.federalTax || this.option1.stateTax) ||
+						   (this.option2.agi || this.option2.federalTax || this.option2.stateTax) ||
+						   (this.option3.agi || this.option3.federalTax || this.option3.stateTax);
+				},
+
+				getBestOption() {
+					const totals = [
+						{ option: 'Option 1', total: this.calculateTotal(this.option1) },
+						{ option: 'Option 2', total: this.calculateTotal(this.option2) },
+						{ option: 'Option 3', total: this.calculateTotal(this.option3) }
+					].filter(item => item.total !== '');
+
+					if (totals.length === 0) return 'No data entered';
+
+					// Find the option with the highest total (best for taxpayer - highest refund or lowest tax owed)
+					const best = totals.reduce((max, current) => {
+						// Remove dollar sign and parse the numeric value
+						const currentTotal = parseFloat(current.total.replace('$', ''));
+						const maxTotal = parseFloat(max.total.replace('$', ''));
+						return currentTotal > maxTotal ? current : max;
+					});
+
+					return best.option;
+				},
+
+				getBestOptionAmount() {
+					const bestOption = this.getBestOption();
+					if (bestOption === 'No data entered') return '';
+
+					const optionMap = {
+						'Option 1': this.option1,
+						'Option 2': this.option2,
+						'Option 3': this.option3
+					};
+
+					const total = this.calculateTotal(optionMap[bestOption]);
+					return total === '' ? '' : total;
+				},
+
+				resetCalculator() {
+					this.taxpayerName = '';
+					this.mwpAmount = null;
+					this.option1 = { agi: null, federalTax: null, stateTax: null };
+					this.option2 = { agi: null, federalTax: null, stateTax: null };
+					this.option3 = { agi: null, federalTax: null, stateTax: null };
+				},
+
+
+			}
+		}
+	</script>
+</body>
+</html>
+

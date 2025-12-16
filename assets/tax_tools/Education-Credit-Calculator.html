@@ -1,0 +1,2361 @@
+<!DOCTYPE html>
+<!-- ************************************************************************************************ -->
+<!-- ***************** CALCULATE EDUCATION AND SCHOLARSHIP/GRANT CREDITS       ******************** -->
+<!-- ************************************************************************************************ -->
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Education and Scholarship/Grant Calculator</title>
+
+	<meta name="author" content="V. Joseph Bowman, JR. , OR1 District 9">
+	<meta name="description" content="Education Credit Calculator ">
+
+	<style type="text/css">
+		table {
+			border: 2px solid black;
+		}
+
+		table,
+		td {
+			border: none solid black;
+			border-collapse: collapse;
+		}
+
+		td.leftBar {
+			border-left: medium solid;
+		}
+
+		td.leftBarThick {
+			border-left: thick solid;
+		}
+
+		input:enabled {
+			background-color: white
+		}
+
+		input:disabled {
+			background-color: lightgray
+		}
+
+		.tooltitle {
+			font-size: 125%;
+			font-weight: bold;
+		}
+
+		.workaroundtitle {
+			font-weight: bold;
+			text-align: center;
+		}
+
+		.headerfield {
+			text-align: center;
+
+			.flex-item {
+				width: 800px;
+				margin: 10px;
+				text-align: left;
+			}
+		}
+
+		.inputfield {
+			background-color: yellow;
+		}
+
+		.inputfield #TPName,
+		#StudName {
+			width: 20em;
+			text-align: center;
+		}
+
+		.inputdata {
+			background-color: white;
+			width: 5em;
+			text-align: right;
+			border: 1px black solid;
+		}
+
+		.resultsdata {
+			background-color: yellow;
+			width: 5em;
+			text-align: right;
+			border: 1px black solid;
+		}
+
+		.descriptiontext {
+			border: 1px black solid;
+		}
+
+		.linedescription {
+			width: 25em;
+		}
+
+		.resultsfield {
+			background-color: lightgreen;
+			font-weight: bold;
+			text-align: right;
+			border: 1px black solid;
+		}
+
+		.resultsfield #AOCClaimExpenseAns,
+		#AOCTaxScholAns,
+		#LTLClaimExpenseAns,
+		#LTLTaxScholAns,
+		#ALLAOCClaimExpenseAns,
+		#ALLAOCTaxScholAns,
+		#ALLLTLClaimExpenseAns,
+		#ALLLTLTaxScholAns,
+		#AOCTFDataNew,
+		#LTLTFDataNew,
+		#AOCTFData1New,
+		#LTLTFData1New {
+			width: 5em;
+		}
+
+		.resultsfieldOregon {
+			background-color: plum;
+			font-weight: bold;
+			text-align: right;
+			border: 1px black solid;
+		}
+
+		.resultsfieldStudent {
+			background-color: orange;
+			font-weight: bold;
+			text-align: right;
+			border: 1px black solid;
+		}
+
+		.flex-container {
+			display: -webkit-flex;
+			display: flex;
+			-webkit-justify-content: center;
+			justify-content: center;
+		}
+
+		.flex-container>div {
+			padding: 10px;
+		}
+
+		.flex-item {
+			width: 800px;
+			margin: 10px;
+			text-align: left;
+		}
+
+		.flex-containerAlert {
+			display: -webkit-flex;
+			display: flex;
+			-webkit-justify-content: center;
+			justify-content: center;
+			font-size: 150%;
+			background-color: DarkOrange;
+		}
+
+		.flex-itemAlert {
+			width: 800px;
+			margin: 10px;
+			text-align: left;
+		}
+
+		#WksLine1,
+		#WksLine2,
+		#WksLine3,
+		#WksLine4,
+		#WksLine5,
+		#WksLine6,
+		#WksLine7 {
+			width: 8em;
+			text-align: right;
+		}
+
+		#WksLine8,
+		#WksLine9,
+		#WksLine10,
+		#WksLine11 {
+			width: 8em;
+			text-align: right;
+		}
+
+		#RefundAmt,
+		#ItemizedAmt,
+		#SchedATax,
+		#F1040Line41 {
+			width: 8em;
+			text-align: right;
+		}
+
+		#F1040Line42,
+		#TaxableRefund {
+			width: 8em;
+			text-align: right;
+		}
+
+		button {
+			background-color: lightblue;
+			font-weight: bold;
+		}
+
+		#ButtonBox {
+			margin-bottom: 0.5em;
+		}
+
+		button {
+			font-size: 105%;
+			font-weight: bold;
+		}
+
+		.versiondisplay {
+			font-weight: bold;
+			margin-left: 4em;
+			margin-right: 4em;
+		}
+
+		html {
+			background-color: #cccccc;
+		}
+
+		.info {
+			border: 1px solid blue;
+			background-color: lightblue;
+			border-radius: 0.5em;
+			cursor: help;
+		}
+
+		.infotip {
+			border: 1px solid blue;
+			background-color: cyan;
+			border-radius: 0.5em;
+			cursor: help;
+			font-weight: bold;
+		}
+
+		#instruction_label {
+			cursor: help;
+		}
+
+		body {
+			background-color: #eeeeee;
+			font-family: sans-serif;
+			font-size: 0.9em;
+		}
+
+		.infoRow {
+			background-color: white;
+			color: tomato;
+			font-weight: bold;
+			text-align: center;
+			display: none;
+		}
+
+		.edinfo {
+			display: none;
+			text-align: left;
+			border: 1px solid green;
+			background-color: lightgreen;
+			z-index: 2;
+			padding: 10px;
+			width: 95%
+		}
+
+		#GeneralInfoBox {
+			display: inline-block;
+			text-align: left;
+			background-color: white;
+			padding: 10px;
+		}
+
+		.modal {
+			display: none;
+			/* Hidden by default */
+			position: fixed;
+			/* Stay in place */
+			z-index: 1;
+			/* Sit on top */
+			left: 10%;
+			top: 10%;
+			width: 80%;
+			/* Full width */
+			height: 80%;
+			/* Full height */
+			overflow: auto;
+			/* Enable scroll if needed */
+			background-color: white;
+		}
+
+		.modal-item {
+			width: 800px;
+			margin: 10px;
+			text-align: left;
+			overflow: auto;
+			padding:
+				2x 2x 2x 2x;
+		}
+
+		/* The Close Button */
+		.close {
+			color: #aaa;
+			float: right;
+			font-size: 28px;
+			font-weight: bold;
+		}
+
+		.close:hover,
+		.close:focus {
+			color: black;
+			text-decoration: none;
+			cursor: pointer;
+		}
+
+		h1 {
+			text-align: center;
+			font-size: 1.2em;
+			font-weight: bold;
+			text-decoration: underline;
+		}
+
+		h2 {
+			text-align: center;
+			font-size: 1.1em;
+			font-weight: bold;
+			font-style: italic;
+		}
+
+		.printalternative {
+			display: none;
+		}
+
+		.donotuse {
+			font-size: 300%;
+			position: relative;
+			top: -7em;
+			right: -2em;
+			font-weight: bold;
+			z-index: 2;
+		}
+
+		#userInput {
+			margin-top: 0.5em;
+			margin-bottom: 0.7em;
+		}
+
+		@media print {
+			html {
+				background-color: transparent;
+			}
+
+			body {
+				background-color: transparent;
+				font-size: 0.57em
+			}
+
+			.printalternative {
+				display: inline;
+			}
+
+			.printhide {
+				display: none;
+			}
+
+			#Disclaimer {
+				display: none;
+			}
+		}
+
+		/* Reverse email text direction to prevent scraping */
+		.email {
+			unicode-bidi: bidi-override;
+			direction: rtl;
+		}
+	</style>
+
+	<script type="text/javascript">
+
+		// *************** HOW TO DO YEARLY UPDATE *****************
+		//			Change TAX_YR. Radio buttons automatically adjust
+		//			Search for last text year to change text information.
+		// ***************Contributors *****************************
+		// 		Jim Blackburn
+		//		Rod Garriott
+		//		Len Lewandowski
+		//		David Rainwater
+		//		John Coble 
+		//      Xander Harris
+		// ***************Versions *****************************
+
+		var VERSION = "(Version TY2025.1.0 &nbsp &nbsp 12/08/2025)";
+
+		// --------------------------------------------------------------------------------
+		// KNOWN BUGS: 
+		// TODO: 
+		//			Add Alert for Kiddie Tax
+		// --------------------------------------------------------------------------------
+
+		var TAX_YR = "2025";
+		var under24 = false;
+		var studentDP = false;
+		var edInfoList = "";             // List of O EdInfo Class Objects
+		var CurrentEdInfoID = "GeneralInfoBox"
+
+		//----------------------------------------------------------------------------------------
+		//                                   Initialize()
+		//----------------------------------------------------------------------------------------
+		function Initialize() {
+
+			settaxYearDisplay();
+
+			setUnder24("N");
+
+			setStudentDP("N");
+			document.getElementById("AOCQualUnrestrictData").disabled = true;
+			document.getElementById("LTLQualUnrestrictData").disabled = true;
+			getEdInfo();
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   settaxYearDisplay()
+		// This function sets the display amd valies for th tax year based on the value of TAX_YR.
+		// This makes the system easy to change from year to year.
+		//----------------------------------------------------------------------------------------
+		function settaxYearDisplay() {
+			radioTY_0.value = labelTY_0.innerHTML = TAX_YR;
+			radioTY_1.value = labelTY_1.innerHTML = TAX_YR - 1;
+			radioTY_2.value = labelTY_2.innerHTML = TAX_YR - 2;
+			radioTY_3.value = labelTY_3.innerHTML = TAX_YR - 3;
+
+			// Set the checked radio button
+			var todaydate = new Date()
+
+			if (todaydate.getFullYear() == TAX_YR) {
+				radioTY_1.checked = true;
+				setTaxYear("" + (TAX_YR - 1));
+			} else {
+				radioTY_0.checked = true;
+				setTaxYear("" + (TAX_YR));
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   setTaxYear(code)
+		// This function records the tax year choice
+		//----------------------------------------------------------------------------------------
+		function setTaxYear(code) {
+			taxYearSelected = true;
+			TAX_YR = code;
+			TitleWinter.innerHTML = "Winter<br>" + TAX_YR;
+			TitleSpring.innerHTML = "Spring<br>" + TAX_YR;
+			TitleSummer.innerHTML = "Summer<br>" + TAX_YR;
+			TitleFall.innerHTML = "Fall  <br>" + TAX_YR;
+			TitleTotal.innerHTML = "Total <br>" + TAX_YR;
+
+			// <!-- Change Row display in results table based on Tax Year   -->
+			if (TAX_YR > "2021") {
+				OldExpensesRow.style.display = "none"
+				NewTuitionRow.style.display = ""
+				NewGrantRow.style.display = ""
+				NewExpenseRow.style.display = ""
+				NewExpensesRow.style.display = ""
+
+			} else {
+				OldExpensesRow.style.display = ""
+				NewTuitionRow.style.display = "none"
+				NewGrantRow.style.display = "none"
+				NewExpenseRow.style.display = "none"
+				NewExpensesRow.style.display = "none"
+			}
+
+			CalculateEdExp();
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   setUnder24(code)
+		// This function sets the useSE variable = true or false
+		//----------------------------------------------------------------------------------------
+		//----------------------------------------------------------------------------------------
+		function setUnder24(code) {
+			if (code === "Y") {
+				under24 = true;
+				Under24Yes.checked = "checked";
+			}
+			else {
+				under24 = false;
+				Under24No.checked = "checked";
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   setStudentDP(code)
+		// This function sets the useSE variable = true or false
+		//----------------------------------------------------------------------------------------
+		//----------------------------------------------------------------------------------------
+		function setStudentDP(code) {
+			if (code === "Y") {
+				studentDP = true;
+				StudentDPYes.checked = "checked";
+			}
+			else {
+				studentDP = false;
+				StudentDPNo.checked = "checked";
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   ChangeName()
+		// Changes  names on detail table
+		//----------------------------------------------------------------------------------------
+		//----------------------------------------------------------------------------------------
+		function ChangeName() {
+			TPNameP2.innerHTML = "Taxpayer Name:" + TPName.value
+			StudentNameP2.innerHTML = "Student Name:" + StudName.value
+		}
+		//----------------------------------------------------------------------------------------
+		//                                   DataChange(type)
+		// This function is called when education table data changes
+		//----------------------------------------------------------------------------------------
+		function DataChange(type) {
+			var thisType = type;
+			var sumAmount = 0;
+
+			if (thisType === "TF") {              // Tuition and Fees
+				sumAmount += +TFWinter.value;
+				sumAmount += +TFSpring.value;
+				sumAmount += +TFSummer.value;
+				sumAmount += +TFFall.value;
+				TFTotal.innerHTML = sumAmount;
+			}
+			else if (thisType === "ReqBooks") {		// ReqBooks
+				sumAmount += +ReqBooksWinter.value;
+				sumAmount += +ReqBooksSpring.value;
+				sumAmount += +ReqBooksSummer.value;
+				sumAmount += +ReqBooksFall.value;
+				ReqBooksTotal.innerHTML = sumAmount;
+			}
+			else if (thisType === "Books") {		// Books
+				sumAmount += +BooksWinter.value;
+				sumAmount += +BooksSpring.value;
+				sumAmount += +BooksSummer.value;
+				sumAmount += +BooksFall.value;
+				BooksTotal.innerHTML = sumAmount;
+			}
+			else if (thisType === "Material") {	// Material
+				sumAmount += +MaterialWinter.value;
+				sumAmount += +MaterialSpring.value;
+				sumAmount += +MaterialSummer.value;
+				sumAmount += +MaterialFall.value;
+				MaterialTotal.innerHTML = sumAmount;
+			}
+			else if (thisType === "Restrict") {		// Restrict
+				sumAmount += +RestrictWinter.value;
+				sumAmount += +RestrictSpring.value;
+				sumAmount += +RestrictSummer.value;
+				sumAmount += +RestrictFall.value;
+				RestrictTotal.innerHTML = sumAmount;
+			}
+			else if (thisType === "Unrestrict") {		// Unrestrict
+				sumAmount += +UnrestrictWinter.value;
+				sumAmount += +UnrestrictSpring.value;
+				sumAmount += +UnrestrictSummer.value;
+				sumAmount += +UnrestrictFall.value;
+				UnrestrictTotal.innerHTML = sumAmount;
+			}
+			else if (thisType === "StdLoan") {		// StdLoan
+				sumAmount += +StdLoanWinter.value;
+				sumAmount += +StdLoanSpring.value;
+				sumAmount += +StdLoanSummer.value;
+				sumAmount += +StdLoanFall.value;
+				StdLoanTotal.innerHTML = sumAmount;
+			}
+			CalculateEdExp()
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   CalculateEdExp()
+		// This function Calculates all the items in the detail and results tables
+		//     variables that start with ALLAOC or ALLLTL refer to situation of using all of the 
+		//     unrestricted grants for paying education expenses.
+		//----------------------------------------------------------------------------------------
+		function CalculateEdExp() {
+			var ExcessAOCRestrict, ExcessLTLRestrict, AOCMaxUnrestrict, LTLMaxUnrestrict;
+
+			// Qualifying Expenses
+			ALLAOCTFDataNew.innerHTML = ALLLTLTFDataNew.innerHTML = AOCTFDataNew.innerHTML = LTLTFDataNew.innerHTML = TFTotal.innerHTML;
+			AOCTFData.innerHTML = LTLTFData.innerHTML = TFTotal.innerHTML;
+			AOCBooksData.innerHTML = BooksTotal.innerHTML;
+			AOCMaterialData.innerHTML = MaterialTotal.innerHTML;
+			ALLAOCOtherExpenseNew.innerHTML = AOCOtherExpenseNew.innerHTML = +AOCBooksData.innerHTML + +AOCMaterialData.innerHTML;
+			ALLAOCTotExpData.innerHTML = AOCTotExpData.innerHTML = +AOCTFData.innerHTML + +AOCBooksData.innerHTML + +AOCMaterialData.innerHTML;
+			ALLLTLTotExpData.innerHTML = LTLTotExpData.innerHTML = LTLTFData.innerHTML;
+
+			// Scholarship/Grants and net Expenses
+			AOCRestrictData = Math.min(AOCTotExpData.innerHTML, RestrictTotal.innerHTML);
+			LTLRestrictData = Math.min(LTLTotExpData.innerHTML, RestrictTotal.innerHTML);
+
+			// Display Restricted B1
+			ALLAOCRestrictDataDisplay.innerHTML = AOCRestrictDataDisplay.innerHTML = AOCRestrictData;
+			ALLLTLRestrictDataDisplay.innerHTML = LTLRestrictDataDisplay.innerHTML = LTLRestrictData;
+
+			ExcessAOCRestrict = RestrictTotal.innerHTML - +AOCRestrictData;
+			ExcessLTLRestrict = RestrictTotal.innerHTML - +LTLRestrictData;
+
+			//Display G1
+			ALLAOCExcessRestrictData.innerHTML = AOCExcessRestrictData.innerHTML = ExcessAOCRestrict;
+			ALLLTLExcessRestrictData.innerHTML = LTLExcessRestrictData.innerHTML = ExcessLTLRestrict;
+
+			//issue alert if Restricted exceeds qualified Expenses 
+			if ((ExcessAOCRestrict > 0) || (ExcessLTLRestrict > 0)) {
+				doAlert("ExcessRestricted", true);
+			}
+			else {
+				doAlert("ExcessRestricted", false);
+			}
+
+			var AOCUnrestrictCap, LTLUnrestrictCap, AOCMinUnrestrict, LTLMinUnrestrict, TPMoneyData, TotalMoney;
+
+			// Money Data.
+			TPMoneyData = +TPMoneyReturn.value + +GiftTotal.value
+			TotalMoney = +TPMoneyData + +StdLoanTotal.innerHTML
+
+			// Sets variables used for calculations to pick up any changes to total income (11 Feb 2025)
+			AOCTotalMoneyData.innerHTML = LTLTotalMoneyData.innerHTML = +TotalMoney;
+
+			AOCUnrestrictCap = (+AOCTotExpData.innerHTML - AOCRestrictData);  // Qual Expenses Less Restricted Grants
+			LTLUnrestrictCap = (+LTLTotExpData.innerHTML - LTLRestrictData);
+			AOCMaxUnrestrict = Math.min(+AOCUnrestrictCap, +UnrestrictTotal.innerHTML);  // Max Amount of Grants That can be Used to offset 
+			LTLMaxUnrestrict = Math.min(+LTLUnrestrictCap, +UnrestrictTotal.innerHTML);
+
+			//Max amount of qualified expenses that can be Offset.
+			AOCQualOffsetCap = Math.min(+AOCTotalMoneyData.innerHTML, +AOCLimitData.innerHTML, AOCUnrestrictCap)
+			LTLQualOffsetCap = Math.min(+LTLTotalMoneyData.innerHTML, +LTLLimitData.innerHTML, LTLUnrestrictCap)
+
+			// Min Amount of Grants to use to offet qualifed Expenses.
+			AOCMinUnrestrict = Math.max(Math.min((+AOCUnrestrictCap - AOCQualOffsetCap), +AOCMaxUnrestrict), 0);
+
+			LTLMinUnrestrict = Math.max(Math.min((+LTLUnrestrictCap - LTLQualOffsetCap), +AOCMaxUnrestrict), 0);
+
+			// Display  B2
+			AOCUnrestrictDisplay.innerHTML = AOCMinUnrestrict;
+			LTLUnrestrictDisplay.innerHTML = LTLMinUnrestrict;
+			ALLAOCUnrestrictDisplay.innerHTML = AOCMaxUnrestrict;
+			ALLLTLUnrestrictDisplay.innerHTML = LTLMaxUnrestrict;
+
+			//Check and adjust Cap of use of Qualified Expenses
+			var alertinfo;
+
+			if ((+AOCMaxUnrestrict - AOCMinUnrestrict - +AOCQualUnrestrictData.value) < 0) {
+				alertinfo = "Unrestricted Scholarship used for AOC qualified expenses exceeds \n Qualified Expenses" +
+					" or Available Unrestricted Scholarship. \n\n Setting to maximum value possible. ";
+				alert(alertinfo);
+
+				AOCQualUnrestrictData.value = +AOCMaxUnrestrict - AOCMinUnrestrict;
+			}
+
+			if ((+LTLMaxUnrestrict - LTLMinUnrestrict - +LTLQualUnrestrictData.value) < 0) {
+				alertinfo = "Unrestricted Scholarship used for LTL qualified expenses exceeds qualified Expenses.\nSetting to maximum value. ";
+				alert(alertinfo);
+				LTLQualUnrestrictData.value = +LTLMaxUnrestrict - LTLMinUnrestrict;
+			}
+
+			//Redisplay Additional Unrestricted Input  and B3 
+			AOCQualUnrestrictDataDisplay.innerHTML = AOCQualUnrestrictData.value;
+			AOCNetExpenseData.innerHTML = Math.max(+AOCTotExpData.innerHTML - AOCMinUnrestrict - AOCRestrictData - +AOCQualUnrestrictData.value, 0);
+
+			LTLQualUnrestrictDataDisplay.innerHTML = LTLQualUnrestrictData.value;
+			LTLNetExpenseData.innerHTML = Math.max(+LTLTotExpData.innerHTML - LTLMinUnrestrict - LTLRestrictData - LTLQualUnrestrictData.value, 0);
+
+			// This is the taxable amount of Unrestricted shown in G2
+			var AOCUnrestrictNotUsed, LTLUnrestrictNotUsed;
+
+			AOCUnrestrictNotUsed = +UnrestrictTotal.innerHTML - AOCMinUnrestrict - +AOCQualUnrestrictData.value;
+			LTLUnrestrictNotUsed = +UnrestrictTotal.innerHTML - LTLMinUnrestrict - +LTLQualUnrestrictData.value;
+			ALLAOCUnrestrictNotUsed = +UnrestrictTotal.innerHTML - AOCMaxUnrestrict;
+			ALLLTLUnrestrictNotUsed = +UnrestrictTotal.innerHTML - LTLMaxUnrestrict;
+
+			// Display G2
+			AOCUnrestrictNotUsedDisplay.innerHTML = AOCUnrestrictNotUsed;
+			LTLUnrestrictNotUsedDisplay.innerHTML = LTLUnrestrictNotUsed;
+			ALLAOCUnrestrictNotUsedDisplay.innerHTML = ALLAOCUnrestrictNotUsed;
+			ALLLTLUnrestrictNotUsedDisplay.innerHTML = ALLLTLUnrestrictNotUsed;
+
+			// Display Expense Data
+			ALLAOCNetExpenseData.innerHTML = Math.max(+ALLAOCTotExpData.innerHTML - AOCRestrictData - AOCMaxUnrestrict, 0);
+			ALLLTLNetExpenseData.innerHTML = Math.max(+ALLLTLTotExpData.innerHTML - LTLRestrictData - LTLMaxUnrestrict, 0);
+
+			// Dispaly Taxpayer Money and Student Loans Detail Row D
+			AOCTPMoneyData.innerHTML = LTLTPMoneyData.innerHTML = +TPMoneyData;
+			AOCStdLoanData.innerHTML = LTLStdLoanData.innerHTML = +StdLoanTotal.innerHTML;
+			ALLAOCTotalMoneyData.innerHTML = ALLLTLTotalMoneyData.innerHTML = AOCTotalMoneyData.innerHTML = LTLTotalMoneyData.innerHTML = +TotalMoney;
+
+			//issue alert if money is zero if there are expenses
+			if ((+AOCTotalMoneyData.innerHTML === 0) && (+AOCNetExpenseData.innerHTML > 0)) {
+				doAlert("ZeroTPMoney", true);
+			}
+			else {
+				doAlert("ZeroTPMoney", false);
+			}
+
+			// Ed Expenses to Claim
+			AOCClaimExpenseAnsNew.innerHTML = AOCClaimExpenseAns.innerHTML = AOCClaimExpenseData.innerHTML = Math.min(AOCNetExpenseData.innerHTML, AOCTotalMoneyData.innerHTML, AOCLimitData.innerHTML);
+			LTLClaimExpenseAnsNew.innerHTML = LTLClaimExpenseAns.innerHTML = LTLClaimExpenseData.innerHTML = Math.min(LTLNetExpenseData.innerHTML, LTLTotalMoneyData.innerHTML, LTLLimitData.innerHTML);
+			ALLAOCClaimExpenseAnsNew.innerHTML = ALLAOCClaimExpenseAns.innerHTML = ALLAOCClaimExpenseData.innerHTML = Math.min(ALLAOCNetExpenseData.innerHTML, ALLAOCTotalMoneyData.innerHTML, ALLAOCLimitData.innerHTML);
+			ALLLTLClaimExpenseAnsNew.innerHTML = ALLLTLClaimExpenseAns.innerHTML = ALLLTLClaimExpenseData.innerHTML = Math.min(ALLLTLNetExpenseData.innerHTML, ALLLTLTotalMoneyData.innerHTML, ALLLTLLimitData.innerHTML);
+
+			// Calculate Taxable Scholarship/Grants
+			// Row H
+			AOCExcessExpenseData.innerHTML = Math.max(0, AOCNetExpenseData.innerHTML - AOCClaimExpenseData.innerHTML);
+			LTLExcessExpenseData.innerHTML = Math.max(0, LTLNetExpenseData.innerHTML - LTLClaimExpenseData.innerHTML) + +BooksTotal.innerHTML + +MaterialTotal.innerHTML;
+			ALLAOCExcessExpenseData.innerHTML = Math.max(0, ALLAOCNetExpenseData.innerHTML - ALLAOCClaimExpenseData.innerHTML);
+			ALLLTLExcessExpenseData.innerHTML = Math.max(0, ALLLTLNetExpenseData.innerHTML - ALLLTLClaimExpenseData.innerHTML) + +BooksTotal.innerHTML + +MaterialTotal.innerHTML;
+
+			// Last Row of Detail 
+			AOCTaxScholAns.innerHTML = AOCTaxScholData.innerHTML = Math.max(0, +AOCExcessRestrictData.innerHTML + AOCUnrestrictNotUsed - AOCExcessExpenseData.innerHTML);
+			LTLTaxScholAns.innerHTML = LTLTaxScholData.innerHTML = Math.max(0, +LTLExcessRestrictData.innerHTML + LTLUnrestrictNotUsed - LTLExcessExpenseData.innerHTML);
+			ALLAOCTaxScholAns.innerHTML = ALLAOCTaxScholData.innerHTML = Math.max(0, +ALLAOCExcessRestrictData.innerHTML + ALLAOCUnrestrictNotUsed - ALLAOCExcessExpenseData.innerHTML);
+			ALLLTLTaxScholAns.innerHTML = ALLLTLTaxScholData.innerHTML = Math.max(0, +ALLLTLExcessRestrictData.innerHTML + ALLLTLUnrestrictNotUsed - ALLLTLExcessExpenseData.innerHTML);
+
+			//Calculate max OR Subtraction 333
+			AOCHousingAns.innerHTML = Math.min(+AOCTaxScholAns.innerHTML, +HousingTotal.value);
+			LTLHousingAns.innerHTML = Math.min(LTLTaxScholAns.innerHTML, HousingTotal.value);
+			ALLAOCHousingAns.innerHTML = Math.min(ALLAOCTaxScholAns.innerHTML, HousingTotal.value);
+			ALLLTLHousingAns.innerHTML = Math.min(ALLLTLTaxScholAns.innerHTML, HousingTotal.value);
+
+			// Calculation for Grants Used for Qualified Expenses [ B1 + B2 + min ( (C - F),(unresticted - B2) ) ]
+			// B1 + B2 + B3
+			AOCGrantsUsedNew.innerHTML = +AOCRestrictData + +AOCMinUnrestrict + +AOCQualUnrestrictDataDisplay.innerHTML;
+			LTLGrantsUsedNew.innerHTML = +LTLRestrictData + +LTLMinUnrestrict + +LTLQualUnrestrictDataDisplay.innerHTML;
+
+			ALLAOCGrantsUsedNew.innerHTML = AOCRestrictData + AOCMaxUnrestrict;
+			ALLLTLGrantsUsedNew.innerHTML = LTLRestrictData + LTLMaxUnrestrict;
+
+			//  Check for Taxpayer Caution related to Inadequate Monies
+			var caution1 = caution2 = "";
+			var AOCOver = (Number(AOCClaimExpenseAns.innerHTML) > Number(TPMoneyReturn.value));
+			var LTLOver = (Number(LTLClaimExpenseAns.innerHTML) > Number(TPMoneyReturn.value));
+
+			if (AOCOver || LTLOver) {
+				if (AOCOver && LTLOver) {
+					caution1 = "American Opportunity Credit (AOC) or Lifetime Learning Credit (LTL)"
+				}
+				else if (AOCOver) {
+					caution1 = "American Opportunity Credit (AOC)";
+				}
+				else {
+					caution1 = "Lifetime Learning Credit (LTL)";
+				}
+
+				cautionText1.innerHTML = caution1;
+				cautionReturn.innerHTML = TPMoneyReturn.value;
+				cautionGift.innerHTML = GiftTotal.value;
+				cautionLoan.innerHTML = +StdLoanTotal.innerHTML;
+				cautionTotal.innerHTML = Number(TPMoneyReturn.value) + Number(GiftTotal.value) + Number(StdLoanTotal.innerHTML);
+
+				fundsAlert.style.display = "inline-block";
+			}
+			else {
+				fundsAlert.style.display = "none";
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   doAlert(type, indicator)
+		//----------------------------------------------------------------------------------------
+		function doAlert(type, yesno) {
+			var alertMessage = "";
+
+			if (type === "ZeroTPMoney") {
+				if (yesno) {
+					TPWagesDesc.style.color = TPGiftDesc.style.color = TPLoanDesc.style.color = "red";
+					TPMoneyReturn.style.backgroundColor = GiftTotal.style.backgroundColor = StdLoanWinter.style.backgroundColor = "tomato";
+					StdLoanSpring.style.backgroundColor = StdLoanSummer.style.backgroundColor = StdLoanFall.style.backgroundColor = "tomato";
+					alert("You have not entered any taxpayer income or other monies, \n resulting in no education credit.  Are you sure this is correct?");
+				}
+				else {
+					TPWagesDesc.style.color = "initial";
+					TPGiftDesc.style.color = "initial";
+					TPLoanDesc.style.color = "initial";
+					TPMoneyReturn.style.backgroundColor = GiftTotal.style.backgroundColor = StdLoanWinter.style.backgroundColor = "white";
+					StdLoanSpring.style.backgroundColor = StdLoanSummer.style.backgroundColor = StdLoanFall.style.backgroundColor = "white";
+				}
+			}
+			else if (type === "ExcessRestricted") {
+				if (yesno) {
+					RestrictDescr.style.color = "red";
+					RestrictWinter.style.backgroundColor = "tomato";
+					RestrictSpring.style.backgroundColor = "tomato";
+					RestrictSummer.style.backgroundColor = "tomato";
+					RestrictFall.style.backgroundColor = "tomato";
+					alert("The restricted scholarship/grant amounts you entered exceed the eligible expenses, \n resulting in no education credit.  Are you sure this is correct?");
+
+				} else {
+					RestrictDescr.style.Color = "initial"
+					RestrictWinter.style.backgroundColor = "white";
+					RestrictSpring.style.backgroundColor = RestrictSummer.style.backgroundColor = RestrictFall.style.backgroundColor = "white";
+				}
+			}
+
+			if (alertMessage != "") {
+				Alert.innerHTML = alertMessage;
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   printResults()
+		// This prints the results table.
+		//----------------------------------------------------------------------------------------
+		function printResults() {
+			var oldLeft, oldRight;
+
+			// Print Current Data
+			oldLeft = leftContainer.style.flexBasis;
+			oldRight = rightContainer.style.flexBasis;
+
+			leftContainer.style.flexBasis = "5%";
+			rightContainer.style.flexBasis = "95%";
+			leftContainer.style.display = "none";
+
+			window.print();
+
+			leftContainer.style.flexBasis = oldLeft;
+			rightContainer.style.flexBasis = oldRight;
+			leftContainer.style.display = "inline";
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                  getEdInfo()
+		// This prints the results table.
+		//----------------------------------------------------------------------------------------
+		function getEdInfo() {
+
+			var x = document.getElementsByClassName("edinfo");
+			var i, temp;
+			var infotype;
+			edInfoList = x;
+
+			temp = ""
+			for (i = 0; i < x.length; i++) {
+				infotype = x[i].getAttribute("data-info");
+				temp += "<h1 style='text-align: left; color: red;'> Item " + (i + 1) + "................." + infotype + "</h1>";
+				temp = temp + x[i].innerHTML;
+			}
+
+			allEdInfo1.innerHTML = allEdInfo.innerHTML = temp;
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                  displayEdInfo()
+		// This prints the results table.
+		//----------------------------------------------------------------------------------------
+		function displayEdInfo() {
+			displayInfo.style.display = "block"
+
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                  printEdInfo(type)
+		// This prints the results table.
+		//----------------------------------------------------------------------------------------
+		function printEdInfo(type) {
+			leftContainer.style.display = "none";
+			rightContainer.style.display = "none";
+			infoMark.style.display = "none";
+			Disclaimer.style.display = "none";
+			resetButton.style.visibility = "hidden";
+			printButton.style.visibility = "hidden";
+
+			if (type === "ALL") {
+				printerEdInfo.innerHTML = allEdInfo.innerHTML;
+			} else {
+				printerEdInfo.innerHTML = document.getElementById(CurrentEdInfoID).innerHTML;
+			}
+
+			printInfo.style.display = "inline";
+			window.print();
+			leftContainer.style.display = "inline";
+			rightContainer.style.display = "inline";
+			infoMark.style.display = "inline";
+			Disclaimer.style.display = "inline";
+			resetButton.style.visibility = "visible";
+			printButton.style.visibility = "visible";
+			printInfo.style.display = "none";
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                  showEdInfo(infoid)
+		// This shows the particular EdInfo Item and closes the current  One
+		// This will display multiple items defined as an array.
+		//       Example showEdInfo(['OregonHousing','TPMoneyInfoBoxHousing'])
+		//----------------------------------------------------------------------------------------
+		function showEdInfo(infoid) {
+			var thisid = infoid;
+
+			// [processing for CurrentEdInfoID
+			if (Array.isArray(CurrentEdInfoID)) {
+				for (i = 0; i < CurrentEdInfoID.length; ++i) {
+					document.getElementById(CurrentEdInfoID[i]).style.display = "none";
+				}
+			} else {
+				document.getElementById(CurrentEdInfoID).style.display = "none";
+			}
+
+			// [processing for ThisID
+			if (Array.isArray(thisid)) {
+				for (i = 0; i < thisid.length; ++i) {
+					document.getElementById(thisid[i]).style.display = "inline-block";
+				}
+			} else {
+				document.getElementById(thisid).style.display = "inline-block";
+			}
+
+			CurrentEdInfoID = thisid;
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                  UseUnrestrict_Change()
+		// Processes Unrestrict Check Box
+		//----------------------------------------------------------------------------------------
+		function UseUnrestrict_Change() {
+			if (UseUnrestrict.checked) {
+				document.getElementById("AOCQualUnrestrictData").disabled = false;
+				document.getElementById("LTLQualUnrestrictData").disabled = false;
+				AOCQualUnrestrictDataDisplay.innerHTML = AOCQualUnrestrictData.value = "";
+				LTLQualUnrestrictDataDisplay.innerHTML = LTLQualUnrestrictData.value = "";
+			} else {
+				document.getElementById("AOCQualUnrestrictData").disabled = true;
+				document.getElementById("LTLQualUnrestrictData").disabled = true;
+				AOCQualUnrestrictDataDisplay.innerHTML = AOCQualUnrestrictData.value = 0;
+				LTLQualUnrestrictDataDisplay.innerHTML = LTLQualUnrestrictData.value = 0;
+			}
+
+			CalculateEdExp();
+		}
+	</script>
+</head>
+
+<!-- ************************************************************************************************ -->
+<!-- ********************************* START OF HTML ************************************************ -->
+<!-- ************************************************************************************************ -->
+
+<body onload="Initialize()">
+	<center>
+
+		<span id="calctitle" class="tooltitle">Education and Scholarship/Grant Calculator</span>
+
+		<br><button id="resetButton" onclick="location.reload(true)"><b>Clear and reset calculator</b></button>
+		<span id="Version" class="versiondisplay "></span>
+		<script>Version.innerHTML = VERSION;</script>
+		<button id="printButton" onclick="printResults()"> Print a taxpayer copy</button>
+		<span id="infoMark" class="printhide">
+			<br> Items marked with <span class="info">&nbsp&#8505&nbsp</span> will display detailed information on the
+			left.
+			<br> Items marked with <span class="infotip">TIP</span></td> will display a TIP when hovering over the input
+			field.
+		</span>
+
+		<span id="BogartRef" class="printhide"> <br> In certain cases,
+			the user may want to use the
+			<span onmousemove="showEdInfo('OptimizingInfo');"><a target="_blank"
+					href="https://cotaxaide.org/tools/Education%20Calculator.html"> Colorado Education Calculator.</a>
+				See Information.<span class="info">&nbsp&#8505&nbsp</span> </span>
+		</span>
+
+		<br>
+
+		<div class="flex-container">
+
+			<div id="leftContainer" style="flex-basis:40%; ">
+				<br><button onclick="displayEdInfo()"><b>View All Information </b></button>
+				<button onclick="printEdInfo('ALL')"><b>Print All Information </b></button><br>
+
+				<br><button onclick="showEdInfo('GeneralInfoBox')"><b>Show General Instructions</b></button>
+				&nbsp. &nbsp.<button onclick="printEdInfo('CURRENT')"><b>Print This Information</b></button>
+
+				<div style="overflow:auto;height:80vh; width:38%; position:fixed;">
+
+					<!-- Start of Scrolling Info Boxes -->
+
+					<!--  General Instructions Info  -->
+					<div id="GeneralInfoBox" class="printhide edinfo" data-info="General Instructions">
+						<h2>General Instructions</h2>
+						To receive any education credit:
+						<ul>
+							<li> The student <b>must have a 1098T</b> from the attended institution. </li>
+							<li> The taxpayer <b>must have monies</b> to pay for the expenses. This includes taxable and
+								non-taxable income, gifts and/or student loans</li>
+						</ul>
+						In addition, a copy of the student’s account summary is required for accurate tax preparation.
+						These statements are available on-line.
+						Determine if the student received loans as well as Scholarship/Grants, or otherwise paid in
+						their own money to the school.
+						If so, the student determines which monies are used for which expenses.
+						<br><br>Normally it is a tax advantage to use loans or own money for the qualifying expenses and
+						then pay tax on the Scholarship/Grants that
+						are then used for non-qualifying expenses.
+						<br><br>The American Opportunity Credit (AOC) or Lifetime Learning Credit (LTL) Columns
+						calculate both (a) the maximum allowable
+						expenses for the credit. This also maximizes the taxable scholarship/grants.
+						and (b) the minimum allowable expenses to enter for the credit. This also minimizes the taxable
+						scholarship/grants.
+						Determine which is better for the taxpayer and use that.
+						<br><br>The Calculator also allows some of the Unrestricted Scholarship/Grants to be used for
+						qualified expenses, which results in smaller
+						credits and less taxable scholarship/grants.
+						This is usually used only when (a) the Taxpayer is the student and wishes to reduce taxable
+						income or (b) the student is a dependent
+						and the taxable scholarship/grants trigger the Kiddie Tax (see Using Unrestricted
+						Scholarship/Grants for Ed Expense for more information) .
+
+						<h2>Tuition and Fees Deduction</h2>
+						The Tuition and Fees Deduction is retroactive to TY2018, TY2019 and TY2020. In general American
+						Opportunity Credit and
+						Lifetime Learning Credit are more advantageous. Use Tuition and Fees when encountering the
+						following:
+						<ul>
+							<li>TP is not eligible for AOC and TP’s marginal tax rate is above 20%. </li>
+							<li>When there is a need to reduce TP’s AGI. </li>
+							<li>Use the amount in Tuition and Fees Line of the calculator. </li>
+							<li>OREGON: Use if TP not eligible for AOC and has 0 taxable income. [more information in
+								LTL section.</li>
+
+						</ul>
+						<b style="color:red;"> OREGON INFORMATION: </b>
+						If taking Tuition and Fees on the federal return <b>DO NOT use subtraction 308.</b>
+						on state return. Amount has already been subtracted from AGI.
+
+						<h2>American Opportunity Credit</h2>
+						The basic highlights of the American Opportunity Credit are:
+						<ul>
+							<li> Credit up to $2,500. 40% of which may be refundable. (See Information on Taxpayer under
+								24).</li>
+							<li> Available ONLY if the student had not completed the first 4 years of postsecondary
+								education.</li>
+							<ul>
+								<li><b>Completion of first 4 years.</b> A student has completed the first 4 years of
+									postsecondary education if
+									the institution at which the student is enrolled awards the student 4 years of
+									academic credit at that
+									institution for coursework completed by the student before [the taxyear]. This
+									student generally wouldn't be an
+									eligible student for purposes of the American opportunity credit. <b>[IRS 2019
+										Publication 970 page 18]</b></li>
+								<li>For example a student who is awarded their 4 years of academic credit by December
+									31, 2019 will not be eligible
+									for AOC in TY2020 even if they have taken only 3 years of AOC. </li>
+							</ul>
+							<li> Available ONLY for 4 tax years per eligible student.</li>
+							<li>Student must be pursuing a program leading to a degree or other recognized education
+								credential.</li>
+							<li> Student must be enrolled at least half-time.</li>
+							<li> The student had not been convicted of a felony for possessing or distributing a
+								controlled substance.</li>
+							<li> Includes books and materials.</li>
+							<li> Must provide educational institution's EIN</li>
+							<li> Cannot claim if filing Status is MFS</li>
+						</ul>
+
+						<h2>Lifetime Learning Credit</h2>
+						The basic highlights of the Lifetime Learning Credit are:
+						<ul>
+							<li> Credit up to $2,000. Credit limied to amount of tax owed. </li>
+							<li> Available for all years of postsecondary education and for courses to acquire or
+								improve job skills</li>
+							<li> Available for an unlimited number of tax years.</li>
+							<li> Student does not need to be pursuing a program leading to a degree or other recognized
+								education credential.</li>
+							<li> Available for one or more courses</li>
+							<li> Felony drug convictions do not make the student ineligible.</li>
+							<li> Does NOT include books and materials unless special conditions apply (See information
+								on Tuition and Fees)</li>
+							<li> Cannot claim if filing Status is MFS</li>
+
+						</ul>
+						<b style="color:red;"> OREGON INFORMATION: </b>
+						Check to make sure that the TP used the LTL Credit on the federal return. If
+						Taxable Income is zero, the LTL credit will have no effect since it is not refundable. If you
+						use
+						subtraction 308 on the Oregon return, the Oregon Department of Revenue may reject the
+						subtraction
+						because it sees no ed credit on the federal return. Instead use Tuition and Fees Deduction as
+						this has
+						the same effect of reducing taxable income. If you use Tuition and Fees Deduction <b>DO NOT use
+							the
+							308 subtraction</b> on the state return.
+					</div>
+
+					<!--  Taxpayer is Under the Age of 24  -->
+					<div id="TaxPayerUnder24InfoBox" class="printhide edinfo"
+						data-info="Taxpayer is Under the Age of 24">
+						<h2>Taxpayer is Under the Age of 24</h2>
+						<b>Special rules for the American Opportunity Credit apply if the taxpayer is under the
+							age of 24.</b> The taxpayer may or may not be eligible for the <b>refundable</b> portion of
+						the credit. Use this flow chart or the conditions following it to determine eligibility:
+						<br>
+
+						<img src="AOC24yroldChart.png" width="100%">
+
+						<br><br>
+						<b>Special rules for the American Opportunity Credit.</b> If the taxpayer is under the
+						age of 24 and meets all of the following conditions, the taxpayer is <b>not eligible for the
+							refundable portion</b> of the credit.
+						The taxpayer is allowed to use the credit to reduce their tax as a nonrefundable credit only.
+
+						The Taxpayer <b>does not</b> qualify for a refundable credit if items 1 (a, b, or c), 2, and 3
+						below apply.
+						<ol>
+							<li>The Taxpayer is </li>
+							<ol type="a">
+								<li>Under age 18 at the end of the Tax Year,</li>
+								<li>Age 18 at the end of the Tax Year <b>and </b> the Taxpayer's earned income (defined
+									below) was less than one-half
+									of the Taxpayer's support (defined below), </li>
+								<li>Over age 18 and under age 24 at the end of 2018 and a full-time student (defined
+									below) and the Taxpayer's earned income
+									(defined below) was less than one-half of the Taxpayer's support (defined below).
+								</li>
+							</ol>
+							<li>At least one of the Taxpayer's parents was alive at the end of the Tax Year.</li>
+							<li>the Taxpayer is filing a return as single, head of household, qualifying widow(er), or
+								married filing separately
+								for the Tax Year.</li>
+						</ol>
+						The following definitions are from IRS Publication 970 for Tax Year 2018:
+						<br><br>
+						<b>Earned income.</b> Earned income includes wages, salaries, professional fees, and other
+						payments received for personal
+						services actually performed. Earned income includes the part of any scholarship or fellowship
+						grant that represents payment for
+						teaching, research, or other services performed by the student that are required as a condition
+						for receiving the
+						scholarship or fellowship grant.
+						<br><br>
+						<b>Support.</b> The Taxpayer's support includes food, shelter, clothing, medical and dental
+						care, education, and the like. Generally,
+						the amount of the item of support will be the amount of expenses incurred by the one furnishing
+						such item. If the item of
+						support is in the form of property or lodging, measure the amount of such item of support by its
+						fair market value.
+						However, a scholarship received by the Taxpayer isn't considered support if the Taxpayer is a
+						full-time student. See Pub. 501 for details.
+						<br><br>
+						<b>Full-time student.</b> The Taxpayer is a full-time student for the Tax Year if during any
+						part of any 5 calendar months during the
+						year the Taxpayer was enrolled as a full-time student at an eligible educational institution
+						(defined earlier), or took a
+						full-time, on-farm training course given by such an institution or by a state, county, or local
+						government agency.
+						<br><br>
+						*** Maybe only appear when checked YES?
+					</div>
+
+					<!--  Using Bogart   -->
+					<div id="OptimizingInfo" class="printhide edinfo" data-info="Optimization Information">
+						<b> Optimizing the Education Credit</b>
+						<br>
+						When EIC, PTC or Child Tax Credit is involved, it may be advantageous to reduce education
+						expenses from the maximum education
+						credit by reducing the amount of
+						taxable scholarship monies. This requires applying some of the unrestricted scholarship to
+						qualified expenses, thereby
+						reducing the taxable scholarship money.
+
+						<br><br> The preparer has two options:
+						<ul>
+							<li>The Bogart Education Calculator is designed to provide the optimum federal advantage to
+								the taxpayer.
+								It does not take into account the effect of changes on the Oregon Return.</li>
+							<li> This calculator can be used to find a close solution by applying the unrestricted
+								scholarship money to qualified
+								expenses and changing the values in TaxSlayer. If the Oregon return has been prepared,
+								this will reflect the effect on
+								both the federal and state return.</li>
+							<li> The preparer should choose whichever process they feel most comfortible with.</li>
+						</ul>
+
+						Below is a table indicating if reducing education expenses and taxable scholarship money may be
+						advantageous:
+						<table>
+							<tr>
+								<th style="border: 1px solid black;">Item</th>
+								<th style="border: 1px solid black;">Student is <br> Taxpayer or Spouse</th>
+								<th style="border: 1px solid black;">Student is Dependent</th>
+							</tr>
+
+							<tr>
+								<td style="border: 1px solid black;">No Taxable Scholarship</td>
+								<td style="border: 1px solid black;">No</td>
+								<td style="border: 1px solid black;">No</td>
+							</tr>
+							<tr>
+								<td style="border: 1px solid black;">EIC</td>
+								<td style="border: 1px solid black;">Maybe</td>
+								<td style="border: 1px solid black;">No</td>
+							</tr>
+
+							<tr>
+								<td style="border: 1px solid black;">Child Tax Credit</td>
+								<td style="border: 1px solid black;">No-if no dependent child under the age of
+									17<br>Maybe-otherwise<br></td>
+								<td style="border: 1px solid black;">No-if no dependent child under the age of
+									17<br>Maybe-otherwise<br></td>
+							</tr>
+							<tr>
+								<td style="border: 1px solid black;">PTC</td>
+								<td style="border: 1px solid black;">Maybe</td>
+								<td style="border: 1px solid black;">No-if dependent AGI less than $12,400
+									(TY2020)<br>Maybe-otherwise<br></td>
+							</tr>
+						</table>
+					</div>
+
+					<!--  Student is a Dependent  -->
+					<div id="DependentInfoBox" class="printhide edinfo" data-info="Student is a Dependent">
+						<h2>Student is a Dependent</h2>
+						If the student is a dependent:
+						<ul>
+							<li>The Education Credit goes to the Taxpayer</< /li>
+							<li> The Taxable portion of the Scholarship/Grant is income for the Student.</li>
+							<li> Under certain conditions the Scholarship/Grant may trigger the Kiddie Tax for the
+								Student</li>
+						</ul>
+					</div>
+
+					<!--  TaxPayer Money Informarion  -->
+					<div id="TPMoneyInfoBox" class="printhide edinfo" data-info="Taxpayer Money Information">
+						<h2> Enter Taxpayer's Non-Schloarship Income from the Tax Return here</h2>
+						This includes both taxable and non-taxable income that are listed on the return. It does not
+						include scholarship/grant money.
+						<br><br><span style="color:red;"><b> TIP: ENTER AGI (before taxable scholarship) if it is
+								greater than the allowable credit, since that
+								covers the allowable credit.</b></span>
+						<br><br> Taxpayer's Non-Schloarship Other Sources of Funds and Student Loans are entered
+						elsewhere.
+
+						<h2> General Information about Taxpayer's Money and the Education Credit</h2>
+						The education credit is limited to the amount of non scholarship/grant money the Taxpayer has to
+						pay for qualified education
+						expenses. This money falls into three broad categories
+						<ul>
+							<li><b>Taxpayer's Non-Schloarship Income from the Tax Return:</b>These are monies that are
+								included as income on the tax return both taxable and non-taxable.
+								<br>It does not include scholarship/grant money.
+							</li>
+							<li><b>Taxpayer's Non-Schloarship Other Sources of Funds:</b>These are monies not on the tax
+								return. They include non-student loans,
+								withdrawals from savings, gifts deposited with the school or gifts spent on qualified
+								expenses. </li>
+							<li><b>Student Loans</b></li>
+						</ul>
+						These three categories are entered in three different places on the form.
+						<br><br> <b style="color:red"> Caution – Possible denial of credit by IRS </b>
+						<br>If the taxpayer does not have enough income on their tax return (taxable and non-taxable),
+						the IRS may reject their claim
+						for a credit until they can substantiate that they had funds other than scholarship money to pay
+						the qualified expenses claimed on
+						the return.
+
+						<br><br>For example, consider a full time student taxpayer who has an AGI of $1000 and no
+						non-taxable income. If they are funding their
+						education with scholarships/grants and student loans they will most likely have their claim for
+						an education credit limited to
+						$1000 until they send the IRS proof of other monies or student loans. This is usually done in
+						response to a letter from the IRS denying some or all of the claimed credit on their tax return.
+						<br><br><span style="color:red;"><b>TIP:</b> The system will issue a warning when this is the
+							case. Make sure the Taxpayer keeps
+							a copy of this sheet and explain to them that they may get a notice from the IRS and they
+							just need to have the paperwork ready
+							to respond to get the full credit.</span>
+					</div>
+
+					<!--  TaxPayer Money Informarion  -->
+					<div id="TPMoneyInfoBoxGift" class="printhide edinfo" data-info="Taxpayer Money Information">
+						<h2> Enter Taxpayer's Non-Schloarship Other Sources of Funds here</h2>
+						These are monies not on the tax return and includes non-student loans,
+						withdrawals from savings, etc. It also includes gifts deposited with the school or spent on
+						qualified expenses.
+						<br><br><span style="color:red;"><b> Tip: ENTER 0, if AGI is greater than the requested credit,
+								since AGI will cover the allowable credit.</b> </span>
+						<br><br> Taxpayer's Non-Schloarship Income from the Tax Return and Student Loans are entered
+						elsewhere.
+
+						<h2> General Information about Taxpayer's Money and the Education Credit</h2>
+						The education credit is limited to the amount of non scholarship/grant money the Taxpayer has to
+						pay for qualified education
+						expenses. This money falls into three broad categories
+						<ul>
+							<li><b>Taxpayer's Non-Schloarship Income from the Tax Return:</b>These are monies that are
+								included as income on the tax return both taxable and non-taxable.
+								<br>It does not include scholarship/grant money.
+							</li>
+							<li><b>Taxpayer's Non-Schloarship Other Sources of Funds:</b>These are monies not on the tax
+								return. They include non-student loans,
+								withdrawals from savings, gifts deposited with the school or gifts spent on qualified
+								expenses. </li>
+							<li><b>Student Loans</b></li>
+						</ul>
+						These three categories are entered in three different places on the form.
+						<br><br> <b style="color:red"> Caution – Possible denial of credit by IRS </b>
+						<br>If the taxpayer does not have enough income on their tax return (taxable and non-taxable),
+						the IRS may reject their claim
+						for a credit until they can substantiate that they had funds other than scholarship money to pay
+						the qualified expenses claimed on
+						the return.
+
+						<br><br>For example, consider a full time student taxpayer who has an AGI of $1000 and no
+						non-taxable income. If they are funding their
+						education with scholarships/grants and student loans they will most likely have their claim for
+						an education credit limited to
+						$1000 until they send the IRS proof of other monies or student loans. This is usually done in
+						response to a letter from the IRS denying some or all of the claimed credit on their tax return.
+						<br><br><span style="color:red;"><b>TIP:</b> The system will issue a warning when this is the
+							case. Make sure the Taxpayer keeps
+							a copy of this sheet and explain to them that they may get a notice from the IRS and they
+							just need to have the paperwork ready
+							to respond to get the full credit.</span>
+					</div>
+
+					<!--  TaxPayer Money Informarion  -->
+					<div id="TPMoneyInfoBoxHousing" class="printhide edinfo"
+						data-info="Student Payment for housing expenses">
+						<h2> Enter Student Direct Payments for Housing Costs Here</h2>
+						Oregon allows a subtraction, code 333, for amounts paid with taxable scholarship money by a
+						student
+						that is paid directly for rent, utilites or other housing expenses. The student
+						should have documentation such as checks, receipts, or transfers to prove these expenses.
+					</div>
+
+					<!--  TaxPayer Money Informarion  -->
+					<div id="TPMoneyInfoBoxLoan" class="printhide edinfo" data-info="Taxpayer Money Information">
+						<b> Enter Student Loans here</b>
+						<br><br> Taxpayer's Non-Schloarship Income from the Tax Return and Taxpayer's Non-Schloarship
+						Other Sources of Funds are entered elsewhere.
+						<h2> General Information about Taxpayer's Money and the Education Credit</h2>
+						The education credit is limited to the amount of non scholarship/grant money the Taxpayer has to
+						pay for qualified education
+						expenses. This money falls into three broad categories
+						<ul>
+							<li><b>Taxpayer's Non-Schloarship Income from the Tax Return:</b>These are monies that are
+								included as income on the tax return both taxable and non-taxable.
+								<br>It does not include scholarship/grant money.
+							</li>
+							<li><b>Taxpayer's Non-Schloarship Other Sources of Funds:</b>These are monies not on the tax
+								return. They include non-student loans,
+								withdrawals from savings, gifts deposited with the school or gifts spent on qualified
+								expenses. </li>
+							<li><b>Student Loans</b></li>
+						</ul>
+						These three categories are entered in three different places on the form.
+						<br><br> <b style="color:red"> Caution – Possible denial of credit by IRS </b>
+						<br>If the taxpayer does not have enough income on their tax return (taxable and non-taxable),
+						the IRS may reject their claim
+						for a credit until they can substantiate that they had funds other than scholarship money to pay
+						the qualified expenses claimed on
+						the return.
+
+						<br><br>For example, consider a full time student taxpayer who has an AGI of $1000 and no
+						non-taxable income. If they are funding their
+						education with scholarships/grants and student loans they will most likely have their claim for
+						an education credit limited to
+						$1000 until they send the IRS proof of other monies or student loans. This is usually done in
+						response to a letter from the IRS denying some or all of the claimed credit on their tax return.
+						<br><br><span style="color:red;"><b>TIP:</b> The system will issue a warning when this is the
+							case. Make sure the Taxpayer keeps
+							a copy of this sheet and explain to them that they may get a notice from the IRS and they
+							just need to have the paperwork ready
+							to respond to get the full credit.</span>
+					</div>
+
+					<!--  Qualified Expenses Info  -->
+					<div id="QualifiedExpenseInfoBox" class="printhide edinfo" data-info="Qualified Education Expenses">
+						<h2>Qualified Education Expenses.</h2>
+						For purposes of tax-free scholarships and fellowship grants, these are expenses for:
+						<ul>
+							<li>Tuition and fees required to enroll at or attend an eligible educational institution;
+							</li>
+							<li>Course-related expenses, such as fees, books, supplies, and equipment that are required
+								for the courses at the eligible educational institution. </li>
+						</ul>
+						These items must be required of all students in your course of instruction.
+						<h2>Expenses that don't qualify.</h2>
+						Qualified education expenses <b>DO NOT</b> include the cost of:
+						<ul>
+							<li>Room and board,</li>
+							<li>Travel/Transfportation Fees,</li>
+							<li>Research,</li>
+							<li>Clerical help, or</li>
+							<li>Equipment and other expenses that aren't required for enrollment in or attendance at an
+								eligible educational institution.</li>
+							<li>Insurance,</li>
+							<li>Medical expenses (including student health fees)</li>
+							<li>Similar personal, living, or family expenses.</li>
+							<ul>
+								<br><b>This is true even if the amount must be paid to the institution as a condition of
+									enrollment or attendance.</b>
+					</div>
+
+					<!--  Tuition  Expenses Info  -->
+					<div id="TuitionInfoBox" class="printhide edinfo" data-info="Tuition and Fees">
+						<h1> Tuition and Fees </h1 <h2>Include All qualified expenses that are eligible for both
+						American Opportunity Credit and Lifetime Learning Credit</h2>
+						<ul>
+							<li>Tuition and fees required to enroll at or to attend an eligible educational institution;
+							</li>
+							<li>Related fees such as: Student activity fees that are required for the courses at the
+								eligible educational institution.
+							<li>Course-related books, supplies, and equipment
+								<b>only</b> if the fees and expenses:
+								<ul>
+									<li> Are <b>required</b> of all students</li>
+									<li> <b>Is required to be paid</b> to the institution</li>
+								</ul>
+							<li>Expenses and Fees must be required of all students enrolled in the course</li>
+						</ul>
+						These items must be required of all students in your course of instruction.
+						<br><br>
+						<b>NOTE:</b>The college bookstore is usually not the actual University, it's a coop for the
+						students.
+						<br><br>
+						<b> Example</b> A kit that a beauty school requires of all students and that can only be
+						purchased at the beauty school
+						at the time of enrollment when paying tuition to the institution would be an example of supplies
+						qualifying under tuition and fees.
+						<h2>Do Not Include:</h2>
+						<ul>
+							<li>Fees that are not required of all students</li>
+							<li>Fees for personal, living or family use such as athletic fees, health fees, etc.</li>
+							<li>Qualified books or materials that can be purchased through a third-party or that are not
+								required. These are entered on the
+								Qualified Books or Qualifed Materials lines.</li>
+							<li>Any items that are excluded from the Lifetime Learning Credit.
+								<ul>
+									<b>This is true even if the amount must be paid to the institution as a condition of
+										enrollment or attendance.</b>
+					</div>
+
+					<!--  Qualified Books -->
+					<div id="BooksInfoBox" class="printhide edinfo" data-info="Qualified Books">
+						<h2> Qualified Books</h2>
+						Expenses for books, supplies, and equipment needed for a course of study are included in
+						qualified
+						education expenses whether or not the materials are purchased from the educational institution.
+						<b> Do not include items that are included the
+							Tuition and Fees Line.</b>
+					</div>
+
+					<!--  Qualified Materials -->
+					<div id="MaterialsInfoBox" class="printhide edinfo" data-info="Qualified Materials">
+						<h2> Qualified Materials</h2>
+						Expenses for books, supplies, and equip-ment needed for a course of study are included in
+						qualified
+						education expenses whether or not the materials are purchased from the educational institution.
+						<b> Do not include items that are included the
+							Tuition and Fees Line.</b>
+					</div>
+
+					<!--  Restricted Scholarship/Grants -->
+					<div id="RestrictedInfoBox" class="printhide edinfo" data-info="Restricted Scholarship/Grants">
+						<h2> Restricted Scholarship/Grants </h2>
+						Restricted Scholarship/Grants can only be used for qualified expenses. They cannot be used for
+						other
+						related expenses, such as room and board, travel, etc.
+						<br><br>
+						Restricted scholarships/grants may come from an organization, such as a local bank, rotary, or
+						high school athletic booster group.
+						The scholarships/grants may only be used as stated by the granting organization. <b>The student
+							is responsible for researching and
+							clarifying any restrictions. The default position is that the scholarship/grant is
+							restricted if the student can't verify that the
+							scholarship/grant is unrestricted</b>.
+					</div>
+
+					<!--  Unrestricted Scholarship/Grants -->
+					<div id="UnrestrictedInfoBox" class="printhide edinfo" data-info="Unrestricted Scholarship/Grants">
+						<h2> Unrestricted Scholarship/Grants </h2>
+						Unrestricted Scholarship/Grants can be used for non-qualified expenses.
+						<br><br>
+						Unrestricted scholarships/grants may be from a government needs-based program such as <b>Pell
+							grants and/or Oregon Opportunity Grants</b>.
+						Some private scholarships such as the <b>Ford Foundation Grants</b> are also unrestricted.
+						<br><br>
+						The fact that the educational institution applies the scholarship or fellowship grant to
+						qualified education expenses,
+						such as tuition and related fees, doesn't prevent the student from choosing to apply certain
+						scholarships or fellowship
+						Scholarship/Grants to the student’s actual non-qualified expenses. By making this choice (that
+						is, by including the part of the
+						scholarship or fellowship grant applied to the student’s non-qualified expenses in income), the
+						student may increase
+						taxable income and may be required to file a tax return. But this allows payments made in cash,
+						by check, by credit
+						or debit card, or with borrowed funds such as a student loan to be applied to qualified
+						education expenses.
+						<b>[IRS 2018 Publication 970 p16 col 2]</b>
+					</div>
+
+					<!--  Maximize Credits -->
+					<div id="MaxCreditInfoBox" class="printhide edinfo" data-info="Maximum Ed Credit">
+						<h2> Maximum Ed Credit </h2>
+						This line shows the Maximum Education Credit that is available for both the American Opportunity
+						Credit and the
+						Lifetime Learning Credit. It also results in the maximum taxable scholarship for the student.
+						<br><br>
+						The calculator allows unrestricted scholarship monies to be applied to qualified education
+						expenses. This might be desirable in
+						the case where:
+						<ol type="a">
+							<li>the Student is a Dependent and the taxable income triggers the Kiddie Tax or </li>
+							<li>the Taxpayer/Spouse is the Student and the taxpayer wishes to reduce scholarship income,
+								e.g., EIC.</li>
+						</ol>
+					</div>
+
+					<!--  Oregon Tuition and Fees -->
+					<div id="OregonTandF" class="printhide edinfo"
+						data-info="Oregon Tuition and Fees Subtraction Code 308">
+						<h2> Oregon Tuition and Fees Subtraction Code 308</h2>
+						<b style="color:red"> NOTE: Subtraction code 308 expired at the end of 2020</b>
+						<br><br>
+						Oregon allows a subtraction for Tuition and Fees if the Taxpayer claims an American Opportunity
+						Credit
+						or a Lifetime Learning Credit. No subtraction is allowed if the TaxPayer claims a Tuition and
+						Fees Adjustment,
+						since that amount flows through to the taxpayer's Oregon return via the taxpayer's federal
+						adjusted gross income.
+						<br><br>
+						The following conditions apply:
+						<ul>
+							<li>The maximum subtraction is $4,000</li>
+							<li>The amount is equal to the amount that could have been claimed on the Federal Return as
+								a Tuition and Fees Adjustment
+							<li>The Taxpyer cannot claim the subtraction if:
+
+								<ul>
+									<li>the taxpayer's filing status is married filing separately;</li>
+									<li>the taxpayer can be claimed as a dependent by another per-son on their return,
+										even if that person doesn’t claim them; or </li>
+									<li>the taxpayer's federal modified adjusted gross income(MAGI) exceeds the
+										limitations for the federal
+										tuition and fees deduction as stated on federal Form 8917. These amounts are
+										$80,000 ($130,000 if MFJ) for tax years
+										2018, 2019 and 2020.</li>
+								</ul>
+						</ul>
+						<b>[See Oregon 2019 Publication 17, Page 73 150-101-431 (Rev. 04-30-20) ] </b>
+					</div>
+
+					<!--  Oregon using Scholarship income for Housing -->
+					<div id="OregonHousing" class="printhide edinfo"
+						data-info="Oregon Scholarship used for Housing. Subtraction Code 333">
+						<h2> Oregon Scholarship Used for Housing. Subtraction Code 333 </h2>
+						Oregon Subtraction 333: Scholarship Awards used for Housing Expenses allows a taxpayer to
+						subtract
+						taxable scholarship money used by the student to pay rent, utilities or other housing expenses,
+						up
+						to the amount of the taxable scholarship money.
+						<br><br>“Housing expenses” are the reasonable expenses paid or incurred during the taxable year
+						by a
+						student for housing for the student. The term includes expenses attributable to the housing
+						(such
+						as utilities and insurance) and not otherwise taken into account as a deduction on the federal
+						income
+						tax return of the individual. Housing expenses will be treated as reasonable to the extent the
+						Oregon Department of Revenue determines the expenses are neither lavish nor extravagant under
+						the circumstances.
+						<br><br><span style="color:red;"><b>TIP:</b> Housing expenses do not include items such as food,
+							phone, etc.</span>
+						<p align="center"><b>Students Living at Home</b></font>
+						</p>
+
+						</p>
+						<p style="margin-bottom: 0.14in">Question: When can a college student
+							living in their parent&rsquo;s home use subtraction 333 to reduce
+							student&rsquo;s taxable income?</p>
+						<p style="margin-bottom: 0.14in">Answer: The only time that would be
+							allowed is if the student is actually be paying rent, utilities,
+							or other housing related expenses to the parents. The subtraction would not be allowed if
+							the
+							student is living at home rent free because in that case the taxable scholarship would
+							presumably have been used for non-housing expenses such as food or entertainment.</p>
+						<p> The student should have receipts, checks or bank transfers to verify these payments.</p>
+						<p align="center" style="margin-bottom: 0.14in"><b>References</b></p>
+						<p style="margin-bottom: 0.14in"><b>Oregon Publication 17</b></p>
+						<p style="margin-bottom: 0.14in">Scholarship awards used for housing
+							expenses (ORS 316.846) [Subtraction code 333] You can subtract
+							scholarships used for housing expenses from Oregon income. You must
+							include the scholarship in federal taxable income for the year to
+							claim the subtraction. You can claim the subtraction if the
+							scholarship was awarded to you or your dependent. You can subtract
+							only the amount used for housing expenses for the scholarship
+							recipient. The recipient must attend an accredited community college,
+							college, university, or other institution of higher education. You
+							must reduce your subtraction if you&rsquo;re claiming the same
+							housing expenses as a deduction on your return. Your subtraction
+							can&rsquo;t be more than the amount of scholarship income included in
+							federal taxable income. There is no carryforward allowed.</p>
+						<p> <b>ORS&nbsp;316.846 Scholarship awards used for housing expenses</b></p>
+						<ol>
+							<li>There shall be subtracted from federal taxable income amounts received from
+								a scholarship awarded to the taxpayer or a dependent of the taxpayer
+								that are used for housing expenses of the scholarship recipient at
+								the time the scholarship recipient is attending an accredited
+								community college, college, university or other institution of higher
+								education.</li>
+							<li> A subtraction may not be allowed under this section if the amounts
+								described in subsection (1) of this section:</p>
+								<ol type="a">
+									<li>Are not included in the taxpayer&rsquo;s federal gross income for the tax
+										year;&nbsp;or</li>
+									<li>Are taken into account as a deduction on the taxpayer&rsquo;s federal
+										income tax return for the tax year. [1999 c.747 &sect;2]</li>
+
+								</ol>
+							</li>
+						</ol>
+						<b>Oregon Department of Revenue Rule&nbsp;150-316-0630 Scholarship Awards used for Housing
+							Expenses</b>
+						<ol>
+							<li>If a scholarship award is used to pay housing expenses, the taxpayer may
+								subtract the amount paid for such expenses from federal taxable
+								income, but not in excess of the amount of the award included in
+								federal taxable income.</li>
+
+							<li>For purposes of&nbsp;</font>
+								</font><a href="https://oregon.public.law/statutes/ors_316.846"><u>ORS
+										316.846 (Scholarship awards used for housing expenses)</u></a>&nbsp;and
+								this rule, &ldquo;housing expenses&rdquo; are the reasonable expenses
+								paid or incurred during the taxable year by an individual for housing
+								for the individual. The term includes expenses attributable to the
+								housing (such as utilities and insurance) and not otherwise taken
+								into account as a deduction on the federal income tax return of the
+								individual. Housing expenses will be treated as reasonable to the
+								extent the department determines the expenses are neither lavish nor
+								extravagant under the circumstances.
+								<br><br>Example 1: Jasmine, a student at
+								Oregon State University, receives a scholarship award that she
+								includes in her federal taxable income. She buys a house close to the
+								school. She uses part of the scholarship award to pay the mortgage
+								interest and property taxes. She also uses part of the scholarship
+								award to buy food and to fix the roof. Jasmine may subtract the
+								mortgage interest and property taxes from her federal taxable income
+								on her Oregon return if she does not claim them as itemized
+								deductions on her federal return, but not in excess of the amount of
+								the award included in federal taxable income. She may not subtract
+								the food purchases and the cost of fixing the roof.
+								<br><br>Example 2: Louis,
+								a student at Portland State University, receives a scholarship award
+								that he includes in his federal taxable income. He rents an apartment
+								with a roommate about three blocks from school. In addition to the
+								rent he is responsible for half of the electric bill and for a
+								monthly parking fee at the apartment complex. He also pays for half
+								of the monthly fee to Rent-A-Center to rent a sofa and loveseat. He
+								uses part of the scholarship award to pay for these housing expenses.
+								Louis may subtract from his federal taxable income on his Oregon
+								return the sum of his portion of the rent, his portion of the
+								electric bill, the parking fees, and his portion of the monthly fees
+								for renting a sofa and loveseat, to the extent such sum does not
+								exceed the amount of the award included in federal taxable income.
+							</li>
+						</ol>
+					</div>
+					<!--  Oregon using Scholarship income for Housing -->
+					<div id="OregonHousingold" class="printhide edinfo"
+						data-info="Oregon Scholarship used for Housing. Subtraction Code 333">
+						<h2> Oregon Scholarship Used for Housing. Subtraction Code 333 </h2>
+						"You can subtract scholarships used for housing expenses from Oregon income. You must include
+						the scholarship in federal taxable income for the year to claim the subtraction.
+						<br><br>
+						You can claim the subtraction if the scholarship was awarded to you or your dependent. You can
+						subtract only the amount used for housing expenses for the scholarship recipient. The
+						recipient must attend an accredited community college, college, university, or other
+						institution of higher education.
+						<br><br>
+						You must reduce your subtraction if you’re claiming the same housing expenses as
+						a deduction on your return. Your subtraction can’t be more than the amount of scholarship
+						income included in federal taxable income. There is no carryforward allowed."
+						<b>[Oregon 2019 Publication 17, Page 73 150-101-431 (Rev. 04-30-20) ] </b>
+					</div>
+
+					<!--Itemimize Scholarship/Grant -->
+					<div id="MinCreditInfoBox" class="printhide edinfo" data-info="Minimum Scholarship/Grants">
+						<h2> Minimum Scholarship/Grants </h2>
+						This line shows the Minimum Education Credit that is available for both the American Opportunity
+						Credit and the
+						Lifetime Learning Credit. It also results in the minimum taxable scholarship for the student.
+						<br><br>
+						This is desirable if the Taxpayer is taking the Lifetime Learning Credit and the marginal tax
+						rate is over 20%.
+						The Lifetime Learning Credit is 20% of the qualified expenses up to $2,000.
+					</div>
+
+					<!--  Using Unrestricted Scholarship/Grants for Ed Expenses -->
+					<div id="UseUnrestictedInfoBox" class="printhide edinfo"
+						data-info="Using Unrestricted Scholarship/Grants for Ed Expenses">
+						<h2> Using Unrestricted Scholarship/Grants for Ed Expenses </h2>
+						In some cases the taxpayer may find it advantageous to use some of the unrestricted
+						Scholarship/Grants for education expenses.<br>
+						Two of the most common are:
+						<ul>
+							<li> When reducing income will increase other tax credits, e.g., EIC</li>
+							<li> When the Kiddie Tax (Form 8615) is triggered. (This is rare. See below.)<br>
+								<ul>
+									<li>The Kiddie Tax is <b style="color:red">Out of Scope </b> </li>
+								</ul>
+							</li>
+							<br><br>
+						</ul>
+
+						<h2> Reducing Income to Increase Other Tax Credits </h2>
+						Using additional unrestricted scholarship for qualified expenses will reduce the taxpayer's AGI
+						and may increase certain
+						tax credits. The most common credit where this may occur is when the taxpayer is receiving EIC.
+						This row allows the user
+						to add additional unrestricted scholarship to cover qualified expenses. The user should then
+						enter these into TaxSlayer to see
+						if credits will excede the benefits of the education credit.
+
+						<h2> Kiddie Tax -- Applies only if the Student is a dependent of the taxpayer. </h2>
+						When calculating Education Credits, the Kiddie Tax may be triggered when <b>ALL</b> of the
+						following criteria are met:
+						<ol>
+							<li> Taxable Scholarship/Grants plus other unearned income exceed $2,100(TY2018),
+								$2,200(TY2019 & TY2020).</li>
+							<li> The dependent is required to file a tax return.<br> This is usually when the students
+								AGI exceeds $12,000(TY2018), $12,200(TY2019),
+								$12,400(TY2020).
+								<br><b>Note:</b>Taxable Scholarship/Grants are considered earned income for the purpose
+								of determining if a dependent
+								must file a tax return and for calculating the standard deduction for dependents.
+								Taxable scholarships and
+								fellowship grants not reported on Form W-2 are considered to be unearned income for the
+								purpose of calculating
+								kiddie tax.<b>[See Pub 4012 Tab A Chart B]</b>.
+							<li> One of the following is true</li>
+							<ol type="a">
+								<li> The Student is younger than 18</li>
+								<li> The Student is 18 and their earned income (W-2 and Schedule C) is less than 1/2 of
+									their support</li>
+								<li> The Student is between 19 and 23 at the end of the tax year, is a full-time
+									student, and their earned
+									income (W-2 and Schedule C) is less than 1/2 of their support</li>
+							</ol>
+							<li> One of the students parent is alive at the end of the tax year.</li>
+							<li> The Student does not file a joint return for the tax year.</li>
+						</ol>
+
+						<b>Note:</b>If it looks like the Kiddie tax has been triggered, calculate 1/2 of the student's
+						support. Note (3b) and (3c) require that the
+						student's earned income be less that 1/2 of the student's support in order to apply. Also (3c)
+						does not apply if the student is not a full-time
+						student at the end of the year.
+
+						<h2> Reducing Taxpayer Income -- Only applies if Student is the Taxpayer or Taxpayer's Spouse
+						</h2>
+						*** Add Information
+					</div>
+					<br>
+				</div> <!-- End of Scroll Divisions -->
+			</div> <!-- End of Left  container -->
+
+			<!-- Start of Right Flex Item -->
+			<div id="rightContainer" style="flex-basis:60%;">
+				<!-- ************************** -->
+				<!-- Taxpayer Information Table -->
+				<!-- ************************** -->
+				<table>
+					<tr>
+						<td colspan="3" class="workaroundtitle"> Taxpayer Information </td>
+					</tr>
+
+					<tr>
+						<td class="inputfield">Taxpayer's Name</td>
+						<td class="inputfield" colspan="1">
+							<input id="TPName" tabindex="1" value="" onchange="ChangeName()">
+						<td class="inputfield" colspan="3" onmouseover="showEdInfo('TaxPayerUnder24InfoBox');">&nbsp Is
+							Taxpayer Under Age 24? <span class="info">&nbsp&#8505&nbsp</span>
+							<input id="Under24Yes" type="radio" name="Under24" value="Y"
+								onclick="setUnder24(this.value)">Yes
+							<input id="Under24No" type="radio" name="Under24" value="N"
+								onclick="setUnder24(this.value)">No
+						</td>
+						</td>
+					</tr>
+					<tr>
+						<td class="inputfield">Student's Name</td>
+						<td class="inputfield" colspan="1">
+							<input id="StudName" tabindex="1" value="" onchange="ChangeName()">
+						<td class="inputfield" colspan="3" onmouseover="showEdInfo('DependentInfoBox');">&nbsp Is
+							Student a Dependent? <span class="info">&nbsp&#8505&nbsp</span>
+							<input id="StudentDPYes" type="radio" name="StudentDP" value="Y"
+								onclick="setStudentDP(this.value)">Yes
+							<input id="StudentDPNo" type="radio" name="StudentDP" value="N"
+								onclick="setStudentDP(this.value)">No
+						</td>
+						</td>
+					</tr>
+
+					<tr>
+						<td class="inputfieldbold">Tax Year</td>
+						<td class="inputfield" colspan="2">
+							<input id="radioTY_3" type="radio" name="Year" value=""
+								onclick="setTaxYear(this.value)" /><label id="labelTY_3" for="radioTY_3">0</label>
+							<input id="radioTY_2" type="radio" name="Year" value=""
+								onclick="setTaxYear(this.value)" /><label id="labelTY_2" for="radioTY_2">0</label>
+							<input id="radioTY_1" type="radio" name="Year" value=""
+								onclick="setTaxYear(this.value)" /><label id="labelTY_1" for="radioTY_1">0</label>
+							<input id="radioTY_0" type="radio" name="Year" value="" checked="checked"
+								onclick="setTaxYear(this.value)" /><label id="labelTY_0" for="radioTY_0">0</label>
+						</td>
+					</tr>
+
+					<tr onmouseover="showEdInfo('TPMoneyInfoBox');">
+						<td id="TPWagesDesc" colspan="2"><b>Taxpayer's</b> Income from Tax Return (excluding
+							scholarships)<span class="info">&nbsp&#8505&nbsp</span>
+							<span class="infotip">TIP</span>
+						</td>
+						<td colspan="2"> <input class="inputdata" type="text" id="TPMoneyReturn"
+								onchange="CalculateEdExp()"
+								title="ENTER AGI (before taxable scholarship) if it is greater than the maximum allowable qualified expenses  ($4,000 AOC, 10,000 LTL), since AGI provides enough non-scholarship funds to cover the allowable qualified expenses.">
+						</td>
+					</tr>
+
+					<tr onmouseover="showEdInfo('TPMoneyInfoBoxGift');">
+						<td id="TPGiftDesc" colspan="2"><b>Taxpayer's</b> Other Sources of Funds (excluding
+							scholarships)<span class="info">&nbsp&#8505&nbsp</span><span class="infotip">TIP</span></td>
+						</td>
+						<td colspan="2"> <input class="inputdata" type="text" id="GiftTotal" onchange="CalculateEdExp()"
+								title="ENTER 0, if AGI is greater than the maximum allowabl qualified expenses, since AGI provides enough non-scholarship funds to cover the allowable qualified expenses.">
+						</td>
+					</tr>
+
+					<tr onmouseover="showEdInfo(['TPMoneyInfoBoxHousing','OregonHousing']);">
+						<td id="TPHousingDesc" colspan="4" align="right"><b>Student's</b> DIRECT payments for rent,
+							utilities and other housing expenses.
+							<span class="info">&nbsp&#8505&nbsp</span><span class="infotip">TIP</span>
+						</td>
+						</td>
+						<td> <input class="inputdata" type="text" id="HousingTotal" onchange="CalculateEdExp()"
+								title="ENTER only direct payments made by the STUDENT. Students living at home rent free enter 0. You must be able to document the expenses.">
+						</td>
+					</tr>
+				</table>
+				<br>
+
+				<!-- ********************* -->
+				<!-- Education  Data Table -->
+				<!-- ********************* -->
+				<table>
+					<tr>
+						<td class="workaroundtitle" colspan="6"> Education Data </td>
+					</tr>
+					<tr>
+						<td class="workaroundtitle"> Term </td>
+						<td class="workaroundtitle" id="TitleWinter"> Winter </td>
+						<td class="workaroundtitle" id="TitleSpring"> Spring </td>
+						<td class="workaroundtitle" id="TitleSummer"> Summer </td>
+						<td class="workaroundtitle" id="TitleFall"> Fall </td>
+						<td class="workaroundtitle" id="TitleTotal"> Total </td>
+					</tr>
+					<tr>
+						<td class="workaroundtitle" colspan="6" onmouseover="showEdInfo('QualifiedExpenseInfoBox');">
+							Qualified Education Expenses <span class="info">&nbsp&#8505&nbsp</span> </td>
+					</tr>
+
+					<tr onmouseover="showEdInfo('TuitionInfoBox');">
+						<td> Tuition & Fees <span class="info">&nbsp&#8505&nbsp</span> </td>
+						<td> <input class="inputdata" type="text" id="TFWinter" onchange="DataChange('TF')"> </td>
+						<td> <input class="inputdata" type="text" id="TFSpring" onchange="DataChange('TF')"> </td>
+						<td> <input class="inputdata" type="text" id="TFSummer" onchange="DataChange('TF')"> </td>
+						<td> <input class="inputdata" type="text" id="TFFall" onchange="DataChange('TF')"> </td>
+						<td class="resultsdata" id="TFTotal" style="width:100px"> </td>
+					</tr>
+					<tr onmouseover="showEdInfo('BooksInfoBox');">
+						<td>Books <span class="info">&nbsp&#8505&nbsp</span>
+						</td>
+						<td> <input class="inputdata" type="text" id="BooksWinter" onchange="DataChange('Books')"> </td>
+						<td> <input class="inputdata" type="text" id="BooksSpring" onchange="DataChange('Books')"> </td>
+						<td> <input class="inputdata" type="text" id="BooksSummer" onchange="DataChange('Books')"> </td>
+						<td> <input class="inputdata" type="text" id="BooksFall" onchange="DataChange('Books')"> </td>
+						<td class="resultsdata" style="width:100px" id="BooksTotal"> </td>
+
+					</tr>
+					<tr onmouseover="showEdInfo('MaterialsInfoBox');">
+						<td>Materials<span class="info">&nbsp&#8505&nbsp</span> </td>
+						<td> <input class="inputdata" type="text" id="MaterialWinter" onchange="DataChange('Material')">
+						</td>
+						<td> <input class="inputdata" type="text" id="MaterialSpring" onchange="DataChange('Material')">
+						</td>
+						<td> <input class="inputdata" type="text" id="MaterialSummer" onchange="DataChange('Material')">
+						</td>
+						<td> <input class="inputdata" type="text" id="MaterialFall" onchange="DataChange('Material')">
+						</td>
+						<td class="resultsdata" style="width:100px" id="MaterialTotal"> </td>
+					</tr>
+
+					<tr>
+						<td class="workaroundtitle" colspan="6"> Scholarship/Grants and Other Qualified Distributions
+						</td>
+					</tr>
+
+					<tr onmouseover="showEdInfo('RestrictedInfoBox');">
+						<td id="RestrictDescr">Restricted Scholarship/Grants<span class="info">&nbsp&#8505&nbsp</span>
+						</td>
+						<td> <input class="inputdata" type="text" id="RestrictWinter" onchange="DataChange('Restrict')">
+						</td>
+						<td> <input class="inputdata" type="text" id="RestrictSpring" onchange="DataChange('Restrict')">
+						</td>
+						<td> <input class="inputdata" type="text" id="RestrictSummer" onchange="DataChange('Restrict')">
+						</td>
+						<td> <input class="inputdata" type="text" id="RestrictFall" onchange="DataChange('Restrict')">
+						</td>
+						<td class="resultsdata" style="width:100px" id="RestrictTotal"> </td>
+					</tr>
+
+					<tr onmouseover="showEdInfo('UnrestrictedInfoBox');">
+						<td>Unrestricted Scholarship/Grants<span class="info">&nbsp&#8505&nbsp</span> </td>
+						<td> <input class="inputdata" type="text" id="UnrestrictWinter"
+								onchange="DataChange('Unrestrict')"> </td>
+						<td> <input class="inputdata" type="text" id="UnrestrictSpring"
+								onchange="DataChange('Unrestrict')"> </td>
+						<td> <input class="inputdata" type="text" id="UnrestrictSummer"
+								onchange="DataChange('Unrestrict')"> </td>
+						<td> <input class="inputdata" type="text" id="UnrestrictFall"
+								onchange="DataChange('Unrestrict')"> </td>
+						<td class="resultsdata" style="width:100px" id="UnrestrictTotal"> </td>
+					</tr>
+					<tr>
+						<td class="workaroundtitle" colspan="6">Sources of Income</td>
+					</tr>
+
+					<tr onmouseover="showEdInfo('TPMoneyInfoBoxLoan');">
+						<td id="TPLoanDesc"> Student Loans<span class="info">&nbsp&#8505&nbsp</span> </td>
+						<td> <input class="inputdata" type="text" id="StdLoanWinter" onchange="DataChange('StdLoan')">
+						</td>
+						<td> <input class="inputdata" type="text" id="StdLoanSpring" onchange="DataChange('StdLoan')">
+						</td>
+						<td> <input class="inputdata" type="text" id="StdLoanSummer" onchange="DataChange('StdLoan')">
+						</td>
+						<td> <input class="inputdata" type="text" id="StdLoanFall" onchange="DataChange('StdLoan')">
+						</td>
+						<td class="resultsdata" style="width:100px" id="StdLoanTotal"> </td>
+					</tr>
+				</table>
+
+				<br>
+				<!-- THIS IS THE Funds Alert Area -->
+				<div id="fundsAlert" style='color:red;text-align:left;margin:10px;display:none'>
+					<h1> <b>Taxpayer Caution!!</b></h1>
+					If you are claiming the maximum <b><span id=cautionText1> </span></b> the IRS may reject some or all
+					of your credit
+					until you provide them additional information.
+					<br><br>
+
+					<b>EXPLANATION:</b> The IRS usually only sees the Income shown on you tax return (taxable and non
+					taxable) when
+					processing your education credit. Therefore if the amount of qualified education expenses you are
+					claiming on your
+					tax return is more than the income shown on your tax return, the IRS may reject some or all of your
+					education
+					credit. This does not mean that you should not claim the credit, only that the IRS may require you
+					to substantiate
+					that you have income other that the income shown on your tax return.
+					<br><br>
+					<b>YOUR INFO:</b>You have at least $<span id="cautionReturn"> </span> as the amount of income shown
+					on the return. You are able to claim the maximum credit
+					because you have $<span id="cautionGift"> </span> income from sources other than shown on the return
+					and $<span id="cautionLoan"> </span> in student loans for a total of
+					$<span id="cautionTotal"> </span> of non scholarship money which equals or exceeds the maximum
+					credit you can claim.
+					<br><br>
+					<b>WHAT YOU NEED TO DO:</b> Make copies of documents substantiating your income from other sources
+					and your students
+					loans. If the IRS sends you a letter denying part or all of the credit, reply to that letter with
+					copies of these
+					documents stating that you had this additional non-scholarship money available besides what was
+					shown on the return.
+					You may also wish to include a copy of this document.
+
+					<br><br><b>DO NOT PANIC:</b>You may not hear from the IRS but if you do, you should be prepared
+					because based on the
+					data you have provided you are eligible for the credit.
+					<br><br>
+				</div>
+
+				<!-- *************************** -->
+				<!-- THIS IS THE RESULTS TABLE   -->
+				<!-- *************************** -->
+				<table id="ResultsTable">
+					<tr>
+						<td class="workaroundtitle" colspan="5"><b> Enter data for either American Opportunity Credit
+								(AOC) or Lifetime Learning Credit (LTL) Into TaxSlayer from one of the colums
+								below</b><br>
+						</td>
+					</tr>
+					<tr>
+						<td class="workaroundtitle" colspan="5" style="font-size:0.8em;">
+							(Enter <b style="background-color:lightgreen;">green</b> in TaxSlayer education page
+							<b style="background-color:plum;">purple </b> in the Oregon subtraction,
+							<b style="background-color:orange;">orange </b> in student's return as taxable income.)
+						</td>
+					</tr>
+					<tr>
+						<td Colspan="1"></td>
+						<td class="workaroundtitle leftBar" Colspan="2" onmouseover="showEdInfo('MaxCreditInfoBox');">
+							Maximize Ed Credit<span class="info">&nbsp&#8505&nbsp</span></td>
+						<td class="workaroundtitle leftBarThick" Colspan="2"
+							onmouseover="showEdInfo('MinCreditInfoBox');"> Minimize Taxable Scholarship/Grant<span
+								class="info">&nbsp&#8505&nbsp</span></td>
+					</tr>
+
+					<tr style="text-align: center;font-weight:bold;">
+						<td Colspan="1"></td>
+						<td class="leftBar" style="width:0.8em"><b> AOC </b>
+						</td>
+						<td class="leftBar"> LTL
+						</td>
+						<td class="leftBarThick"> AOC
+						</td>
+						<td class="leftBar"> LTL
+						</td>
+					</tr>
+
+					<div> <!-- Pre 2022 Entry -->
+						<tr id="OldExpensesRow" style="display:none"> <!-- Qualifying Expenses Line -->
+							<td class="descriptiontext"> TP's Qualifying Education Expenses <b>Form 8863</b> </td>
+							<td class="resultsfield leftBar" id="AOCClaimExpenseAns">0</td>
+							<td class="resultsfield leftBar" id="LTLClaimExpenseAns">0</td>
+							<td class="resultsfield leftBarThick" id="ALLAOCClaimExpenseAns"> 0</td>
+							<td class="resultsfield leftBar" id="ALLLTLClaimExpenseAns">0 </td>
+						</tr>
+					</div>
+
+					<div> <!-- Post 2021 Entries -->
+						<tr id="NewTuitionRow"> <!-- Tuition Paid Line -->
+							<td class="descriptiontext"> <b>Tuition</b> & Fees <b>Paid</b> </td>
+							<td class="resultsfield leftBar" id="AOCTFDataNew">0</td>
+							<td class="resultsfield leftBar" id="LTLTFDataNew">0</td>
+							<td class="resultsfield leftBarThick" id="ALLAOCTFDataNew"> 0</td>
+							<td class="resultsfield leftBar" id="ALLLTLTFDataNew">0 </td>
+						</tr>
+
+						<tr id="NewGrantRow"> <!-- Grants Line -->
+							<td class="descriptiontext"> <b>Grants</b> Used for Ed. Expenses </td>
+							<td class="resultsfield leftBar" id="AOCGrantsUsedNew"> 0</td>
+							<td class="resultsfield leftBar" id="LTLGrantsUsedNew">0 </td>
+							<td class="resultsfield leftBarThick" id="ALLAOCGrantsUsedNew"> 0</td>
+							<td class="resultsfield leftBar" id="ALLLTLGrantsUsedNew">0 </td>
+						</tr>
+
+						<tr id="NewExpenseRow"> <!-- Other Qualifying Expenses Line -->
+							<td class="descriptiontext"> <b>Other Qualifying Expenses</b> Books and Materials</td>
+							<td class="resultsfield leftBar" id="AOCOtherExpenseNew"> 0</td>
+							<td class="resultsfield leftBar">0 </td>
+							<td class="resultsfield leftBarThick" id="ALLAOCOtherExpenseNew"> 0</td>
+							<td class="resultsfield leftBar">0 </td>
+						</tr>
+
+						<tr id="NewExpensesRow"> <!-- Qualifying Expenses Line Summary for Varification-->
+							<td class="descriptiontext"> Verify TP's Qualifying Education Expenses <b>Form 8863</b>
+							</td>
+							<td class="leftBar" id="AOCClaimExpenseAnsNew">0</td>
+							<td class="leftBar" id="LTLClaimExpenseAnsNew">0</td>
+							<td class="leftBarThick" id="ALLAOCClaimExpenseAnsNew"> 0</td>
+							<td class="leftBar" id="ALLLTLClaimExpenseAnsNew">0 </td>
+						</tr>
+					</div>
+
+					<tr> <!-- Max Oregon Scholarship for Housing Line -->
+						<td class="descriptiontext" onmouseover="showEdInfo('OregonHousing');"> <b>Maximum Oregon</b>
+							Scholarship used for Housing <b>Subtraction Code 333<span
+									class="info">&nbsp&#8505&nbsp</span></b> </td>
+						<td class="resultsfieldOregon leftBar" id="AOCHousingAns"> 0</td>
+						<td class="resultsfieldOregon leftBar" id="LTLHousingAns">0 </td>
+						<td class="resultsfieldOregon leftBar" id="ALLAOCHousingAns"> 0</td>
+						<td class="resultsfieldOregon leftBar" id="ALLLTLHousingAns">0 </td>
+					</tr>
+
+					<tr> <!-- Unrestricted Grants for Expenses Line -->
+						<td class="descriptiontext" onmouseover="showEdInfo('UseUnrestictedInfoBox');"> <b>Use
+								Additional Unrestricted Scholarship/Grant for Qualified Expenses?&nbsp<span
+									class="info">&nbsp&#8505&nbsp</span> </b>
+							<input id="UseUnrestrict" type="checkbox" onchange="UseUnrestrict_Change()" />
+						</td>
+						<td class="resultsfield leftBar"> <input class="inputdata " type="text"
+								id="AOCQualUnrestrictData" onchange="DataChange('')" value="0"> </td>
+						<td class="resultsfield leftBar"> <input class="inputdata " type="text"
+								id="LTLQualUnrestrictData" onchange="DataChange('')" value="0"> </td>
+					</tr>
+
+					<tr> <!-- Student Taxable Scholarship Line -->
+						<td class="descriptiontext"> Student's <b>Taxable 1040 Scholarship</b> Income </td>
+						<td class="resultsfieldStudent leftBar" id="AOCTaxScholAns"> 0</td>
+						<td class="resultsfieldStudent leftBar" id="LTLTaxScholAns">0 </td>
+						<td class="resultsfieldStudent leftBar" id="ALLAOCTaxScholAns"> 0</td>
+						<td class="resultsfieldStudent leftBar" id="ALLLTLTaxScholAns">0 </td>
+					</tr>
+
+					<tr>
+						<td colspan="12">
+							<h></h>
+						</td>
+					</tr>
+				</table>
+
+				<br>
+				<div style="page-break-after:always"> </div>
+
+				<!-- ************************* -->
+				<!-- THIS IS THE DETAIL TABLE  -->
+				<!-- ************************* -->
+				<table>
+					<tr>
+						<th colspan="9" class="workaroundtitle"><b>Detailed Calculations of Taxpayers's Form 8863
+								Education Credit </b></th>
+					</tr>
+					<tr>
+						<td colspan="4" class="workaroundtitle" id="TPNameP2">Taxpayer:</td>
+						<td></td>
+						<td colspan="4" class="workaroundtitle"> <span id="StudentNameP2">Student:</span></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td class="workaroundtitle" Colspan="6">Maximize <br> Education Credit Detail</td>
+						<td class="workaroundtitle leftBarThick" Colspan="2">Minimize<br> Taxable Scholarship/Grant<br>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td class="workaroundtitle" Colspan="3"> Amer. Opportunity Credit</td>
+						<td class="workaroundtitle leftBar" Colspan="3"> Lifetime Learning Credit</td>
+						<td class="workaroundtitle leftBarThick "> AOC</td>
+						<td class="workaroundtitle leftBar"> LTL</td>
+					</tr>
+					<tr>
+						<td>Tuition and Fees </td>
+						<td></td>
+						<td class="resultsdata" id="AOCTFData"></td>
+						<td> </td>
+						<td class="leftBar"></td>
+						<td class="resultsdata" id="LTLTFData"></td>
+						<td> </td>
+						<td class="leftBarThick"></td>
+						<td class="leftBar"></td>
+					</tr>
+					<tr>
+						<td>Books</td>
+						<td>+</td>
+						<td class="resultsdata" id="AOCBooksData"></td>
+						<td> </td>
+						<td class="leftBar">+</td>
+						<td id="LTLBooksData">N/A</td>
+						<td> </td>
+						<td class="leftBarThick"></td>
+						<td class="leftBar"></td>
+					</tr>
+					<tr>
+						<td>Course Materials</td>
+						<td>+</td>
+						<td class="resultsdata" id="AOCMaterialData"></td>
+						<td> </td>
+						<td class="leftBar">+</td>
+						<td id="LTLMaterialData">N/A</td>
+						<td> </td>
+						<td class="leftBarThick"></td>
+						<td class="leftBar"></td>
+					</tr>
+					<tr>
+						<td>Total Qualifying Expenses</td>
+						<td>=</td>
+						<td>A</td>
+						<td class="resultsdata" id="AOCTotExpData"></td>
+						<td class="leftBar">=</td>
+						<td>A</td>
+						<td class="resultsdata" id="LTLTotExpData"></td>
+						<td class="resultsdata leftBarThick" id="ALLAOCTotExpData"></td>
+						<td class="resultsdata leftBar" id="ALLLTLTotExpData"></td>
+					</tr>
+					<tr>
+						<td>Scholarship/Grants restricted to qual. exp.</td>
+						<td>-</td>
+						<td class="resultsdata" id="AOCRestrictDataDisplay"></td>
+						<td>B1</td>
+						<td class="leftBar">- </td>
+						<td class="resultsdata" id="LTLRestrictDataDisplay"></td>
+						<td>B1</td>
+						<td class="resultsdata leftBarThick" id="ALLAOCRestrictDataDisplay"></td>
+						<td class="resultsdata leftBar" id="ALLLTLRestrictDataDisplay"></td>
+					</tr>
+					<tr>
+						<td>Unrestricted Scholarship/Grants used for qual. exp. </td>
+						<td>-</td>
+						<td class="resultsdata" id="AOCUnrestrictDisplay"></td>
+						<td>B2</td>
+						<td class="leftBar">- </td>
+						<td class="resultsdata" id="LTLUnrestrictDisplay"></td>
+						<td>B2</td>
+						<td class="resultsdata leftBarThick" id="ALLAOCUnrestrictDisplay"></td>
+						<td class="resultsdata leftBar" id="ALLLTLUnrestrictDisplay"></td>
+					</tr>
+
+					<tr onmouseover="showEdInfo('UseUnrestictedInfoBox');">
+						<td>Additional Unrestricted Scholarship/Grants used for qual. exp.<span
+								class="info">&nbsp&#8505&nbsp</span> </td>
+						<td>-</td>
+						<td class="resultsdata" id="AOCQualUnrestrictDataDisplay"></td>
+						<td>B3</td>
+						<td class="leftBar">- </td>
+						<td class="resultsdata" id="LTLQualUnrestrictDataDisplay"></td>
+						<td>B3</td>
+						<td class="resultsdata leftBarThick" id="xUnrestrictTotal1"></td>
+						<td class="resultsdata leftBar" id="xUnrestrictTotal2"></td>
+					</tr>
+					<tr>
+						<td>Exp. less restricted Scholarship/Grants (A-B)</td>
+						<td>=</td>
+						<td>C</td>
+						<td class="resultsdata" id="AOCNetExpenseData"></td>
+
+						<td class="leftBar">= </td>
+						<td>C</td>
+						<td class="resultsdata" id="LTLNetExpenseData"></td>
+						<td class="resultsdata leftBarThick" id="ALLAOCNetExpenseData"></td>
+						<td class="resultsdata leftBar" id="ALLLTLNetExpenseData"></td>
+					</tr>
+					<tr>
+						<td>TP's money + gifts deposited w/<br> school or spent on qual. ed. exp.</td>
+						<td></td>
+						<td class="resultsdata" id="AOCTPMoneyData"></td>
+						<td> </td>
+						<td class="leftBar"></td>
+						<td class="resultsdata" id="LTLTPMoneyData"></td>
+						<td> </td>
+						<td class="leftBarThick"></td>
+						<td class="leftBar"></td>
+					</tr>
+					<tr>
+						<td>Student Loans</td>
+						<td>+</td>
+						<td class="resultsdata" id="AOCStdLoanData"></td>
+						<td> </td>
+						<td class="leftBar">+</td>
+						<td class="resultsdata" id="LTLStdLoanData"></td>
+						<td> </td>
+						<td class="leftBarThick"></td>
+						<td class="leftBar"></td>
+					</tr>
+					<tr>
+						<td>Total TP's money</td>
+						<td>=</td>
+						<td> D</td>
+						<td class="resultsdata" id="AOCTotalMoneyData"></td>
+						<td class="leftBar">=</td>
+						<td>D </td>
+						<td class="resultsdata" id="LTLTotalMoneyData"></td>
+						<td class="resultsdata leftBarThick" id="ALLAOCTotalMoneyData"></td>
+						<td class="resultsdata leftBarThick" id="ALLLTLTotalMoneyData"></td>
+					</tr>
+					<tr>
+						<td>Limit on expense for the credit</td>
+						<td></td>
+						<td>E</td>
+						<td class="resultsdata" id="AOCLimitData">4000</td>
+						<td class="leftBar"></td>
+						<td>E </td>
+						<td class="resultsdata" id="LTLLimitData">10000</td>
+
+						<td class="resultsdata leftBarThick" id="ALLAOCLimitData">4000</td>
+						<td class="resultsdata leftBar" id="ALLLTLLimitData">10000</td>
+					</tr>
+					<tr>
+						<td>Expenses to claim for Education <br> Credit F=(smallest of C, D or E)</td>
+						<td>=</td>
+						<td>Form 8863 </td>
+						<td class="resultsfield" id="AOCClaimExpenseData"></td>
+						<td class="leftBar">=</td>
+						<td>Form 8863 </td>
+						<td class="resultsfield" id="LTLClaimExpenseData"></td>
+						<td class="resultsfield leftBarThick" id="ALLAOCClaimExpenseData"></td>
+						<td class="resultsfield leftBar" id="ALLLTLClaimExpenseData"></td>
+					</tr>
+					<tr>
+						<td colspan="12">
+							<h1>Calculation of Student's 1040 Scholarship/Grant Income </h1>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td class="workaroundtitle" Colspan="3"> Amer. Opportunity Credit</td>
+						<td class="workaroundtitle leftBar" Colspan="3"> Lifetime Learning Credit</td>
+						<td class="workaroundtitle leftBarThick"> AOC</td>
+						<td class="workaroundtitle leftBar"> LTL</td>
+					</tr>
+					<tr>
+						<td>Excess Restricted Scholarship/Grants not used for ed exp.</td>
+						<td></td>
+						<td class="resultsdata" id="AOCExcessRestrictData"></td>
+						<td>G1 </td>
+						<td class="leftBar"></td>
+						<td class="resultsdata" id="LTLExcessRestrictData"></td>
+						<td> G1</td>
+						<td class="resultsdata leftBarThick" id="ALLAOCExcessRestrictData"></td>
+						<td class="resultsdata leftBar" id="ALLLTLExcessRestrictData"></td>
+					</tr>
+					<tr>
+						<td>Unrestricted Scholarship/Grants not used for ed exp.</td>
+						<td>+</td>
+						<td class="resultsdata" id="AOCUnrestrictNotUsedDisplay"></td>
+						<td>G2 </td>
+						<td class="leftBar">+</td>
+						<td class="resultsdata" id="LTLUnrestrictNotUsedDisplay"></td>
+						<td> G2</td>
+						<td class="resultsdata leftBarThick" id="ALLAOCUnrestrictNotUsedDisplay"></td>
+						<td class="resultsdata leftBar" id="ALLLTLUnrestrictNotUsedDisplay"></td>
+					</tr>
+					<tr>
+						<td>Less exp. not used for Ed. Cr or <br> paid by restricted Scholarship/Grants (C-F)</td>
+						<td>-</td>
+						<td class="resultsdata" id="AOCExcessExpenseData"></td>
+						<td>H</td>
+						<td class="leftBar">-</td>
+						<td class="resultsdata" id="LTLExcessExpenseData"></td>
+						<td>H (Books & Materials)</td>
+						<td class="resultsdata  leftBarThick" id="ALLAOCExcessExpenseData"></td>
+						<td class="resultsdata leftBar" id="ALLLTLExcessExpenseData"></td>
+					</tr>
+					<tr>
+						<td>Taxable Scholarship/Grants<br> (G-H) (not less than zero)</td>
+						<td>=</td>
+						<td>1040 Income </td>
+						<td class="resultsfield" id="AOCTaxScholData"></td>
+						<td class="leftBar">=</td>
+						<td>1040 Income</td>
+						<td class="resultsfield" id="LTLTaxScholData"></td>
+						<td class="resultsfield leftBarThick" id="ALLAOCTaxScholData"></td>
+						<td class="resultsfield leftBar" id="ALLLTLTaxScholData"></td>
+					</tr>
+				</table>
+				<br>
+				<div id="Disclaimer">
+					<b>Information:</b> If you have comments or bugs on the calculator, please email them to <span
+						class="email">krow.sirrahrednax@rednax</span>
+				</div>
+			</div> <!-- End of Right container -->
+		</div> <!-- End of Flex container -->
+		<br>
+
+		<!-- Container of All Education Information-->
+		<div id="TotalEdInof" class="flex-container" style="display:none">
+			<div id="allEdInfo" class="flex-item"></div>
+		</div>
+
+		<!-- Print Information-->
+		<div id="printInfo" class="flex-container" style="display:none">
+			<div id="printerEdInfo" class="flex-item"></div>
+		</div>
+
+		<!-- Modal Information -->
+		<div id="displayInfo" class="modal">
+			<span class="close" onclick="displayInfo.style.display='none' ">&times;</span>
+			<div id="allEdInfo1" class="modal-item"></div>
+		</div>
+
+	</center>
+</body>
+
+</html>

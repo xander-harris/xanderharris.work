@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+
+
+<!-- ************************************************************************************************ -->
+
+<!-- ******************* CALCULATE OREGON RETIREMENT AND DISABILITY TAX CREDIT ********************** -->
+<!-- ************************************************************************************************ -->
+
+
+<html>
+
+<head>
+	<title>Oregon Retirement and Disability Credit Calculator</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="author" content="V. Joseph Bowman, Jr. OR1 Eugene TY2018+" />
+	<meta name="author" content="Barbara Smith-Thomas, OR1 Portland Metro TY2017-" />
+	<meta name="description" content="Calculates Oregon Retirement and Disability Credit for Tax Years 2016-2019" />
+
+
+<style type="text/css">
+
+	
+	table, td {border: 1px solid black; border-collapse: collapse;}
+	button {font-size: 105%; font-weight: bold;}
+	.versiondisplay {font-weight: bold; margin-left:4em; margin-right:4em  }
+	.instructions { font-size: 110%; font-weight: bold;}
+
+	.tooltitle {font-size:125%; font-weight:bold;}
+	.headerfield {text-align: center; font-weight: bold;}
+	.inputfield {background-color: yellow; }
+	.inputfield #TPName {width: 25em; text-align: center;}
+	
+	.commentfield {text-align: right;}	
+	.resultsfield {background-color: lightgreen;}
+
+	.flex-container {display: -webkit-flex; display: flex;
+			 -webkit-justify-content: center; justify-content: center;}
+	.flex-item {width: 800px; margin: 10px; text-align: left;}
+	
+	#Alert {display: none;} /* Hide Alert message at page load*/
+
+	.flex-containerAlert {display: -webkit-flex; display: flex;
+			 -webkit-justify-content: center; justify-content: center; font-size:150%; background-color: DarkOrange;}
+	.flex-itemAlert {width: 800px; margin: 10px; text-align: left; }
+	
+	
+	#FedEorDCredit {width: 8em; text-align: right;}
+	#OregonPercent {width: 8em; text-align: right;}
+	#StateEorDCredit {width: 8em; text-align: right; font-weight: bold;}
+
+	#TaxpayerPension, #SpousePension, #FederalPensionSubtraction {width: 8em; text-align: right;}
+	#ORTaxablePension, #SSCeiling, #TotalSS, #SSAmount, #SSTaxAmount {width: 8em; text-align: right;}
+	#TotalPension, #TPPension, #SPPension, #TaxPension {width: 8em; text-align: right;}
+	#SSAvail, #HHIncome, #HHIncomeBase {width: 8em; text-align: right;}
+	#IncomeOverBase, #Line10, #Line11 {width: 8em; text-align: right;}
+	#RetirementIncomeCredit {width: 8em; text-align: right; font-weight: bold;}
+
+	#FederalAGI, #NonTaxableInterest, #NonTaxableDividends {width: 8em; text-align: right;}
+	#Scholarships, #Insurance, #Inheritance {width: 8em; text-align: right;}
+	#Military, #Gifts, #CapitalLoss {width: 8em; text-align: right;}
+	#SocialSecurity, #OregonTax, #HHInc {width: 8em; text-align: right;}
+	#Disability, #Lottery, #RRBTier2, #TANF, #OtherNonTax {width: 8em; text-align: right;}
+
+	button {background-color: lightblue;}
+	#ButtonBox {margin-bottom: 0.5em;}
+
+	html {background-color: #cccccc;}
+
+	body {background-color: #eeeeee;
+		font-family: sans-serif;
+
+		font-size: 0.9em;
+
+	}
+
+	h1 {	text-align: center;
+
+		font-size: 1.1em;
+
+		font-weight: bold;
+
+		text-decoration: underline;
+
+	}
+
+	
+	.printalternative {display:none;}
+	.donotuse {font-size:300%;
+
+		position:relative;
+
+		top:-7em;
+
+		right:-2em;
+		font-weight:bold;
+		z-index:2;
+		}
+
+
+	#userInput {margin-top: 0.5em; margin-bottom: 0.5em;}
+
+	.email {
+		unicode-bidi: bidi-override;
+		direction: rtl;
+	}
+
+	@media print {
+
+		html {background-color: transparent;}
+
+		body {background-color: transparent; font-size:80%;}
+
+		.printalternative {display:inline;}
+
+		.printhide {display:none;}
+		#pageBreakDiv {page-break-after: always}
+
+		#Disclaimer {
+			display: none;
+		}
+	}
+
+</style>
+
+<script type="text/javascript">
+	// *************** HOW TO DO YEARLY UPDATE *****************
+	//  This calculator may be ready for retirement, very very rare to find a TP that qualifies
+	//	1) Change TAX_YR 
+	//		Display of radio button tax year selection is based on the value of TAX_YR. Beginning with TY2019.
+	//	2) Make changes in function writeQualInfoLines() which tells where to get the data
+	//	3) Check for changes in instructions.
+	// ***************Contributors *****************************
+	// 		Paul Dickey & Oregon Testers
+	//		Leonard Harfe
+	// ***************Versions *****************************
+	
+	var VERSION;
+	// To Do:	
+	//		-Check processing for Part Year and Non Resident (Need business validation on if it's functioning correctly)
+	//		-Add comment that solution is Green.
+	//		-?? Put Credit (in green) in the same area as the alert ??
+	// Known Bugs:
+	//		ERROR: NaN on Line 1 when TP Only or SP Only > 62 
+	//		ERROR: Data Entry Error TOtal Pension = is less than Taxable Pension. Error does not show up
+	//			when switchin Only >62 values.
+	//
+	VERSION = "(Version TY2025.1.0 &nbsp &nbsp 12/08/2025)";
+	//		Changed TY to 2022
+	//VERSION = "(Version TY2022.1.0 &nbsp &nbsp 11/02/2022)";
+	//		Changed TY to 2022
+	//		Added Tax info for 2022 from 1040 in writeQualInfoLines()
+	//VERSION = "(Version TY2021.1.0 &nbsp &nbsp 10/23/2021)";
+	//		Change TY to 2021
+	//		Radio button defaults to TY prior to current year
+	//VERSION = "(Version TY2020.1.0 &nbsp &nbsp 09/23/2021)";
+	//		9.23.21 - Corrected errors. To this version. Did not post on web site in TY2020 because of problems.
+	//		Change TY to 2020
+	//		TODO: Make changes in function writeQualInfoLines() which tells where to get the data
+	//			NEEDS 2020 1040 
+	//		TODO: -Move AGI, Code 307 and Oregons State tax Refund to Taxpayer Table
+	//
+	//VERSION = "(Version TY2019.1.1 &nbsp &nbsp 10/25/2019)";
+	//		Change taxYear to TAX_YR
+
+	//VERSION = "(Version TY2019.1.0 &nbsp &nbsp 10/27/2019)";
+	//		Updated TY to 2019
+	//		Made radio button display automatic
+	//		Delete References, Code and Text relating to Elderly Tax Credit
+	//		Update Code for 2019
+	//
+	//VERSION = "(Version TY2018.1,4 &nbsp &nbsp 1/7/2019)";
+	// 	VJB: Changed HHIncome Array to ADD and SUB array
+	//		Added additional items to House Hold Income.
+	// 		Added Print Page Break for Chrome & Firefox
+	//VERSION = "(Version TY2018.1,3 &nbsp &nbsp 1/7/2019)";
+	//	VJB: Deleted double "with"
+	//		Corrected problem with Excess SS not processing correctly
+	// 		Changed some highlighting and bolding
+	// VERSION = "(Version TY2018.1,2 12/29/2018)";
+	//	VJB: Clean up unused code
+	// 		Check spelling
+	//VERSION = "(Version TY2018.1,1 12/28/2018)";
+	// 	VJB:Added Processing for Pensions Data.
+	//		Changed Messages and aggregated some messaging
+	// 		Put all Qualification Checking in one Function
+	//		Added Descriptions  for Part Year and Non Resident
+	//		Moved Javascript for Disabled Credit to bottom
+	//VERSION = "(Version TY2018.1, 12/21/2018)";
+	//	VJB:Moved Elderly Credit After to after residency. (Only visible for 2015)
+	//		Added 62 and Over Radio ButtonBox
+	//		Added Filing Status, Oregon Residency and 62 and Over to TP Into
+	//		Moved Input for Social Security Benefits to TP Information
+	//		Check for validity for Age and SS Cap at start
+	//		Made Retirement Worksheet and Household Income side by side
+	// 		Added Contact Info
+	//		Set defaults for all Radio buttons
+	//		Added functions to support new variables
+	//		Made Comments in Retirement Dynamic
+	//		Eliminated Line 1b in WOrksheet
+	//VERSION = "(Version TY2018.0.1, 12/01/2018)";
+	//	VJB	Changed version processing so is in line
+	//		Added Clear and Print capabilities.
+	//VERSION = "(version 2.1, 01/23/2018)";
+	//added 2017 year radio button and dropped 2013 year radio button
+	//var VERSION = "(version 2.0, 12/31/2016)";
+	//added year radio button and expiration of credit for elderly and disabled in 2016
+	//var VERSION = "(version 1.0, 9/27/2016)";
+
+		// Default TAX_YR to Current Tax Year
+	var taxYearSelected = true;
+	var TAX_YR = "2025";
+
+	// Default Residency to Full Year
+	var ResStatusSelected = true;
+	var ResidencyStatus = "F";
+
+		// Default Filing status to MFJ
+	var FilingStatusSelected = true;
+	var FilingStatus = "J";
+		
+		// Default Age62 to 'N' so will force to answer
+	var Age62Selected = true;
+	var Age62 = "N";
+
+	var SScap, HHbase;
+	var incomeCutoff;
+
+		// Set MFJ Data
+	var SScapMFJ = 15000;
+	var HHbaseMFJ = 30000;
+	var incomeCutoffMFJ = 45000;
+
+		// Set Other Data
+	var SScapOTH = 7500;
+	var HHbaseOTH = 15000;
+	var incomeCutoffOTH = 22500;
+
+		
+	// <!-- var HHINCOME_INPUT = [[ "FederalAGI", "Federal AGI" ], -->
+	// 		<!-- [ "NonTaxableInterest", "Non taxable interest" ], -->
+	// 		<!-- [ "NonTaxableDividends", "Non taxable dividends" ], -->
+	// 		<!-- [ "Scholarships", "Scholarhips not included in income" ], -->
+	// 		<!-- [ "Insurance", "Insurance Payments" ], -->
+	// 		<!-- [ "Inheritance", "Inheritances" ], -->
+	// 		<!-- [ "Gifts", "Gifts and Grants" ], -->
+	// 		<!-- [ "Military", "Military and Veterans Benefits" ], -->
+	// 		<!-- [ "CapitalLoss", "Capital Loss in excess of $1,000" ], -->
+	// 		<!-- [ "SocialSecurity", "Taxable SS and RR Tier 1" ], -->
+	// 		<!-- [ "OregonTax", "Oregon State Income Tax" ], ]; -->
+	
+	var HHINCOMEADD = [					// Array of Items to Add to Household Income=id,Description,Source of data (H=innerHTML,V=Value)
+			[ "FederalAGI", "Federal AGI","V" ],
+			[ "NonTaxableInterest", "Non taxable interest","V" ],
+			[ "NonTaxableDividends", "Non taxable dividends","V" ],
+			[ "Scholarships", "Scholarhips not included in income","V" ],
+			[ "Insurance", "Insurance Payments","V" ],
+			[ "Inheritance", "Inheritances","V" ],
+			[ "Gifts", "Gifts and Grants","V" ],
+			[ "Military", "Military and Veterans Benefits","V" ],
+			[ "CapitalLoss", "Capital Loss in excess of $1,000" ,"V"],
+			["Disability","Non Taxable Disabilit","V"],
+			["Lottery","Non Taxable Lottery Winnings","V"],
+			["RRBTier2","Railroad Retirement Tier 2","V"],
+			["TANF","TANF-Temporary Assistance for Needy Families","V"],
+			["OtherNonTax","Other Non Taxable Items","V"]
+			];
+			
+	var HHINCOMESUB = [				// Array of Items to Subtact
+			[ "SocialSecurity", "Taxable SS and RR Tier 1","H" ],
+			[ "OregonTax", "Oregon State Income Tax","V" ]
+			];
+
+
+	//----------------------------------------------------------------------------------------
+
+	//                                   Initialize()
+	//----------------------------------------------------------------------------------------
+
+	function Initialize() {
+
+	//	alert("function Initialize() called");
+	settaxYearDisplay();
+	setTaxYear(TAX_YR);
+	setFilingStatus(FilingStatus);
+	set62Answer(Age62);
+	
+
+
+	}
+
+	//----------------------------------------------------------------------------------------
+	//                                   settaxYearDisplay()
+	// This function sets the display amd valies for th tax year based on the value of TAX_YR.
+	// This makes the system easy to change from year to year.
+	//----------------------------------------------------------------------------------------
+
+	function settaxYearDisplay() {
+		radioTY_0.value = labelTY_0.innerHTML = TAX_YR;
+		radioTY_1.value = labelTY_1.innerHTML = TAX_YR -1;
+		radioTY_2.value = labelTY_2.innerHTML = TAX_YR -2;
+		radioTY_3.value = labelTY_3.innerHTML = TAX_YR -3;
+		
+		// Set the checked radio button
+		var todaydate = new Date()
+		
+		if (todaydate.getFullYear() == TAX_YR) {
+			radioTY_1.checked = true
+		}else{
+			radioTY_0.checked = true
+		}
+	}
+
+
+	//----------------------------------------------------------------------------------------
+
+	//                                   checkNumeric(index)
+
+	// This function verifies that the input is numeric
+	//----------------------------------------------------------------------------------------
+
+	function checkNumeric(index) {
+		var bdvar = document.getElementById(index);
+		var a = bdvar.value + ""; // This forces bdvar.value to be a string
+
+		
+		if (bdvar.value === "") { // OK not to enter 0
+			return;
+		}
+		if (isNaN(bdvar.value) ) {
+			alert("Entry is not a valid number. \n \n$, Spaces or commas are not permitted in the number." +
+				" \n \nEntry may be a whole or decimal number.");
+
+			return;
+
+		}
+
+	}
+
+    //----------------------------------------------------------------------------------------
+	//                                   checkNumericData(numdata)
+	// This function verifies that a data element is numeric
+	//----------------------------------------------------------------------------------------
+
+	function checkNumericData(numdata) {
+		var chkdata = numdata + ""; // This forces bdvar.value to be a string
+
+		
+		if (chkdata === "") { // OK not to enter 0
+			return 0 ;
+		}
+		if (isNaN(chkdata) ) {
+			alert("Entry is not a valid number. \n \n$, Spaces or commas are not permitted in the number." +
+				" \n \nEntry may be a whole or decimal number.");
+
+			return 0;
+
+		}
+		return 1;
+	}
+	//----------------------------------------------------------------------------------------
+
+	//                                   setResStatus(code)
+
+	// This function records Oregon residency status choice
+	//----------------------------------------------------------------------------------------
+
+	function setResStatus(code) {
+		ResStatusSelected = true;
+		ResidencyStatus = code;
+		writeQualInfoLines()
+	}
+
+	//----------------------------------------------------------------------------------------
+
+	//                                   setFilingStatus(code)
+
+	// This function records filing status choice
+	//----------------------------------------------------------------------------------------
+
+	function setFilingStatus(code) {
+		FilingStatusSelected = true;
+		FilingStatus = code;
+		
+			// Turn off the 5a amount unless Spouse or Taxpayer and MFJ
+			
+			
+		setTotalPensionRows()
+				
+		if (FilingStatus == "J") {
+		
+			document.getElementById("AgeQuestMarried").style.display 	= "table-row" ;
+			document.getElementById("AgeQuestOther").style.display 		= "none" ;
+			     // Set the buttons on a switch from Single
+			
+			if (Age62 == "N") {
+				document.getElementById("ageButtonNeither").checked = true   ; //Set checked for other
+			} else if (Age62 == "T") {   // Must be taxpayer "T"
+				document.getElementById("ageButtonTP").checked = true ;   //Set checked for other
+			
+			}
+			SSCeiling.innerHTML = SScap = SScapMFJ;
+			HHIncomeBase.innerHTML = HHbase = HHbaseMFJ;
+			incomeCutoff = incomeCutoffMFJ;
+		} else {   // Switching to Other Age Item
+			document.getElementById("AgeQuestMarried").style.display 	= "none" ;
+			document.getElementById("AgeQuestOther").style.display 		= "table-row" ;
+			if (Age62 == "B" || Age62 == "S") {  // Need to reset
+				set62Answer("N")
+				document.getElementById("ageButtonNo").checked = true ;
+			} else if (Age62 == "N") {
+				document.getElementById("ageButtonNo").checked = true   ; //Set checked for other
+			} else {   // Must be taxpayer "T"
+				document.getElementById("ageButtonYes").checked = true ;   //Set checked for other
+			
+			}
+			SSCeiling.innerHTML = SScap = SScapOTH;
+			HHIncomeBase.innerHTML = HHbase = HHbaseOTH;
+			incomeCutoff = incomeCutoffOTH;
+		}
+		chkQualified("AGE62");
+
+	}
+
+	//----------------------------------------------------------------------------------------
+
+	//                                   setTaxYear(code)
+
+	// This function records the tax year choice
+	//----------------------------------------------------------------------------------------
+
+	function setTaxYear(code) {
+		taxYearSelected = true;
+		TAX_YR = code;
+		
+		var SSlineInfo, pensionTotLineInfo, pensionTaxLineInfo, AGILineInfo;
+		
+		writeQualInfoLines()
+	}
+
+	//----------------------------------------------------------------------------------------
+	//                                   set62Answer(code)
+	// This function sets the Age62 amount and alerts if not qualified for Credit
+	//----------------------------------------------------------------------------------------
+
+	function set62Answer(code) {
+		Age62Selected = true;
+		Age62 = code;
+		
+		var temp;
+		
+		chkQualified("AGE62");
+		setTotalPensionRows();
+	}
+	
+	//----------------------------------------------------------------------------------------
+	//                                   setTotalPensionRows()
+	// This function Sets the Pension row Display
+	//----------------------------------------------------------------------------------------
+	function setTotalPensionRows() {
+		
+		var alwaysdisplay = true;
+		var notUsedDescr = "Not Needed";
+		
+		if (alwaysdisplay) {
+			if  (((Age62 == "T") || (Age62 == "S")) && (FilingStatus == "J")) {
+				document.getElementById("TotalPension").disabled 	= false ;
+				document.getElementById("TPPension").disabled 	= false ;
+				if ( TotalPension.value  == notUsedDescr) {
+					// Only change values if switching from a not used basis
+					TotalPension.value = "";
+					TPPension.value = "";
+					SPPension.value = "Calculated";
+					TaxPercent.innerHTML = " To be calculated";
+				}
+			} else {
+				document.getElementById("TotalPension").disabled 	= true ;
+				document.getElementById("TPPension").disabled 	= true ;
+				
+				TotalPension.value = notUsedDescr;
+				TPPension.value = notUsedDescr;
+				SPPension.value = notUsedDescr;
+				TaxPercent.innerHTML = " 100%"
+			}
+			
+		} else {
+			
+			document.getElementById("TotalPensionRow").style.display 	= "none" ;
+			document.getElementById("TPPensionRow").style.display 		= "none" ;
+			document.getElementById("SPPensionRow").style.display 		= "none" ;
+					
+			if  (((Age62 == "T") || (Age62 == "S")) && (FilingStatus == "J")) {
+			
+				document.getElementById("TotalPensionRow").style.display 	= "table-row" ;
+				document.getElementById("TPPensionRow").style.display 		= "table-row" ;
+				document.getElementById("SPPensionRow").style.display 		= "table-row" ;		
+			}
+		}
+	}
+
+
+	//----------------------------------------------------------------------------------------
+	//                                   writeQualInfoLines()
+	// This function writes the lines of the Taxpayer's Retirement Information Table
+	//----------------------------------------------------------------------------------------
+	function writeQualInfoLines() {
+		if (TAX_YR == "2025"){
+			AGILineInfo = " Form 1040 Line 11a";
+			CapLossLineInfo = " Form 1040 Line 7a";
+			SSlineInfo =" Form 1040 Line 6a";
+				
+			if (ResidencyStatus ==="F" ){
+				pensionTotLineInfo =" Form 1040 Line 4a plus 5a";
+				pensionTaxLineInfo =" Form 1040 Line 4b plus 5b";
+			} else if (ResidencyStatus ==="P") {
+				pensionTotLineInfo =" Oregon Portion of <br>" + pensionTotLineInfo;
+				pensionTaxLineInfo =" Oregon Form 40-P Line 15S plus 16S(CHECK THIS)";
+			} else {      // Non Resident
+				pensionTotLineInfo =" Oregon Portion of <br>" + pensionTaxLineInfo;
+				pensionTaxLineInfo =" Oregon Form 40-N Line 15S plus 16S(CHECK THIS)";
+			
+			}
+		}
+		if (TAX_YR == "2024"){
+			AGILineInfo = " Form 1040 Line 11";
+			CapLossLineInfo = " Form 1040 Line 7";
+			SSlineInfo =" Form 1040 Line 6";
+				
+			if (ResidencyStatus ==="F" ){
+				pensionTotLineInfo =" Form 1040 Line 4a plus 5a";
+				pensionTaxLineInfo =" Form 1040 Line 4b plus 5b";
+			} else if (ResidencyStatus ==="P") {
+				pensionTotLineInfo =" Oregon Portion of <br>" + pensionTotLineInfo;
+				pensionTaxLineInfo =" Oregon Form 40-P Line 15S plus 16S(CHECK THIS)";
+			} else {      // Non Resident
+				pensionTotLineInfo =" Oregon Portion of <br>" + pensionTaxLineInfo;
+				pensionTaxLineInfo =" Oregon Form 40-N Line 15S plus 16S(CHECK THIS)";
+			
+			}
+		}
+		if (TAX_YR == "2023"){
+			AGILineInfo = " Form 1040 Line 11";
+			CapLossLineInfo = " Form 1040 Line 7";
+			SSlineInfo =" Form 1040 Line 6";
+				
+			if (ResidencyStatus ==="F" ){
+				pensionTotLineInfo =" Form 1040 Line 4a plus 5a";
+				pensionTaxLineInfo =" Form 1040 Line 4b plus 5b";
+			} else if (ResidencyStatus ==="P") {
+				pensionTotLineInfo =" Oregon Portion of <br>" + pensionTotLineInfo;
+				pensionTaxLineInfo =" Oregon Form 40-P Line 15S plus 16S(CHECK THIS)";
+			} else {      // Non Resident
+				pensionTotLineInfo =" Oregon Portion of <br>" + pensionTaxLineInfo;
+				pensionTaxLineInfo =" Oregon Form 40-N Line 15S plus 16S(CHECK THIS)";
+			
+			}
+		} else if (TAX_YR == "2022"){
+			AGILineInfo = " Form 1040 Line 11";
+			CapLossLineInfo = " Form 1040 Line 7";
+			SSlineInfo =" Form 1040 Line 6";
+				
+			if (ResidencyStatus ==="F" ){
+				pensionTotLineInfo =" Form 1040 Line 4a plus 5a";
+				pensionTaxLineInfo =" Form 1040 Line 4b plus 5b";
+			} else if (ResidencyStatus ==="P") {
+				pensionTotLineInfo =" Oregon Portion of <br>" + pensionTotLineInfo;
+				pensionTaxLineInfo =" Oregon Form 40-P Line 15S plus 16S(CHECK THIS)";
+			} else {      // Non Resident
+				pensionTotLineInfo =" Oregon Portion of <br>" + pensionTaxLineInfo;
+				pensionTaxLineInfo =" Oregon Form 40-N Line 15S plus 16S(CHECK THIS)";
+			
+			}
+		} else if (TAX_YR == "2021"){
+			AGILineInfo = " Form 1040 Line 11";
+			CapLossLineInfo = " Form 1040 Line 7";
+			SSlineInfo =" Form 1040 Line 6";
+				
+			if (ResidencyStatus ==="F" ){
+				pensionTotLineInfo =" Form 1040 Line 4a plus 5a";
+				pensionTaxLineInfo =" Form 1040 Line 4b plus 5b";
+			} else if (ResidencyStatus ==="P") {
+				pensionTotLineInfo =" Oregon Portion of <br>" + pensionTotLineInfo;
+				pensionTaxLineInfo =" Oregon Form 40-P Line 15S plus 16S(CHECK THIS)";
+			} else {      // Non Resident
+				pensionTotLineInfo =" Oregon Portion of <br>" + pensionTaxLineInfo;
+				pensionTaxLineInfo =" Oregon Form 40-N Line 15S plus 16S(CHECK THIS)";
+			
+			}
+		} else if (TAX_YR == "2020"){
+			AGILineInfo = " Form 1040 Line 11";
+			CapLossLineInfo = " Form 1040 Line 7";
+			SSlineInfo =" Form 1040 Line 6";
+				
+			if (ResidencyStatus ==="F" ){
+				pensionTotLineInfo = FedPensionTot = " Form 1040 Line 4a plus 5a";
+				pensionTaxLineInfo = FedPensionTax = " Form 1040 Line 4b plus 5b";
+			} else if (ResidencyStatus ==="P") {
+				pensionTotLineInfo =" Oregon Portion of <br>" + FedPensionTot;
+				pensionTaxLineInfo =" Oregon Form 40-P Line 15S plus 16S ";
+			} else {      // Non Resident
+				pensionTotLineInfo =" Oregon Portion of <br>" + FedPensionTot;
+				pensionTaxLineInfo =" Oregon Form 40-N Line 15S plus 16S";
+			}
+		} 
+		
+		SSAmountDescr.innerHTML = "Total Social Security Benefits from: <br>" 
+			+"<b>TY" + TAX_YR +  SSlineInfo + "a.</b>";
+		
+		SSTaxAmountDescr.innerHTML = "Taxable Social Security Benefits from <br>"
+			+"<b>TY" + TAX_YR +  SSlineInfo + "b.</b>";
+		TotalPensionDescr.innerHTML = "Total Pension from "
+			+"<b>TY" + TAX_YR +  pensionTotLineInfo + ".</b>";
+		TaxPensionDescr.innerHTML = "Taxable Pension from "
+			+"<b>TY" + TAX_YR +  pensionTaxLineInfo + ".</b>";
+		
+				// Changes to Descriptions to Retirement and Household Income Worksheets
+		TotalSSDescr.innerHTML = "Total Social Security Benefits "+ SSlineInfo +"a";
+		SocialSecurityDescr.innerHTML = "Taxable Social Security Benefits "+ SSlineInfo +"b";
+		FederalAGIDescr.innerHTML = "Federal AGI from TY"  +TAX_YR + AGILineInfo;
+		CapitalLossDescr.innerHTML = "Capital Loss, if any, in excess of $1000 from <br>TY"+TAX_YR + CapLossLineInfo;
+	}
+
+
+	//----------------------------------------------------------------------------------------
+	//                                   writeWksLine1()
+	// This function writes the lines of the Retirement Worksheet
+	//----------------------------------------------------------------------------------------
+	function writeWksLine1() {
+		var lineNo ;
+		
+		if (TAX_YR=="2019") {
+			lineNo = "Line 4b and 4 d";
+		} else if (TAX_YR=="2018") {
+			lineNo = "Line 4b";
+		} else {
+			lineNo = "Lines 15b and 16b";
+		}
+			//Set Worksheet label
+		if (Age62 =="B"){
+			TaxpayerPensionDescr.innerHTML = "Taxpayer's and Spouse's Taxable retirement income from: <br> <b>TY"
+			+TAX_YR+ " Form 1040 "+lineNo + "</b>";
+		} else if (Age62 =="T"){
+			TaxpayerPensionDescr.innerHTML = "Taxpayer's portion of Taxable retirement income from: <br> <b>TY"
+			+TAX_YR+ " Form 1040 "+lineNo + "</b>";
+		} else if (Age62 =="S"){
+			TaxpayerPensionDescr.innerHTML = "Spouse's portion of Taxable retirement income from: <br> <b>TY"
+			+TAX_YR+ " Form 1040 "+lineNo + "</b>";
+		} else if (Age62 =="N" ){
+			if (FilingStatus == "J") {
+				TaxpayerPensionDescr.innerHTML = "<b>STOP: Taxpayer is not elgible for credit. Both Taxpayer and Spouse are under 62</b>";
+			} else {
+				TaxpayerPensionDescr.innerHTML = "<b>STOP: Taxpayer is not elgible for credit. Taxpayer is under 62</b>";
+			}
+		}
+		
+		CheckPensionAmount(TaxPension.value,"TAX");
+	
+	}
+
+
+	//----------------------------------------------------------------------------------------
+	//                                   CheckSSAmount(code,type)
+	// This function sets the Age62 amount and alerts if not qualified for Credit
+	//----------------------------------------------------------------------------------------
+
+	function CheckSSAmount(code,type) {
+		var inputType;
+		var SS_Amount;
+		SS_Amount = code;		
+		inputType = type;
+		
+		if (!checkNumericData(SS_Amount)) {			//Check that data is numeric
+			return 0;
+		}
+		
+		if (inputType == "TOTAL") {					// Processing if Total Social Security
+				
+			chkQualified("SSCAP") 
+			
+			TotalSS.innerHTML = SS_Amount;
+			
+		} else {		// Taxable Amount
+			if ((SSAmount.value - SS_Amount) < 0 ) {
+				alert("Data Error: Taxable Social Security Benefits must be less than Total Social Security . ");
+			}
+			SocialSecurity.innerHTML = SS_Amount;
+		}
+	}
+	
+
+	//----------------------------------------------------------------------------------------
+	//                                   CheckPensionAmount(code,type)
+	// This function sets Checks the Pension Amount. Calcs Spouse in necessary, type = "TOTAL", "TP", "TAX"
+	//----------------------------------------------------------------------------------------
+
+	function CheckPensionAmount(code,type) {
+	
+	var inputType, needPct,  thisAmount, pctPension;
+		thisAmount = code;		
+		inputType = type;
+		
+		if (!checkNumericData(thisAmount)) {
+			return 0;
+		}
+		
+				// determine if we need to calculate a %
+		needPct = (((Age62 == "T") || (Age62 == "S")) && (FilingStatus == "J"))
+		
+		if (inputType == "TOTAL") {
+		
+		} else if (inputType == "TP"){
+			// <!-- SPPension.innerHTML = TotalPension.value - TPPension.value; -->
+			SPPension.value = TotalPension.value - TPPension.value;
+		
+		} else {  // Processing for "TAX"
+		
+			// Check here for greater than total if necessary
+			if (needPct) {
+				if (TotalPension.value -  TaxPension.value <0) {
+					alert( "DATA ENTRY ERROR: Total Pension = " +TotalPension.value + " is less than Taxable Pension = "+TaxPension.value);
+					return 0;
+				}
+				if (Age62 == "T") {
+					pctPension = TPPension.value/TotalPension.value;
+				} else {
+					pctPension = (TotalPension.value - TPPension.value)/TotalPension.value;
+					
+				}
+				TaxPercent.innerHTML = "&nbsp &nbsp"+(pctPension*100).toFixed(1) + "%"
+				TaxpayerPension.innerHTML = (pctPension*TaxPension.value).toFixed(0);
+			} else {
+				TaxpayerPension.innerHTML = (thisAmount-0).toFixed(0);
+				
+			}
+		
+		}
+	
+	}
+	
+	//----------------------------------------------------------------------------------------
+
+	//                                   chkQualified(type)
+
+	// This function writes a not qualified message and sets the credit code to also clears 
+	//----------------------------------------------------------------------------------------
+	function  chkQualified(type) {
+		
+		var action = type;
+		var headerline = "Taxpayer does not qualify for this credit. <br><br>"
+		var resultaction = true;
+		
+			
+		if (action == "CLEAR") {							// Clear Alert Message
+			Alert.innerHTML = ""
+			Alert.style.display = "none";
+			RetirementIncomeCredit.innerHTML = "";
+			return 1;
+		}
+					
+		if (action == "AGE62" || action == "ALL" ) {		//  Check Age Qualifications
+			if (Age62 == "N") {
+				if (FilingStatus == "J") {
+					Alert.innerHTML = headerline + "Neither Taxpayer nor Spouse is Age 62 or older.";
+				} else {
+					Alert.innerHTML = headerline + "Taxpayer is NOT Age 62 or older.";
+				}
+				resultaction = false;
+			}
+		
+		}
+				
+		if (action == "SSCAP" || action == "ALL" ) {  		// Check Social Security Cap 
+		
+			if (SScap - (SSAmount.value) < 0 ) {
+				Alert.innerHTML = headerline + "Social Security Benefits = $ "+ SSAmount.value
+					+" are above the Maximum Allowed = $ "+ SScap 
+				resultaction = false;
+			} 
+					
+		}
+		
+		if (action === "HHINC" || action == "ALL" ) {		// Check Household Income Cap 
+			var HHinc = computeHouseholdIncome()-0;
+			var SSamt = TotalSS.innerHTML-0;
+
+			if (HHinc > incomeCutoff) {
+				Alert.innerHTML = headerline + "Household income = $ "+ HHinc +" is greater than $" + incomeCutoff + ".";
+				resultaction = false;
+			}
+			
+		}
+		
+		if (action === "SS+HHINC" || action == "ALL" ) {	// Check Household Income + Social Security Cap 
+
+			if (HHinc + SSamt > incomeCutoff) {
+				Alert.innerHTML = headerline + "Household income plus social security = $ "+ (HHinc + SSamt ) + " is greater than $" + incomeCutoff + ".";
+				resultaction = false;
+			}
+		}
+		
+		if (action === "NETPENSION" || action == "ALL" ) {	// Check Oregon Pension being zero
+
+			if ((TaxpayerPension.innerHTML-0)  - (FederalPensionSubtraction.value) == 0 ) {
+				
+				Alert.innerHTML = headerline + "Net Oregon taxable pension is 0" ;
+				resultaction = false;
+			}
+		}
+
+			// Set data based on whether Qualified or Not
+		if ( resultaction) { // Passed the check(s)
+			RetirementIncomeCredit.innerHTML = "";
+			Alert.innerHTML = "";
+			writeWksLine1();
+			return true;
+		} else {  // Does not qualify
+			RetirementIncomeCredit.innerHTML = 0;
+			TaxpayerPensionDescr.innerHTML = "<b>STOP: Taxpayer does not qualify for this credit</b>";
+			Alert.style.display = "flex";
+			return false;
+		}
+				
+	}
+	
+	
+	//----------------------------------------------------------------------------------------
+
+	//                                   checkRetirementIncome()
+
+	// This function checks taxpayer and spouse retirement income fields and federal pension
+	// subtraction field for validity
+	//----------------------------------------------------------------------------------------
+
+	function checkRetirementIncome() {
+		var a = TaxpayerPension.value + ""; // force value to string
+
+		if (a === "") { // OK not to enter 0
+			TaxpayerPension.value = 0;
+		} else {
+			if (isNaN(a) ) {
+				alert("Taxpayer Pension entry is not a valid number. \n \n$, Spaces or commas are not permitted in the number." +
+					" \n \nEntry may be a whole or decimal number.");
+
+				return 0;
+
+			}
+		}	
+		
+		a = FederalPensionSubtraction.value + "";
+		if (a === "") { 
+			FederalPensionSubtraction.value = 0;
+		} else {
+			if (isNaN(a) ) {
+				alert("Federal Pension Subtraction entry is not a valid number. \n \n$, Spaces or commas are not permitted in the number." +
+					" \n \nEntry may be a whole or decimal number.");
+
+				return 0;
+
+			}
+		}
+		return 1;
+	}
+
+
+	//----------------------------------------------------------------------------------------
+
+	//                                   checkAGI()
+
+	// This function checks the Federal AGI field for validity
+	//----------------------------------------------------------------------------------------
+
+
+	function checkAGI() {
+
+
+		var a = FederalAGI.value + ""; // This forces AGI.value to be a string
+
+
+		if (FederalAGI.value == "") {
+
+			return 0; // AGI must be provided
+ 
+		}
+
+		if (isNaN(FederalAGI.value) ) {
+
+			return 0;
+
+		}
+		return 1;
+	}
+
+
+	//----------------------------------------------------------------------------------------
+
+	//                                   computeHouseholdIncome()
+	// This function computes the household income, verifying that any entries in the
+ 	// Household Income table are numeric and entering the total in the credit worksheet. 
+	//----------------------------------------------------------------------------------------
+
+	function computeHouseholdIncome() {
+		var bdvar;
+		var i;
+		var a;
+
+		// <!-- var hhinc = FederalAGI.value - 0; //force to numeric -->
+		var hhinc = 0; //force to numeric
+
+		HHIncome.innerHTML = ""; 
+
+		// additions to income
+		// <!-- for ( i = 1; i <= 8; i++ ) { -->
+			// <!-- bdvar = document.getElementById(HHINCOME_INPUT[i][0]); -->
+		
+		for ( i = 0; i < HHINCOMEADD.length ; i++ ) {
+			bdvar = document.getElementById(HHINCOMEADD[i][0]);
+			
+			//Data  not an input box
+			if (HHINCOMEADD[i][2] == "H") {
+				a = bdvar.innerHTML + ""; // This forces bdvar.value to be a string
+			
+			} else {
+				a = bdvar.value + ""; // This forces bdvar.value to be a string
+			}
+			// <!-- a = bdvar.value + ""; // This forces bdvar.value to be a string -->
+			// alert("bdvar.value = " + bdvar.value);
+		
+			if (bdvar.value === "") { }   // OK not to enter 0
+			else if (isNaN(bdvar.value) ) {	
+				alert(HHINCOMEADD[i][1] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+				return 0;				
+			}
+			else {
+				hhinc += bdvar.value - 0;
+				// force value to a number
+			}
+		}
+
+		// <!-- for ( i = 9; i <= 10; i++ ) { -->
+			// <!-- bdvar = document.getElementById(HHINCOME_INPUT[i][0]); -->
+		
+		for ( i = 0; i < HHINCOMESUB.length ; i++ ) {
+			bdvar = document.getElementById(HHINCOMESUB[i][0]);
+				
+			//Data  not an input box
+			if (HHINCOMESUB[i][2] == "H") {
+				a = bdvar.innerHTML + ""; // This forces bdvar.value to be a string
+			
+			} else {
+				a = bdvar.value + ""; // This forces bdvar.value to be a string
+			}
+			// alert("bdvar.value = " + bdvar.value);
+
+			if (a === "") { }   // OK not to enter 0
+			else if (isNaN(a) ) {	
+				alert(HHINCOME_INPUT[i][1] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+				return 0;				
+			}
+			else {
+				hhinc -= a - 0;
+ // force value to a number
+			}
+		}
+
+		HHInc.innerHTML = hhinc.toFixed(0); 		// round total, save in HH Income Worksheet
+		HHIncome.innerHTML = HHInc.innerHTML; 		// save to Retirement Tax Credit Worksheet
+
+		return hhinc;
+	}
+
+	//----------------------------------------------------------------------------------------
+
+	//                                   CalcRetIncCredit()
+
+	// This function calculates the Retirement Income Credit
+	//----------------------------------------------------------------------------------------
+
+
+	function CalcRetIncCredit() {
+		var a;
+		var NetTaxablePension;
+		var SSamt, HHinc;
+		//<!-- var SScap, HHbase; -->
+		//<!-- var incomeCutoff; -->
+		var SS, HH, L10, CBase; // hold intermediate results
+
+		// clear answer field, in case compute credit button was clicked before
+		RetirementIncomeCredit.innerHTML = "";
+
+		if (!chkQualified("NETPENSION")) {
+			return false;
+		}
+		
+		
+		NetTaxablePension = (TaxpayerPension.innerHTML-0)  - FederalPensionSubtraction.value;
+//		<!-- NetTaxablePension = (TaxpayerPension.value-0) + (SpousePension.value-0) - FederalPensionSubtraction.value; -->
+		ORTaxablePension.innerHTML = NetTaxablePension;
+	
+		if (NetTaxablePension < 0){
+			alert("Net Pension amount is less than 0, please verify input.");
+			return;
+		}
+
+		if (!checkAGI()) {
+			alert("Federal AGI missing or not a valid number.");
+			RetirementIncomeCredit.innerHTML = 0;
+			return;
+		}
+		
+		if (!chkQualified("ALL")) {				// Check all Qualifications
+			return false;
+		} 
+		
+		SSamt = TotalSS.innerHTML-0;
+		HHinc = computeHouseholdIncome()-0;
+		SSAvail.innerHTML = SS = SScap - SSamt;
+
+		if (HHinc-HHbase > 0) {
+			IncomeOverBase.innerHTML = HH = HHinc - HHbase;
+		} else {
+			IncomeOverBase.innerHTML = HH = 0;
+		}
+
+		if ( SS - HH > 0 ) {
+			Line10.innerHTML = L10 = SS - HH;
+		} else {
+			Line10.innerHTML = L10 = 0;
+		}
+		Line11.innerHTML = CBase = Math.min(L10, NetTaxablePension);
+
+		RetirementIncomeCredit.innerHTML = (CBase * .09).toFixed(0);
+	}
+	
+// -------------------------------Unique Elderly and Disabled Credit functions start here -------------------------	
+	//----------------------------------------------------------------------------------------
+
+	//                             checkFedCred()
+
+	// This function checks the "Federal Elderly or Disabled Credit" field for validity
+
+	//----------------------------------------------------------------------------------------
+
+
+	function checkFedCred() {
+
+
+		var a = FedEorDCredit.value + ""; // This forces AGI.value to be a string
+
+
+		if (FedEorDCredit.value === "0") {
+			return 0;
+ // Federal credit value must be a positive number
+		}
+
+		if (FedEorDCredit.value == "") {
+
+			return 0; // If federal credit value not provided skip computing
+				  // State credit
+ 
+		}
+
+		if (isNaN(FedEorDCredit.value) ) { 
+ 			return 0;  // must be a valid number
+		}
+		return 1;
+	}
+
+	//----------------------------------------------------------------------------------------
+
+	//                             checkLine35percent()
+
+	// This function checks the "Oregon part year percentage" field for validity
+
+	//----------------------------------------------------------------------------------------
+
+
+	function checkLine35percent() {
+
+
+		var a = FedEorDCredit.value + ""; // This forces OregonPercent.value to be a string
+
+
+		if (OregonPercent.value === "0") {
+			return 0;
+ // Line 1 or 3 value must be a positive number
+		}
+
+		if (OregonPercent.value == "") {
+
+			return 0; // If line 1 or 3 value not provided skip computing
+				  // table for itemized deductions
+ 
+		}
+
+		if (isNaN(OregonPercent.value) ) { 
+ 			return 0;  // must be a valid number
+		}
+		a = OregonPercent.value - 0;
+ // force value to a number
+		if (OregonPercent.value < 0) {
+			return 0;
+		}
+		if (OregonPercent.value > 100) {
+			return 0;
+		}
+		return 1;
+	}
+
+
+	//----------------------------------------------------------------------------------------
+
+	//                                   CalcEandDCredit()
+
+	// This function calculates the State Elderly and Disabled Credit
+	//----------------------------------------------------------------------------------------
+
+
+	function CalcEandDCredit() {
+		//alert("function CalcEandDCredit() called");
+
+		// clear answer field, in case compute credit button was clicked before
+		StateEorDCredit.innerHTML = "";
+
+		if (taxYearSelected == false) {
+			alert("Please select a tax year.");	
+			return;
+		}
+
+		if (TAX_YR == 2016) {
+			alert("Elderly and Disabled credit no longer available in 2016");
+			return;
+		}
+
+		if (!checkFedCred()) {
+			alert("Federal Credit amount missing, 0, or not a valid number. Please verify.");
+			return;
+		}
+		if (!ResStatusSelected) {
+			alert("Please select Oregon residency status.");
+			return;
+		}
+		if (ResidencyStatus == "F") {
+			StateEorDCredit.innerHTML = (.4 * FedEorDCredit.value).toFixed(0);
+		} else { // Residency Status is N or P
+			if (!checkLine35percent()) {
+				alert("Oregon percentage missing or not valid. Please verify.");
+				return;
+			}
+			StateEorDCredit.innerHTML = (.4 * FedEorDCredit.value * OregonPercent.value/100).toFixed(0);
+		}
+	}
+	
+	
+</script>
+
+
+
+</head>
+	
+
+
+<!-- ************************************************************************************************ -->
+
+<!-- ********************************* START OF HTML ************************************************ -->
+
+<!-- ************************************************************************************************ -->
+	
+
+
+<body onload="Initialize()"><center>
+
+	
+	<span class="tooltitle"> Oregon Retirement Income Credit (Code 811) Calculator </span>
+
+	<br><button onclick="location.reload(true)"><b>Clear and reset calculator</b></button>
+    <span id="Version" class="versiondisplay"></span><script>Version.innerHTML = VERSION;</script>
+	<button onclick="window.print()"> Print a taxpayer copy</button>
+	<br><br> 
+	
+	<div class="flex-container">
+		<div class="flex-item">
+	The system starts with filing status of MFJ and neither taxpayer or spouse being 62 or older. 
+	Select the correct filing status and then answer the 62 or older question to remove the error message.
+	The credit is not refundable, nor can it be carried forward.
+	<br><br>
+		</div>
+	</div>
+	
+	<table id="name">
+	<tbody>
+		<tr>
+			<td class="headerfield" colspan="2">Taxpayer's Retirement Information Worksheet</td></tr>
+		<tr>
+			<td class="inputfield">Taxpayer's Name:</td>
+			<td class="inputfield">
+				<input id="TPName"  title="Optionally, enter the Taxpayer&#39;s name." 
+					value=""></td></tr>
+		<tr>
+			<td class="inputfield">*Tax Year</td>
+			<td class="inputfield"
+				<input type="radio" name="Year" value="N"/>
+				<input id="radioTY_3" type="radio" name="Year" value="" onclick="setTaxYear(this.value)"/><label id="labelTY_3" for="radioTY_3">0</label>
+				<input id="radioTY_2" type="radio" name="Year" value="" onclick="setTaxYear(this.value)"/><label id="labelTY_2" for="radioTY_2">0</label>
+				<input id="radioTY_1" type="radio" name="Year" value="" onclick="setTaxYear(this.value)"/><label id="labelTY_1" for="radioTY_1">0</label>
+				<input id="radioTY_0" type="radio" name="Year" value="" 
+					checked="checked" onclick="setTaxYear(this.value)"/><label id="labelTY_0" for="radioTY_0">0</label>
+				</td></tr>
+		<tr>
+			<td class="inputfield">*Filing Status</td>
+			<td class="inputfield" 
+				<input type="radio" name="fStatus" value="N"/>
+				<input type="radio" name="fStatus" value="J" 
+					checked="checked" onclick="setFilingStatus('J')"/>MFJ
+				<input type="radio" name="fStatus" value="O" onclick="setFilingStatus('O')"/>Other</td></tr>
+			
+			<!--  62 and Over question  for Married-->
+		<tr id="AgeQuestMarried">
+			<td class="inputfield">Is TP and/or SP 62 or Older?</td>
+			<td class="inputfield" 
+				<input type="radio" name="Answer62" value="X"/>
+				<input type="radio" name="Answer62" value="B" id="ageButtonBoth" onclick="set62Answer('B')"/>Both
+				<input type="radio" name="Answer62" value="T" id="ageButtonTP" onclick="set62Answer('T')"/>TP Only
+				<input type="radio" name="Answer62" value="S" id="ageButtonSP" onclick="set62Answer('S')"/>SP Only
+				<input type="radio" name="Answer62" value="N" id="ageButtonNeither" 
+					checked="checked" onclick="set62Answer('N')"/>Neither
+				</td></tr>
+			<!--  62 and Over question  for Not Married -->
+		<tr id="AgeQuestOther">
+			<td class="inputfield">Is TP  62 or Older?</td>
+			<td class="inputfield" 
+				<input type="radio" name="Answer62TP" value="X"/>
+				<input type="radio" name="Answer62TP" value="T" id="ageButtonYes" onclick="set62Answer('T')"/>Yes
+				<input type="radio" name="Answer62TP" value="N" id="ageButtonNo"  onclick="set62Answer('N')"/>No
+				</td></tr>
+
+			
+		<tr>
+			<td class="inputfield">*Taxpayer's Oregon residency status?</td>
+			<td class="inputfield" tabindex="4"
+				<input type="radio" name="ResStatus" value="X"/>
+				<input type="radio" name="ResStatus" value="F" 
+					checked="checked" onclick="setResStatus('F')"/>Full Year
+				<input type="radio" name="ResStatus" value="P" onclick="setResStatus('P')"/>Part Year
+				<input type="radio" name="ResStatus" value="N" onclick="setResStatus('N')"/>Non Resident</td></tr>
+		
+		<tr>
+			<td class="inputfield" id="SSAmountDescr">Total Social Security benefits -Form 1040 Line 5a</td>
+			<td class="inputfield">
+					
+				<input id="SSAmount"  title="Enter total SS Amount" onblur="CheckSSAmount(this.value,'TOTAL')"
+					value="" 
+				</td></tr>
+		<tr>
+			<td class="inputfield" id="SSTaxAmountDescr">Taxable Social Security benefits -Form 1040 Line 5a</td>
+			<td class="inputfield">
+					
+				<input id="SSTaxAmount"  title="Enter taxable SS Amount" onblur="CheckSSAmount(this.value,'TAXABLE')"
+					value=""
+				</td></tr>
+		
+		<tr>
+			<td class="headerfield" colspan="2">Pension Information</td></tr>
+		
+		
+		<tr id="TotalPensionRow">
+			<td class="inputfield" id="TotalPensionDescr">Total Pension Amount -Form 1040 Line 4a</td>
+			<td class="inputfield">
+				<input id="TotalPension"  title="Enter Total's Pension Amount" onblur="CheckPensionAmount(this.value,'TOTAL')"
+					value=""
+				</td></tr>
+		<tr id="TPPensionRow">
+			<td class="inputfield" id="TPPensionDescr">Taxpayer's Portion of the Above Amount (in $) </td>
+			<td class="inputfield">
+				<input id="TPPension"  title="Enter Total Pension Amount" onblur="CheckPensionAmount(this.value,'TP')"
+					value=""
+				</td></tr>
+		<tr id="SPPensionRow">
+			<td class="inputfield" id="SPPensionDescr">Spouse's Portion is Calculated.</td>
+			<td class="inputfield">
+				<input id="SPPension"  title="Enter Total Pension Amount" disabled 
+					value=""
+			
+				</td></tr>
+		<!-- <td class="inputfield" id="SPPension" > -->
+		<tr id="TaxPensionRow">
+			<td class="inputfield" id="TaxPensionDescr">Taxpayer Pension Amount - Portion of Form 1040 Line 4b</td>
+			<td class="inputfield">
+				<input id="TaxPension"  title="Enter Taxable Pension Amount" onblur="CheckPensionAmount(this.value,'TAX')"
+					value=""
+				</td></tr>
+		
+		<tr >
+			<td id="TaxPercentDescr">Percent of Taxable Pension Available for Credit</td>
+			<td  id="TaxPercent"> 100 %
+				</td></tr>	
+		
+		
+				
+				
+	</tbody></table>
+						<!-- Alert Messages  -->
+	<br><br>
+	 <div id="Alert" class="flex-containerAlert" >
+		<div class="flex-itemAlert" >
+			
+		</div>
+	</div>
+	<br><br>
+
+
+	<div>
+	<table id="retirementCreditTable" style="float:left; margin-left: 5%; margin-bottom: 0.5em;" >
+	<tbody>
+		<tr>
+			<td class="headerfield" colspan="3">Retirement Income Credit Worksheet</td></tr>
+		
+		<tr>
+			<td>line 1</td>
+			<td id="TaxpayerPensionDescr"class="inputfield" style="width:30em">STOP: Taxpayer is not eligible </td>
+			<td class="inputfield" id="TaxpayerPension">
+				
+				</td></tr>
+					
+		<tr>
+			<td>line 2</td>
+			<td class="inputfield" style="width:30em">Enter Federal Pension Subtraction (Code 307). Use Oregon Federal Employee Calculator
+			to determine this subtraction.</td>
+			<td class="inputfield">
+				<input id="FederalPensionSubtraction" tabindex="8" 
+					title="Federal Pension Subtraction from Oregon Income"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td>line 3</td>
+			<td>Net applicable Oregon taxable pension</td>
+			<td id="ORTaxablePension"></td></tr>
+		<tr>
+			<td>line 4</td>
+			<td>Social Security ceiling</td>
+			<td id="SSCeiling"></td></tr>
+		<tr>
+			<td>line 5</td>
+			<td class="inputfield" id="TotalSSDescr">Total Social Security Benefits Form 1040 Line 5a</td>
+			<td id="TotalSS" class="inputfield">  </td></tr>
+		<tr>
+			<td>line 6</td>
+			<td>Unused SS available for credit (Line4 - Line5)</td>
+			<td id="SSAvail"></td></tr>
+		<tr>
+			<td>line 7</td>
+			<td>Household income from Household Income Worksheet</td>
+			<td id="HHIncome"></td></tr>
+		<tr>
+			<td>line 8</td>
+			<td>Household income base</td>
+			<td id="HHIncomeBase"></td></tr>
+		<tr>
+			<td>line 9</td>
+			<td>Household income over base (Line7 - Line8)</td>
+			<td id="IncomeOverBase"></td></tr>
+		<tr>
+			<td>line 10</td>
+			<td>(Line6 - Line 9)</td>
+			<td id="Line10"></td></tr>
+		<tr>
+			<td>line 11</td>
+			<td>Base for credit calculation (Smaller of Line10 and Line3)</td>
+			<td id="Line11"></td></tr>
+		<tr>
+
+			<td>line 12</td>
+			<td class="headerfield">Retirement Income Credit (code 811)<br>Enter on Oregon Credits worksheet</td>
+			<td class="resultsfield" id="RetirementIncomeCredit"></td></tr>
+	</tbody></table>
+	
+	<div id="pageBreakDiv"> </div>
+
+	<table id="HouseholdIncomeTable">
+	<tbody>
+		<tr>
+			<td class="headerfield" colspan="2">Household Income Worksheet<br> See OR 17 Appendix for a list of all items</td></tr>
+		<tr>
+			<td class="inputfield" id="FederalAGIDescr">*Federal AGI from line 37, Form 1040</td>
+			<td class="inputfield">
+				<input id="FederalAGI" tabindex="11" title="Federal AGI from Form 1040"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td class="headerfield"colspan="2">Additions to Household Income NOT included in AGI:</td></tr>
+		<tr>
+			<td class="inputfield">Non taxable interest</td>
+			<td class="inputfield">
+				<input id="NonTaxableInterest" tabindex="12" title="Non taxable interest"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td class="inputfield">Non taxable dividends</td>
+			<td class="inputfield">
+				<input id="NonTaxableDividends" tabindex="13" title="Non taxable dividends"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td class="inputfield">Scholarships not included in income</td>
+			<td class="inputfield">
+				<input id="Scholarships" tabindex="14" title="Scholarships not in AGI"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td class="inputfield">Insurance payments in excess of reimbursed<br>
+						expenses less attorneys' fees</td>
+			<td class="inputfield">
+				<input id="Insurance" tabindex="15" title="Insurance payments"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td class="inputfield">Inheritances</td>
+			<td class="inputfield">
+				<input id="Inheritance" tabindex="16" title="Inheritances"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td class="inputfield">Gifts and grants less $500</td>
+			<td class="inputfield">
+				<input id="Gifts" tabindex="17" title="Gifts and Grants"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td class="inputfield">Non taxable military and veterans benefits</td>
+			<td class="inputfield">
+				<input id="Military" tabindex="18" title="Non taxable military and veterans benefits"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td class="inputfield" id="CapitalLossDescr">Capital loss, if any, on line 13<br>of form 1040 in excess of $1,000</td>
+			<td class="inputfield">
+				<input id="CapitalLoss" tabindex="19" 
+					title="Capital Loss from line 13 - $1,000, but not less than 0"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td class="inputfield" id="DisabilityDescr">Non Taxable Disablity Payments including SSI</td>
+			<td class="inputfield">
+				<input id="Disability" tabindex="0" 
+					title="Non Taxable Disablity Payments including SSI"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td class="inputfield" id="LotteryDescr">Non Taxable Lottery Winnings </td>
+			<td class="inputfield">
+				<input id="Lottery" tabindex="0" 
+					title="Non Taxable Lottery Winnings (Oregon Code 322)"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td class="inputfield" id="RRBTier2Descr">Tier 2 Railroad Retirement (Oregon Code 330)</td>
+			<td class="inputfield">
+				<input id="RRBTier2" tabindex="19" 
+					title="Tier 2 Railroad Retirement (Oregon Code 330)"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td class="inputfield" id="TANFDescr">TANF-Temporary Assistance for Needy Families</td>
+			<td class="inputfield">
+				<input id="TANF" tabindex="19" 
+					title="TANF"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td class="inputfield" id="OtherNonTaxDescr">Other Non Taxable Items. See Appendix OR 17.<br>
+					Use Scratch Pad Tool to document</td>
+			<td class="inputfield">
+				<input id="OtherNonTax" tabindex="0" 
+					title="Other Non Taxable Items. See Appendix OR 17"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td class="headerfield" colspan="2">Subtractions from Household Income:</td></tr>
+		<tr>
+			<td class="inputfield" id="SocialSecurityDescr">Taxable portion of Social Security and Tier 1 <br>
+						Railroad Retirement income (line 20b of 1040)</td>
+			<td class="inputfield" 	id="SocialSecurity" >
+				
+				</td></tr>
+		<tr>
+			<td class="inputfield">Oregon state income tax refund included in AGI</td>
+			<td class="inputfield">
+				<input id="OregonTax" tabindex="0" 
+					title="Oregon state income tax, if included in AGI"
+					onblur="checkNumeric(this.id)"></td></tr>
+		<tr>
+			<td class="headerfield"> Household income for Retirement Income Credit</td>
+			<td id="HHInc"></td></tr>
+	</tbody></table>
+	</div>
+	
+		  
+	<br>
+
+	<button id="CalcRetIncCreditbutton" tabindex="22" onclick="CalcRetIncCredit()">
+			Click here to Calculate Retirement Income Credit</button>
+		   
+	<br><br>	
+	
+	<!-- <br> <br> -->
+	<div id="FYInstructions" class="flex-container">
+		<span class = "instructions">Information </span>
+		<div class="flex-item"><b></b>
+			<ol>
+				<li>Complete top portion of the Taxpayer's Retirement Information Worksheet.  Completing this 
+					information will test whether the taxpayer is eligible for the credit.
+					Ineligible/disqualifying messages appear after this worksheet and before the income worksheets. The 
+					calculator starts with 	neither the taxpayer nor spouse being 62 or over. If a disqualifying message appears,
+					print the page and give to the taxpayer.</li><br>
+				<li>Fill out the Pension Information section. If you have selected part year or non-resident,
+					you will have to calculate the Oregon portion of the Total Pension shown on the 1040. (This may be available
+					is TSO but the state was not available at the time this was published.) If the 
+					filing status is MFJ and either the TP or SP is under 62, you will have to calculate the taxpayer's portion,
+					in dollars, of the Total Pension amount.  The spouse's portion is calculated by subtraction. The system will
+					use this percentage to carry over the appropriate amount of taxable pension that qualifies for the credit.</li><br>
+				<li>If all pre-qualification tests are met, Complete the Worksheets and Click the calculate button. This may 
+					generate additional disqualification alerts.</li><br>
+			</ol>
+		</div>
+	</div>
+	<br><br>
+	
+	<div id="Disclaimer" class="flex-container">
+		<div class="flex-item">
+			<b>Information:</b> 
+			If you have comments or bugs, please email them to <span class="email">krow.sirrahrednax@rednax</span>
+		</div>
+	</div>
+<br><br>
+	
+</center></body>
+</html>

@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<!-- ************************************************************************************************ -->
+<!-- ***************** CALCULATE Prior Year Oregon Tax Refunds Received in TY2018******************** -->
+<!-- ************************************************************************************************ -->
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Simple Oregon Refund Calculator</title>
+
+	<meta name="author" content="V. Joseph Bowman, JR. , OR1 District 9">
+	<meta name="description" content="Simple Taxable Refund Calculator ">
+
+	<style type="text/css">
+		table,
+		td {
+			border: 1px solid black;
+			border-collapse: collapse;
+		}
+
+		input:enabled {
+			background-color: white
+		}
+
+		input:disabled {
+			background-color: lightgray
+		}
+
+		.tooltitle {
+			font-size: 125%;
+			font-weight: bold;
+		}
+
+		.workaroundtitle {
+			font-weight: bold;
+			text-align: center;
+		}
+
+		.headerfield {
+			text-align: center;
+
+			.flex-item {
+				width: 800px;
+				margin: 10px;
+				text-align: left;
+			}
+		}
+
+		.inputfield {
+			background-color: yellow;
+		}
+
+		.inputfield #TPName {
+			width: 25em;
+			text-align: center;
+		}
+
+		.inputdata {
+			background-color: white;
+			width: 8em;
+			text-align: right;
+		}
+
+		.linedescription {
+			width: 25em;
+		}
+
+		.resultsfield {
+			background-color: lightgreen;
+			font-weight: bold;
+		}
+
+		.flex-container {
+			display: -webkit-flex;
+			display: flex;
+			-webkit-justify-content: center;
+			justify-content: center;
+		}
+
+		.flex-item {
+			width: 800px;
+			margin: 10px;
+			text-align: left;
+		}
+
+		.flex-containerAlert {
+			display: -webkit-flex;
+			display: flex;
+			-webkit-justify-content: center;
+			justify-content: center;
+			font-size: 150%;
+		}
+
+		.flex-itemAlert {
+			width: 800px;
+			margin: 10px;
+			text-align: left;
+		}
+
+		#WksLine1,
+		#WksLine2,
+		#WksLine3,
+		#WksLine4,
+		#WksLine5,
+		#WksLine6,
+		#WksLine7 {
+			width: 8em;
+			text-align: right;
+		}
+
+		#WksLine8,
+		#WksLine9,
+		#WksLine10,
+		#WksLine11 {
+			width: 8em;
+			text-align: right;
+		}
+
+		#RefundAmt,
+		#ItemizedAmt,
+		#SchedATax,
+		#SchedATax1,
+		#F1040Line41 {
+			width: 8em;
+			text-align: right;
+		}
+
+		#F1040Line42,
+		#TaxableRefund {
+			width: 8em;
+			text-align: right;
+		}
+
+		button {
+			background-color: lightblue;
+			font-weight: bold;
+		}
+
+		#ButtonBox {
+			margin-bottom: 0.5em;
+		}
+
+		button {
+			font-size: 105%;
+			font-weight: bold;
+		}
+
+		.versiondisplay {
+			font-weight: bold;
+			margin-left: 4em;
+			margin-right: 4em
+		}
+
+		html {
+			background-color: #cccccc;
+		}
+
+		body {
+			background-color: #eeeeee;
+			font-family: sans-serif;
+			font-size: 0.9em;
+		}
+
+		h1 {
+			text-align: center;
+			font-size: 1.1em;
+			font-weight: bold;
+			text-decoration: underline;
+		}
+
+		.printalternative {
+			display: none;
+		}
+
+		.donotuse {
+			font-size: 300%;
+			position: relative;
+			top: -7em;
+			right: -2em;
+			font-weight: bold;
+			z-index: 2;
+		}
+
+		#userInput {
+			margin-top: 0.5em;
+			margin-bottom: 0.5em;
+		}
+
+		.email {
+			unicode-bidi: bidi-override;
+			direction: rtl;
+		}
+
+		@media print {
+			html {
+				background-color: transparent;
+			}
+
+			body {
+				background-color: transparent;
+				font-size: 80%;
+			}
+
+			.printalternative {
+				display: inline;
+			}
+
+			.printhide {
+				display: none;
+			}
+
+			#Disclaimer {
+				display: none;
+			}
+		}
+	</style>
+
+	<script type="text/javascript">
+		// *************** HOW TO DO YEARLY UPDATE *****************
+		//	Change TAX_YR to current Year
+		//	Add prior year values for StdDeduct
+		//  Check line #s on Schedule A.
+		//
+		//  Variable "before2018" dictates processing and text in calculator.
+		//
+		//	Display of radio button tax year selection is based on the value of TAX_YEAR. Beginning with TY2019.
+		//	Check for changes in instructions.
+		//	Check for changes in prior year return.
+		//
+		// ***************Contributors *****************************
+		// 		Paul Dickey
+		//
+		// ***************Versions *****************************
+
+		var VERSION;
+
+		// --------------------------------------------------------------------------------
+		// KNOWN BUGS: 
+		//		
+		// TODO: 
+		//  1)Write an WriteAlert() function - input validation through alerts, generated 
+		//       independently in each function/use case
+		//	2) 2019 Dynamically change descr on earned income
+		//         id="earnedIncomeRow"
+		//  3) Remove 2018 conditional logic
+		//
+		// CHANGE HISTORY:
+		VERSION = "(Version TY2025.1.0 &nbsp &nbsp 12/08/2025)";
+		//		Changed TAX_YR to 2023
+		//		Added 2022 to Std Deduction
+		//		No Change in Schedule A (draft July 21, 2022)
+		//VERSION = "(Version TY2022.1.0 &nbsp &nbsp 11/02/2022)";
+		//		Changed TAX_YR to 2022
+		//		Added 2021 to Std Deduction
+		//		No Change in Schedule A (draft July 21, 2022)
+		//VERSION = "(Version TY2021.1.0 &nbsp &nbsp 11/10/2021)";
+		//		Changed TAX_YR to 2021
+		//		Made prior year the default tax year.
+		//		Added 2020 values to StdDeduct
+		//		Changed detail descriptions to match refund year.
+		//VERSION = "(Version TY2020.1.1 02/28/2021)";
+		// 		Changed Header to come from TAX_YR
+		//		Changed descriptions lines to make clearer.
+		//VERSION = "(Version TY2020.1.0 12/24/2020)";
+		//		Changed TAX_YR to 2020
+		//		Added 2019 values to StdDeduct
+		//		Checked 2019 Sched A for Changes. Same as 2018.
+		//VERSION = "(Version TY2019.1.0 12/11/2019)";
+		//		Added TAX_YR 
+		//		Made refundTaxYear calculated from TAX_YR
+		//		Added refund year radio button display automatic.
+		//		Added Values for StdDeduct[,] for 2018
+		//		Added variable "before2018" to lock previous code.
+		//			Coded for 2018 Return.
+		//VERSION = "(Version TY2018.2 2/21/2019)";
+		//			Corrected Error: Added calculation fordependent standard deduction. Previously was 0
+		//VERSION = "(Version TY2018.1.1 2/20/2019)";
+		// VJB: 	Added refund year to Check boxes
+		//			Reworked Wording for Federal
+		//			Added wording for Oregon Deduction
+		//			Corrected Error for MFS and spouse filing itemized. Error message displayed when Item Ded was less than Std Deduct for 
+		//				MFS and not itemizing. Therefore would not finish the calculations.
+		//			Updated format of version and push buttons to standard format
+		//VERSION = "(Version TY2018.1 12/09/2018)";
+		//	VJB: 	Changed version numbering and location of refresh print buttons.
+		//			Incorporated Comments from Paul Dickey's testers.
+		//				Added alert for Tax Amount greater than Itemized Amt
+		//				Corrected some spelling and clarified wording
+		//			Moved Table Headers inside Table
+		//VERSION = "(Version 1.0.2 12/01/2018)";
+		//	VJB: 	Deleted alert used for debugging
+		//		Added Tax Year to Entry Year descriptions
+		//VERSION = "(Version 1.0.1 11/30/2018)";
+		// 	VJB: 	Changed develpment version 1.0.0.5 to 1.0.1
+		//VERSION = "(Version 1.0.0.5 11/28/2018)";
+		//	VJB:	Made Content of Results Table Dynamic for both 1040 Std and also for 
+		//VERSION = "(Version 1.0.0.4 11/19/2018)";
+		// 	VJB: 	Deleted Question about Line 43 
+		// 		Calculation for Std Deduct, Over 65 and Blind
+		// VERSION = "(Version 1.0.0.3 10/26/2018)";
+		//	Changed Title
+		//	Added 2017 and deleted 2013
+		// 	Moved TP and SP to separate lines
+		//VERSION = "(Version 1.0.0.2 03/15/2018)";   
+		//	VJB Initial Program
+
+		//default to PriorYear
+		var TAX_YR = "2025"
+		var taxRefundYearSelected = true;
+		var taxRefundYear = TAX_YR - 1;
+
+		// Set variable for year of tax change
+		var before2018 = (taxRefundYear < "2018") ? true : false;
+
+		//default to MFJ
+		var filingStatusSelected = true;
+		var FS = "MFJ";
+
+		var DeductIndex = taxRefundYear + FS
+
+		var StdDeduct = new Array;   // Each Item of Array has Values and increment Base, Increment for Over65 and Blind
+
+		StdDeduct["2024SNG"] = [14600, 1950];
+		StdDeduct["2024MFS"] = [14600, 1550];
+		StdDeduct["2024MFJ"] = [29200, 1550];
+		StdDeduct["2024WID"] = [29200, 1550];
+		StdDeduct["2024HOH"] = [21900, 1950];
+
+		StdDeduct["2023SNG"] = [13850, 1850];
+		StdDeduct["2023MFS"] = [13850, 1500];
+		StdDeduct["2023MFJ"] = [27700, 1500];
+		StdDeduct["2023WID"] = [27700, 1500];
+		StdDeduct["2023HOH"] = [20800, 1850];
+
+		StdDeduct["2022SNG"] = [12950, 1750];
+		StdDeduct["2022MFS"] = [12950, 1400];
+		StdDeduct["2022MFJ"] = [25900, 1400];
+		StdDeduct["2022WID"] = [25900, 1400];
+		StdDeduct["2022HOH"] = [19400, 1750];
+
+		StdDeduct["2021SNG"] = [12550, 1700];
+		StdDeduct["2021MFS"] = [12550, 1350];
+		StdDeduct["2021MFJ"] = [25100, 1350];
+		StdDeduct["2021WID"] = [25100, 1350];
+		StdDeduct["2021HOH"] = [18800, 1700];
+
+		StdDeduct["2020SNG"] = [12400, 1650];
+		StdDeduct["2020MFS"] = [12400, 1300];
+		StdDeduct["2020MFJ"] = [24800, 1300];
+		StdDeduct["2020WID"] = [24800, 1300];
+		StdDeduct["2020HOH"] = [18650, 1650];
+
+		StdDeduct["2019SNG"] = [12200, 1650];
+		StdDeduct["2019MFS"] = [12200, 1300];
+		StdDeduct["2019MFJ"] = [24400, 1300];
+		StdDeduct["2019WID"] = [24400, 1300];
+		StdDeduct["2019HOH"] = [18350, 1650];
+
+		StdDeduct["2018SNG"] = [12000, 1600];
+		StdDeduct["2018MFS"] = [12000, 1300];
+		StdDeduct["2018MFJ"] = [24000, 1300];
+		StdDeduct["2018WID"] = [24000, 1300];
+		StdDeduct["2018HOH"] = [18000, 1600];
+
+		StdDeduct["2017SNG"] = [6350, 1550];
+		StdDeduct["2017MFS"] = [6350, 1250];
+		StdDeduct["2017MFJ"] = [12700, 1250];
+		StdDeduct["2017WID"] = [12700, 1250];
+		StdDeduct["2017HOH"] = [9350, 1550];
+
+		StdDeduct["2016SNG"] = [6300, 1550];
+		StdDeduct["2016MFS"] = [6300, 1250];
+		StdDeduct["2016MFJ"] = [12600, 1250];
+		StdDeduct["2016WID"] = [12600, 1250];
+		StdDeduct["2016HOH"] = [9300, 1550];
+
+		StdDeduct["2015SNG"] = [6300, 1550];
+		StdDeduct["2015MFS"] = [6300, 1250];
+		StdDeduct["2015MFJ"] = [12600, 1250];
+		StdDeduct["2015WID"] = [12600, 1250];
+		StdDeduct["2015HOH"] = [9250, 1550];
+
+		StdDeduct["2014SNG"] = [6200, 1550];
+		StdDeduct["2014MFS"] = [6200, 1200];
+		StdDeduct["2014MFJ"] = [12400, 1200];
+		StdDeduct["2014WID"] = [12400, 1200];
+		StdDeduct["2014HOH"] = [9100, 1550];
+
+		//----------------------------------------------------------------------------------------
+		//                                   Initialize()
+		//----------------------------------------------------------------------------------------
+		function Initialize() {
+			settaxYearDisplay();
+			setDetailDescrForSched1();
+			FileChange();    /*Set */
+
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   settaxYearDisplay()
+		// This function sets the display amd valies for th tax year based on the value of taxYear.
+		// This makes the system easy to change from year to year.
+		//----------------------------------------------------------------------------------------
+		function settaxYearDisplay() {
+			// Must have 5 values to handle traing in actual TY using previoud TY.
+			radioTY_1.value = labelTY_1.innerHTML = taxRefundYear;
+			radioTY_2.value = labelTY_2.innerHTML = taxRefundYear - 1;
+			radioTY_3.value = labelTY_3.innerHTML = taxRefundYear - 2;
+			radioTY_4.value = labelTY_4.innerHTML = taxRefundYear - 3;
+			// radioTY_5.value = labelTY_5.innerHTML = taxRefundYear -4;
+
+			// Set the checked radio button notice 
+			var todaydate = new Date()
+
+			if (todaydate.getFullYear() == TAX_YR) {
+				radioTY_2.checked = true;
+				settaxRefundYear(radioTY_2.value);
+			} else {
+				radioTY_1.checked = true;
+				settaxRefundYear(radioTY_1.value);
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   checkNumeric(index)
+		// This function verifies that the input is numeric
+		//----------------------------------------------------------------------------------------
+		function checkNumeric(index) {
+			var bdvar = document.getElementById(index);
+			var a = bdvar.value + ""; // This forces bdvar.value to be a string
+
+			//	alert("function checkNumeric(" + index + ") called");
+			//	alert("bdvar.value = " + bdvar.value);
+
+			if (bdvar.value === "") { // OK not to enter 0
+				return;
+			}
+			if (isNaN(bdvar.value)) {
+				alert("Entry is not a valid number. \n \n$, Spaces or commas are not permitted in the number." +
+					" \n \nEntry may be a whole or decimal number. \nDecimal numbers will be rounded to the nearest whole number.");
+
+				return;
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   setFilingStatus(code)
+		// This function records the filing status choice
+		//----------------------------------------------------------------------------------------
+		function setFilingStatus(code) {
+			filingStatusSelected = true;
+			FS = code;
+			FileChange();
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   settaxRefundYear(code)
+		// This function records the tax year choice
+		//----------------------------------------------------------------------------------------
+		function settaxRefundYear(code) {
+			taxRefundYearSelected = true;
+			taxRefundYear = code;
+			before2018 = (taxRefundYear < "2018") ? true : false;
+
+			if (before2018) {
+
+			} else {
+
+			}
+			FileChange();
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   FileChange()
+		// This function readjusts settings when filing status information is changed
+		//----------------------------------------------------------------------------------------
+		function FileChange() {
+
+			DeductIndex = taxRefundYear + FS;
+
+			// Initialize turning off check boxes
+			TPBlind.checked = TP65.checked = SPBlind.checked = SP65.checked = false;
+			MustItemize.checked = Dependent.checked = false;
+
+			// turn off check box displays 
+			MFSItemize.style.display = "none";
+			SNGDependent.style.display = "none";
+			SpouseInfo.style.display = "none";
+			DynamicRow.style.display = "none";
+			earnedIncomeRow.style.display = "none";
+
+			// Necessary if going from dependent checked
+			F1040Line42.disabled = false;
+			F1040Line42.value = "";
+
+			switch (FS) {
+				case "MFJ":
+					SpouseInfo.style.display = "inline";
+					DynamicRow.style.display = "block";
+					break;
+				case "MFS":
+					MFSItemize.style.display = "inline";
+					DynamicRow.style.display = "block";
+					break;
+				case "SNG":
+					SNGDependent.style.display = "inline";
+					DynamicRow.style.display = "block";
+					earnedIncomeRow.style.display = "table-row";
+					earnedIncome.disabled = true;
+
+					break;
+				case "HOH":
+				case "WID":
+				//			SPBlind.disabled = SP65.disabled = true;
+			}
+
+			resetDetailAmounts();
+			resetInputDescr();
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   resetInputDescr()
+		// This function sets the detail damounts to blank
+		//----------------------------------------------------------------------------------------
+		function resetInputDescr() {
+
+			Headerrow.innerHTML = "This table is for refunds received in TY" + TAX_YR + " for PRIOR tax years."
+			FilingRow.innerHTML = "<b>Filing status from TY" + taxRefundYear + "&nbsp return:</b>";
+			TPRow.innerHTML = "<b>From TY" + taxRefundYear + "&nbsp return:</b>";
+			DynamicRow.innerHTML = "<b>From TY" + taxRefundYear + "&nbsp return:</b>";
+			RefundAmtDescr.innerHTML = "*Refund Amount (1099-G) for TY" + taxRefundYear;
+
+			SchedATaxDescr1Row.style.display = "none";
+			F1040Line41Row.style.display = "none";
+			F1040Line42Row.style.display = "none";
+
+			if (before2018) {
+				SchedATaxDescr.innerHTML = "*Schedule A State Taxes (Line 5) from TY" + taxRefundYear;
+				ItemizedAmtDescr.innerHTML = "*Schedule A Itemized Deductions (Line 29) from TY" + taxRefundYear;
+				F1040Line41Descr.innerHTML = "*Form 1040 Line 41 (AGI - Deductions)  from TY" + taxRefundYear;
+				F1040Line42Descr.innerHTML = "*Form 1040 Line 42 (Exemptions) from TY" + taxRefundYear;
+
+				F1040Line41Row.style.display = "table-row";
+				F1040Line42Row.style.display = "table-row";
+			} else {
+				SchedATaxDescr.innerHTML = "*Schedule A Total State Taxes (Line 5d) from TY" + taxRefundYear;
+				SchedATaxDescr1.innerHTML = "*Schedule A Allowable State Taxes (Line 5e) from TY" + taxRefundYear;
+				ItemizedAmtDescr.innerHTML = "*Schedule A Itemized Deductions (Line 17) from TY" + taxRefundYear;
+
+				SchedATaxDescr1Row.style.display = "table-row";
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   resetDetailAmounts()
+		// This function sets the detail damounts to blank
+		//----------------------------------------------------------------------------------------
+		function resetDetailAmounts() {
+			WksLine1.innerHTML = "";
+			WksLine2.innerHTML = "";
+			WksLine3.innerHTML = "";
+			WksLine4.innerHTML = "";
+			WksLine5.innerHTML = "";
+			WksLine6.innerHTML = "";
+			WksLine7.innerHTML = "";
+			WksLine8.innerHTML = "";
+			WksLine9.innerHTML = "";
+			WksLine10.innerHTML = "";
+			WksLine11.innerHTML = "";
+
+			setDetailDescrForSched1();
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   setDetailDescrForSched1()
+		// This function sets the detail description for the Schedule 1 Line 10 Worksheet
+		//----------------------------------------------------------------------------------------
+		function setDetailDescrForSched1() {
+			if (before2018) {
+				WksName.innerHTML = "Worksheet Schedule 1 Line 10";
+
+				// Description
+				DescrLine1.innerHTML = "1. State Tax Refund (capped by Sched A Line 5) from TY" + taxRefundYear + " return";
+				DescrLine2.innerHTML = "2. Itemized Deductions from TY" + taxRefundYear + " return";
+				DescrLine3.innerHTML = "3. Basic Standard Deduction for TY" + taxRefundYear;
+				DescrLine4.innerHTML = "4. Additional Deduction for Over 65 and/or Blind";
+				DescrLine5.innerHTML = "5.      Standard Deduction from TY" + taxRefundYear + " return";
+				DescrLine6.innerHTML = "6. Line 2 - Line 5 (Not Less than 0)";
+				DescrLine7.innerHTML = "7. Taxable Refund Amount (to Schedule 1 Line 10)";
+
+				// Delete Unused Table Rows
+				WksRow8.style.display = "none";
+				WksRow9.style.display = "none";
+				WksRow10.style.display = "none";
+				WksRow11.style.display = "none";
+			} else {
+				WksName.innerHTML = "Worksheet Schedule 1 Line 1";
+				// Description
+				DescrLine1.innerHTML = "1. State Tax Refund (capped by Sched A Line 5d) from TY" + taxRefundYear + " return";
+				DescrLine2.innerHTML = "2. Sched A Line 5d - Sched A Line 5e from TY" + taxRefundYear + " return";
+				DescrLine3.innerHTML = "3. Line 1 - Line2 (Not less than 0)";
+				DescrLine4.innerHTML = "4. Itemized Deductions from TY" + taxRefundYear + " return";
+				DescrLine5.innerHTML = "5. Basic Standard Deduction for TY" + taxRefundYear;
+				DescrLine6.innerHTML = "6. Additional Deduction for Over 65 and/or Blind";
+				DescrLine7.innerHTML = "7.     Standard Deduction from TY" + taxRefundYear + " return";
+				DescrLine8.innerHTML = "8. Line 4 - Line 7 (Not Less than 0)";
+				DescrLine9.innerHTML = "9. Taxable Refund Amount - minimum (Line 3, Line 8) (to Schedule 1 Line 1)";
+
+				// Delete Unused Table Rows
+				//WksRow8.style.display = "none"	;
+				//WksRow9.style.display = "none"	;
+				WksRow10.style.display = "none";
+				WksRow11.style.display = "none";
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   setDetailDescrFor525()
+		// This function sets the detail description for the 525 Worksheet
+		//----------------------------------------------------------------------------------------
+		function setDetailDescrFor525() {
+			WksName.innerHTML = "Worksheet 2 Pub 525";
+
+			// Enter Descriptions
+			DescrLine1.innerHTML = "1.  State Tax Refund (capped by Sched A Line 5)from TY" + taxRefundYear + " return";
+			DescrLine2.innerHTML = "2.  Total of Other Schedule A Reimbursements";
+			DescrLine3.innerHTML = "3.  Line 1 + Line 2 ";
+			DescrLine4.innerHTML = "4.  Itemized Deductions (Sched A Line 29) from TY" + taxRefundYear + " return";
+			DescrLine5.innerHTML = "5.  Amount Previously Refunded";
+			DescrLine6.innerHTML = "6.  Line 4 - Line 5";
+			DescrLine7.innerHTML = "7.  Standard Deduction from TY" + taxRefundYear + " return";
+			DescrLine8.innerHTML = "8.  Line 6 - Line 7";
+			DescrLine9.innerHTML = "9.  Smaller of Line 3 and Line 8";
+			DescrLine10.innerHTML = "10. Taxable Income (1040 Line 41 - Line 42)";
+			DescrLine11.innerHTML = "11.  Taxable Refund Amount";
+
+			// Restore Table Rowsthat might have been deleted
+
+			WksRow8.style.display = "";
+			WksRow9.style.display = "";
+			WksRow10.style.display = "";
+			WksRow11.style.display = "";
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   showEarnedIncomeRow()
+		// This function shows or hides the earned income row
+		//----------------------------------------------------------------------------------------
+		function showEarnedIncomeRow() {
+
+			if (Dependent.checked) {
+				earnedIncome.disabled = false;
+				F1040Line42.disabled = true;
+				F1040Line42.value = 0;
+			} else {
+				earnedIncome.disabled = true;
+				F1040Line42.disabled = false;
+				F1040Line42.value = "";
+			}
+		}
+		//----------------------------------------------------------------------------------------
+		//                                   calcStdDeductDP()
+		// This function calculated the standard deduction for a dependent. Steps refer to 2017 4012 p F-2
+		//----------------------------------------------------------------------------------------
+		function calcStdDeductDP() {
+
+			var returnval = +earnedIncome.value;			//Step 1
+
+			returnval += 350;								//Step 3
+
+			returnval = Math.max(returnval, 1050);			//Step 5
+
+			returnval = Math.min(returnval, StdDeduct[DeductIndex][0]);  // Step 7
+
+			return returnval;
+		}
+		//----------------------------------------------------------------------------------------
+		//                                   calcTaxableRefund()
+		// This function calculates the taxable refund and fills out the table
+		// 
+		//----------------------------------------------------------------------------------------
+		function calcTaxableRefund() {
+			var StdDeductAdjust = 0;
+			var varMessage;
+			var errorMessage;
+
+			// Calculate  Adjustment for 65 or Blind
+			if (TP65.checked) { StdDeductAdjust += StdDeduct[DeductIndex][1] };
+			if (TPBlind.checked) { StdDeductAdjust += StdDeduct[DeductIndex][1] };
+			if (SP65.checked) { StdDeductAdjust += StdDeduct[DeductIndex][1] };
+			if (SPBlind.checked) { StdDeductAdjust += StdDeduct[DeductIndex][1] };
+
+			// Set the Stamdard Deduction
+			if (Dependent.checked) {
+				thisStdDeduct = calcStdDeductDP() + StdDeductAdjust;
+			} else if (FS == "MFS" && MustItemize.checked) {
+				thisStdDeduct = 0;
+			} else {
+				thisStdDeduct = StdDeduct[DeductIndex][0] + StdDeductAdjust;
+			}
+
+			Alert.innerHTML = ""
+			detailTable.style.display = ""
+			detailTableHeader.style.display = ""
+
+			//Check for Standard Deduction > Itemized Deduction
+			if ((thisStdDeduct - ItemizedAmt.value) > 0) {
+				Alert.innerHTML = " ALERT; Standard Deduction of $" + thisStdDeduct
+					+ " is greater than <br> Itemized Deduction of $" + ItemizedAmt.value
+					+ " <br><br>TP should have taken Standard Deduction\n and therefore refund is not taxable.";
+
+				Alert.style.backgroundColor = "DarkOrange";
+				detailTable.style.display = "none"
+				detailTableHeader.style.display = "none"
+				TaxableRefund.innerHTML = 0;
+				return 1
+			}
+
+			//Check for State Taxes > Itemized Deduction
+			errorMessage = false;
+
+			if (before2018) {
+				if ((SchedATax.value - ItemizedAmt.value) > 0) {
+					errorMessage = true;
+					varMessage = "State Tax (Schd A Line 5) of $" + SchedATax.value;
+				}
+			} else {
+				if ((SchedATax1.value - ItemizedAmt.value) > 0) {
+					errorMessage = true;
+					varMessage = "State Allowable Tax (Sched A Line 5e) of $" + SchedATax1.value;
+
+				}
+			}
+			if (errorMessage) {
+				Alert.innerHTML = " ERROR: " + varMessage
+					+ " <br> is greater than Itemized Deduction of $" + ItemizedAmt.value
+					+ " <br><br>This is not possible. Please recheck the data.";
+
+				Alert.style.backgroundColor = "DarkOrange";
+				detailTable.style.display = "none"
+				detailTableHeader.style.display = "none"
+				TaxableRefund.innerHTML = "ERROR";
+				return 1
+			}
+
+			// Check to see if dependent and has exemptions. Only pre 2018
+			if ((before2018) && (Dependent.checked && (F1040Line42.value > 0))) {
+				Alert.innerHTML = " ALERT; A Dependent cannot have any exemptions! "
+					+ " <br> Check the prior year tax return.";
+
+				Alert.style.backgroundColor = "DarkOrange";
+				detailTable.style.display = "none"
+				detailTableHeader.style.display = "none"
+				TaxableRefund.innerHTML = 0;
+				return 1
+			}
+
+			// Check to see if Total State Tax < Allowable Tax. Only  2018 +
+			if ((!before2018) && (SchedATax.value - SchedATax1.value < 0)) {
+				Alert.innerHTML = " ERROR: Total State Taxes of $" + SchedATax.value
+					+ "<br> is less than Allowable State Taxes of $" + SchedATax1.value
+					+ " <br><br>This is not possible. Please recheck the data.";
+
+				Alert.style.backgroundColor = "DarkOrange";
+				detailTable.style.display = "none"
+				detailTableHeader.style.display = "none"
+				TaxableRefund.innerHTML = 0;
+				return 1
+			}
+			// Calculate worksheet amounts
+			if (before2018) {
+				if ((F1040Line41.value - F1040Line42.value) <= 0) {
+					//requires special processing Pub 525 Since line 43 = 0
+
+					setDetailDescrFor525();
+
+					// Calculations
+					WksLine1.innerHTML = Math.min(RefundAmt.value, SchedATax.value);
+					WksLine2.innerHTML = "None";
+					WksLine3.innerHTML = WksLine1.innerHTML;
+					WksLine4.innerHTML = ItemizedAmt.value;
+					WksLine5.innerHTML = "None";
+					WksLine6.innerHTML = WksLine4.innerHTML;
+					WksLine7.innerHTML = thisStdDeduct;
+					WksLine8.innerHTML = WksLine6.innerHTML - WksLine7.innerHTML;
+					WksLine9.innerHTML = Math.min(WksLine3.innerHTML, WksLine8.innerHTML);
+					WksLine10.innerHTML = F1040Line41.value - F1040Line42.value;
+					WksLine11.innerHTML = Math.max(0, +WksLine10.innerHTML + +WksLine9.innerHTML);
+
+					TaxableRefund.innerHTML = +WksLine11.innerHTML;
+				} else {
+
+					//Standard processing Schedule 1 Line 10
+
+					setDetailDescrForSched1();
+
+					WksLine1.innerHTML = Math.min(RefundAmt.value, SchedATax.value);
+					WksLine2.innerHTML = ItemizedAmt.value;  // Convert to number
+					WksLine3.innerHTML = thisStdDeduct - StdDeductAdjust;
+					WksLine4.innerHTML = StdDeductAdjust;
+					WksLine5.innerHTML = thisStdDeduct;
+					WksLine6.innerHTML = Math.max(0, +WksLine2.innerHTML - WksLine5.innerHTML);
+					WksLine7.innerHTML = Math.min(+WksLine1.innerHTML, +WksLine6.innerHTML);
+
+					TaxableRefund.innerHTML = WksLine7.innerHTML;
+				}
+			} else {   // 2018 and after
+				//Standard processing Schedule 1 Line 11
+				setDetailDescrForSched1();
+
+				WksLine1.innerHTML = Math.min(RefundAmt.value, SchedATax.value);
+				WksLine2.innerHTML = +SchedATax.value - SchedATax1.value;
+				WksLine3.innerHTML = Math.max(0, WksLine1.innerHTML - WksLine2.innerHTML);
+				WksLine4.innerHTML = ItemizedAmt.value;  // Convert to number
+				WksLine5.innerHTML = thisStdDeduct - StdDeductAdjust;
+				WksLine6.innerHTML = StdDeductAdjust;
+				WksLine7.innerHTML = thisStdDeduct;
+				WksLine8.innerHTML = Math.max(0, +WksLine4.innerHTML - WksLine7.innerHTML);
+				WksLine9.innerHTML = Math.min(+WksLine3.innerHTML, +WksLine8.innerHTML);
+
+				TaxableRefund.innerHTML = WksLine9.innerHTML;
+			}
+		}
+	</script>
+</head>
+
+<!-- ************************************************************************************************ -->
+<!-- ********************************* START OF HTML ************************************************ -->
+<!-- ************************************************************************************************ -->
+
+<body onload="Initialize()">
+	<center>
+		<span class="tooltitle"> Simple Taxable Refund Calculator ( Oregon Only) </span>
+		<br><button onclick="location.reload(true)"><b>Clear and reset calculator</b></button>
+		<span id="Version" class="versiondisplay"></span>
+		<script>Version.innerHTML = VERSION;</script>
+		<button onclick="window.print()"> Print a taxpayer copy</button>
+		<br><br>
+		<div id="Disclaimer" class="flex-container">
+			<div class="flex-item">
+				<b>Use this calculator ONLY if ALL of the following conditions are met for the REFUND TAX YEAR:
+					<ul type=square">
+						<li> Refund amount on 1099-G equals refund amount on the Refund Tax Return </li>
+						<li> There were no unused credits on the Refund Tax Return</li>
+						<li> No other refunds or reimbursements of Schedule A amounts on the Refund Tax Return</li>
+						<li> No state sales tax on Schedule A on the Refund Tax Return</li>
+						<li> No NOL carry forward on the Refund Tax Return</li>
+						<li> If TP filed as MFJ on the Refund Tax Return, they are filing MFJ in current year</li>
+					</ul>
+				</b>
+				<b>Otherwise</b> use the calculator at <a href="https://cotaxaide.org/tools/Refund Calculator.html">
+					https://cotaxaide.org/tools/Refund Calculator.html</a>.
+			</div>
+		</div>
+
+		<br><br>
+
+		<table id="medExpInput">
+			<tbody>
+				<tr>
+					<td id="Headerrow" colspan="2" class="workaroundtitle">
+						This table is for refunds received in TY2019 for PRIOR tax years.</td>
+				</tr>
+
+				<tr>
+					<td class="inputfield">Taxpayer's Name</td>
+					<td class="inputfield" colspan="1">
+						<input id="TPName" tabindex="1" title="Optionally, enter the Taxpayer&#39;s name." value="">
+					</td>
+				</tr>
+				<tr>
+					<td class="inputfield" align="right"><b>Year for which the refund was issued:</b></td>
+					<td class="inputfield" colspan="1" tabindex="2" <input="" type="radio" name="Year" value="N">
+						<input id="radioTY_4" type="radio" name="Year" value=""
+							onclick="settaxRefundYear(this.value)"><label id="labelTY_4" for="radioTY_4">0</label>
+						<input id="radioTY_3" type="radio" name="Year" value=""
+							onclick="settaxRefundYear(this.value)"><label id="labelTY_3" for="radioTY_3">0</label>
+						<input id="radioTY_2" type="radio" name="Year" value=""
+							onclick="settaxRefundYear(this.value)"><label id="labelTY_2" for="radioTY_2">0</label>
+						<input id="radioTY_1" type="radio" name="Year" value="" onclick="settaxRefundYear(this.value)"
+							checked="checked"><label id="labelTY_1" for="radioTY_1">0</label>
+					</td>
+				</tr>
+				<tr>
+					<td id="FilingRow" align="right" class="inputfield">*Federal Filing Status</td>
+					<td class="inputfield" colspan="1" tabindex="3">
+						<input type="radio" name="filingStatus" value="SNG"
+							onclick="setFilingStatus('SNG')">Single
+						<input type="radio" name="filingStatus" title="Married Filing Jointly" value="MFJ"
+							onclick="setFilingStatus('MFJ')" checked="checked">MFJ
+						<input type="radio" name="filingStatus" title="Married Filing Single" value="MFS"
+							onclick="setFilingStatus('MFS')">MFS
+						<input type="radio" name="filingStatus" title="Head of Household" value="HOH"
+							onclick="setFilingStatus('HOH')">HOH
+						<input type="radio" name="filingStatus" title="Qualifying Widow(er)" value="WID"
+							onclick="setFilingStatus('WID')">QSS
+					</td>
+				</tr>
+
+				<tr>
+					<td id="TPRow" class="inputfield" align="right"> <b>For Refund Tax Year </b></td>
+					<td class="inputfield" tabindex="4" <input="" type="checkbox" value="N">
+						<input id="TP65" type="checkbox" title="Taxpayer was 65 or older for refund Tax Year"
+							tabindex="2" /> TP 65 or older
+						<input id="TPBlind" type="checkbox" title="Taxpayer was blind for refund Tax Year"
+							tabindex="3" /> TP was blind
+					</td>
+
+				<tr>
+					<td id="DynamicRow" class="inputfield" align="right"> <b>For Refund Tax Year </b></td>
+					<td class="inputfield" tabindex="5" <input="" type="checkbox" value="N">
+						<span id="SNGDependent"><input id="Dependent" type="checkbox" onchange="showEarnedIncomeRow()">
+							Dependent on another taxpayer&apos;s return</span>
+						<span id="MFSItemize"> <input id="MustItemize" type="checkbox"> Spouse itemized<br /></span>
+						<span id="SpouseInfo"> <input id="SP65" type="checkbox" title="Spouse was 65 or older"
+								tabindex="4" /> SP 65 or older
+							<input id="SPBlind" type="checkbox" title="Spouse was blind" tabindex="5" /> SP was blind
+						</span>
+					</td>
+				</tr>
+
+				<tr id="earnedIncomeRow" style="display:none;">
+					<td id="earnedIncomeDescr" class="inputfield"> <b>Earned Income (usually 1040 Line 7 + Line 12 -
+							Line 27) </b></td>
+					<td class="inputfield">
+						<input id="earnedIncome" class="inputdata" title="Enter Earned Income Amount"
+							onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+
+				<tr>
+					<td class="inputfield" id="RefundAmtDescr">*Refund Amount (1099-G)</td>
+					<td class="inputfield" colspan="1">
+						<input id="RefundAmt" tabindex="32" title="Enter State Refund Amount"
+							onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="inputfield" id="SchedATaxDescr">*Schedule A State Taxes (Line 5)</td>
+					<td class="inputfield" colspan="1">
+						<input id="SchedATax" tabindex="32" title="Schedule A Line 5" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr id="SchedATaxDescr1Row" style="display:none;">
+					<td class="inputfield" id="SchedATaxDescr1">*Schedule A State Taxes (Line 5e)</td>
+					<td class="inputfield" colspan="1">
+						<input id="SchedATax1" tabindex="32" title="Schedule A Line 5" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+
+				<tr>
+					<td class="inputfield" id="ItemizedAmtDescr">*Schedule A Itemized Deductions (Line 29)</td>
+					<td class="inputfield" colspan="1">
+						<input id="ItemizedAmt" tabindex="32" title="Schedule A Line 29" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+
+				<tr id="F1040Line41Row">
+					<td class="inputfield" id="F1040Line41Descr">*Form 1040 Line 41 (AGI - Deductions)</td>
+					<td class="inputfield" colspan="1">
+						<input id="F1040Line41" tabindex="32" title="Form 1040 Line 41 (AGI - Deductions)"
+							onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr id="F1040Line42Row">
+					<td class="inputfield" id="F1040Line42Descr">*Form 1040 Line 42 (Exemptions)</td>
+					<td class="inputfield" colspan="1">
+						<input id="F1040Line42" tabindex="32" title="1040 Line 42 (Exemptions)"
+							onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+
+		<button id="Calcbutton" tabindex="36" onclick="calcTaxableRefund()">Click here to Calculate<br>Taxable Oregon
+			Refund</button>
+		<br><br>
+
+		<table>
+			<tbody>
+				<tr>
+					<td class="inputfield"><b>The Taxable Oregon Refund is:<br>
+							&nbsp &nbsp Enter into TSO Federal>>Income>>State and Local Refunds<br>and<br>
+							&nbsp &nbsp Enter into TSO State>>Subtractions from Income </b></td>
+					<td class="resultsfield" id="TaxableRefund"></td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+
+		<div id="Alert" class="flex-containerAlert">
+			<div class="flex-itemAlert">
+			</div>
+		</div>
+
+		<table id="detailTable">
+			<tbody>
+				<tr>
+					<td id="detailTableHeader" colspan="2" class="workaroundtitle">
+						Details on Calculation of Taxable Amount</td>
+				</tr>
+
+				<tr>
+					<td id="WksName" colspan="1" class="workaroundtitle"> </td>
+					<td colspan="1" class="workaroundtitle">Amount</td>
+				</tr>
+				<tr>
+					<td id="DescrLine1" class="linedescription"> 1. State Tax Refund (capped by Sched A Line 5)from
+						TY2017 return</td>
+					<td id="WksLine1"></td>
+				</tr>
+
+				<tr>
+					<td id="DescrLine2" class="linedescription"> 2. Total of Other Schedule A Reimbursements</td>
+					<td id="WksLine2"></td>
+				</tr>
+
+				<tr>
+					<td id="DescrLine3" class="linedescription"> 3. Line 1 + Line 2</td>
+					<td id="WksLine3"></td>
+				</tr>
+				<tr>
+					<td id="DescrLine4" class="linedescription"> 4. Itemized Deductions</td>
+					<td id="WksLine4"></td>
+				</tr>
+				<tr>
+					<td id="DescrLine5" class="linedescription"> 5. Amount Previously Refunded</td>
+					<td id="WksLine5"></td>
+				</tr>
+				<tr>
+					<td id="DescrLine6" class="linedescription"> 6. Line 4 - Line 5</td>
+					<td id="WksLine6"></td>
+				</tr>
+				<tr>
+					<td id="DescrLine7" class="linedescription"> 7. Standard Deduction</td>
+					<td id="WksLine7"></td>
+				</tr>
+				<tr id="WksRow8">
+					<td id="DescrLine8" class="linedescription"> 8. Line 6 - Line 7</td>
+					<td id="WksLine8"></td>
+				</tr>
+				<tr id="WksRow9">
+					<td id="DescrLine9" class="linedescription"> 9. Smaller of Line 3 and Line 8</td>
+					<td id="WksLine9"></td>
+				</tr>
+				<tr id="WksRow10">
+					<td id="DescrLine10" class="linedescription">10. Taxable Income (1040 Line 41 - Line 42)</td>
+					<td id="WksLine10"></td>
+				</tr>
+				<tr id="WksRow11">
+					<td id="DescrLine11" class="linedescription">11. Taxable Refund Amount</td>
+					<td id="WksLine11"></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<br><br>
+		<div id="Disclaimer" class="flex-container">
+			<div class="flex-item">
+				<b>Information:</b> The calculator in TaxSlayer may be unreliable.
+				Use either this calculator for simple refunds (see restrictions above) or <a
+					href="https://cotaxaide.org/tools/Refund Calculator.html">
+					https://cotaxaide.org/tools/Refund Calculator.html</a> for more complicated refunds.
+				<br><br>If you have comments, please email to <span class="email">krow.sirrahrednax@rednax</span>
+			</div>
+		</div>
+		<br><br>
+	</center>
+</body>
+
+</html>

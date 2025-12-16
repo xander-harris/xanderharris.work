@@ -8,3 +8,45 @@ This is my work page. Here I will showcase some of my projects and accomplishmen
 ![](assets/tax_tools.png){.float-left width="100px"}
 
 I develop and maintain tax calculation tools for [Oregon VITA volunteers](https://ortaxvolunteers.org), helping preparers navigate Oregon-specific deductions and credits. These tools support free tax preparation services for families earning under $67,000. **(Volunteer)**
+
+### Tool descriptions 
+
+1. [Dependent Sharing and Comparing Return Results](assets/tax_tools/dependent-sharing.html)
+
+    Dependents can sometimes qualify as a dependent of multiple taxpayers, each filing a separate return. Claiming a dependent affects a taxpayer's eligibility for a number of tax benefits: Head of Household Filing Status, Child Tax Credit (CTC), Earned Income Tax Credit (EITC), Child and Dependent Care Credit, and Oregon Kids Credit. But each dependent may only be claimed by one taxpayer. Therefore, maximizing the tax benefits across multiple returns involves making strategic choices about which dependent(s) are claimed by which taxpayer. This tool helps preparers understand which claim scenarios are likely to result in larger overall refunds and provides them with a worksheet to record their results as they search for the optimal assignment of dependents.
+
+1. [Determining Support](assets/tax_tools/DeterminingSupport.html)
+
+    A taxpayer may claim another person as a dependent on their tax return if they meet the IRS definitions to qualify as a dependent. Part of the qualification tests involve the taxpayer providing support for that person. This tool walks tax preparers and taxpayers through the calculations to determine if the taxpayer provides sufficient support for the person to qualify as a dependent.
+
+1. [Education and Scholarship Calculator](assets/tax_tools/Education-Credit-Calculator.html)
+
+    Education credits are complicated. The Federal tax code currently offers two credits: the American Opportunity Credit and the Lifetime Learning Credit. The credit amounts depend on qualifying education expenses and student income (including restricted and unrestricted scholarship income). Finding the optimal tax benefit for the taxpayer involves totaling all education expenses and strategically allocating scholarship income to maximize tax credits while reducing taxable income. This tool assists preparers in walking through the necessary scenarios and identifying the optimal choices.
+
+1. [Cost of Keeping Up a Home](assets/tax_tools/Keeping-up-a-home.html)
+
+    To claim the Head of Household (HOH) filing status, a taxpayer must (among other requirements) pay more than half of the cost of keeping up a home. This tool systematically walks taxpayers and preparers through the associated allowable costs to consider when determining the dollar value to keep up the taxpayer's home.
+
+1. [Medicaid Waiver Payments](assets/tax_tools/Medicaid-Waiver-Payments.html)
+
+    Under the Social Security Act, states can pay caregivers for family members directly for care they provide in their homes. These payments may be elected to be excluded from the taxpayer's taxable income and/or from their earned income. There is often overlap with additional tax benefits (Child Tax Credit or Earned Income Tax Credit) which require earned income. Therefore, the optimal tax benefit for the taxpayer often depends on how the Medicaid Waiver Payments are handled on the return. This tool walks preparers through the different scenarios and provides them a structure to systematically record the different results. 
+
+1. [Oregon Federal Pension Subtraction](assets/tax_tools/Oregon-Federal-Pension-Subtraction.html)
+    
+    The Oregon Tax code allows for a subtraction from a taxpayer's state taxable income equal to the portion of federal pension payments that are based on federal employment before October 1, 1991. An interesting relic from tax litigation and political compromise from decades past! This tool assists tax preparers in calculating the percentage of federal pension payments to subtract based on the taxpayer's federal employment service dates.
+
+1. [Oregon Retirement Tax Credit](assets/tax_tools/Oregon-Retirement-Tax-Credit.html)
+
+    Oregon offers taxpayers a credit to help reduce Oregon state tax on pension income for low income, senior, taxpayers. This tool helps preparers step through the qualification requirements and calculate the credit amount the taxpayer qualifies for.
+
+1. [Scratch Pad](assets/tax_tools/scratch.html)
+
+    The scratch pad is simply an web calculator that allows preparers to generate and sum a list of dollar values while recording notes related to each entry on the list. Mostly used to print out and include with the completed return to "show ones work" while totaling expenses.
+
+1. [Simple Oregon Refund Calculator](assets/tax_tools/Simple-Oregon-Refund-Calculator.html)
+
+    It's occasionally possible for taxpayers to receive tax refunds in the tax year for returns that were filed in previous years. In these cases, some parts of the refund amount may be taxable income, but it's complicated. This tool helps tax preparers walk though the considertaions and determine the taxable amount.
+
+1. [Special Oregon Medical Subtraction (SOMS)](assets/tax_tools/Special-Oregon-Medical-Subtraction-Calculator.html)
+
+    Oregon offers a state-specific subtraction for senior residents to reduce their taxable income to offset out of pocket medical expenses. This worksheet guides taxpayers and preparers through identifying and totalling qualified medical expenses for the return.

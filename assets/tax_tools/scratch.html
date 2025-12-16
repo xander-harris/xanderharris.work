@@ -1,0 +1,536 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<style type="text/css">
+	ul.tabs {
+		font-size: 12pt;
+		font-weight: bolder;
+		margin: 0;
+		padding: 0;
+		float: left;
+		list-style: none;
+		height: 25px;
+		/*--Set height of tabs original 32--*/
+		border-bottom: 1px solid #999;
+		border-left: 1px solid #999;
+		width: 100%;
+	}
+
+	ul.tabs li {
+		float: left;
+		margin: 0;
+		padding: 0;
+		height: 24px;
+		/*--Subtract 1px from the height of the unordered list original 31--*/
+		line-height: 24px;
+		/*--Vertically aligns the text within the tab original 31--*/
+		border: 1px solid #999;
+		border-left: none;
+		margin-bottom: -1px;
+		/*--Pull the list item down 1px--*/
+		overflow: hidden;
+		background: #e0e0e0;
+	}
+
+	ul.tabs li a {
+		text-decoration: none;
+		color: #000;
+		display: block;
+		padding: 0 20px;
+		border: 1px solid #fff;
+		/*--Gives the bevel look with a 1px white border inside the list item--*/
+		outline: 1px solid black;
+		/*none*/
+	}
+
+	ul.tabs li a:hover {
+		background: #ccc;
+	}
+
+	html ul.tabs li.active,
+	html ul.tabs li.active a:hover {
+		/*--Makes sure that the active tab does not listen to the hover properties--*/
+		background: #fff;
+		border-bottom: 1px solid #fff;
+		/*--Makes the active tab look like it's connected with its content--*/
+
+	}
+
+	body {
+		font-family: sans-serif;
+	}
+
+	.tab_container {
+		font-size: 10;
+		border: 1px solid #999;
+		border-top: none;
+		overflow: hidden;
+		clear: both;
+		float: left;
+		width: 100%;
+		background: #fff;
+	}
+
+	.tab_content {
+		padding: 20px;
+		font-size: 1.2em;
+	}
+</style>
+<style type="text/css" media="print">
+	.noprint {
+		display: none;
+	}
+</style>
+<style type="text/css" media="screen">
+	/* <!-- Turn  hilight color to white --> */
+	.cp ::-webkit-selection,
+	[contenteditable]::-webkit-selection {
+		background: white;
+	}
+
+	.cp ::-moz-selection,
+	[contenteditable]::-moz-selection {
+		background: white;
+	}
+
+	.cp ::selection,
+	[contenteditable]::selection {
+		background: white;
+	}
+
+	.nodisplay {
+		display: none;
+	}
+</style>
+
+<script type="text/javascript">
+
+	// *************** HOW TO DO YEARLY UPDATE *****************
+	//	No Change required. Year is set automatically to todays date - 180 days.
+	//
+	// ***************Contributors *****************************
+	// 		Lois Anderson
+	//		Geroge Johnson
+	// ***************Versions *****************************
+	var VERSION;
+	// --------------------------------------------------------------------------------
+	// KNOWN BUGS:
+	//  
+	//
+	// CHANGE HISTORY:
+	VERSION = "(Version 1.6, 1/29/2021)";
+	//		Changed Reset to "location.reload(true)"
+	//		Changed version # to single dot.
+	//VERSION = "(Version 1.5.1, 1/7/2020)";
+	//		Set year to current year minus 180 days.
+	//VERSION = "(Version 1.5.0, 10/29/2019)";
+	//		Set Year automatically to current date + 180 days, i.e., after July 1 will show next year.
+	//  	VJB: Changed default tax year to 2019
+	//VERSION = "(Version 1.4.4, 07/30/2018)";
+	//  	LAA: Changed default tax year to 2018
+	//	VERSION = "(Version 1.4.3, 01/18/2018)";
+	//  	VJB: Print 0 amount lines only if there is a comment
+	//           Allign Comment to Left
+	//VERSION = "(Version 1.4.1, 12/16/2016)";
+	//  	VJB: Print 0 amount lines so can add comments
+	//           Allign Comment to Right
+	//VERSION = "(Version 1.4, 12/16/2016)";
+	//  	VJB: Print Neg Numbers
+	//VERSION = "(Version 1.3, 12/09/2016)";
+	//  	VJB: Allow Neg numbers
+	//VERSION = "(Version 1.2, 11/28/2016)";
+	//  	VJB: Fixed Clipboard Problem on Chrome by deleting bad code
+	//        Changed to non-serif font
+	// VERSION = "(Version 1.1, 11/18/2016)";
+	//  	VJB: Deleted jquery and clipboard from code and added web references
+	//    	  Added Title and Version Display
+	//	  Moved Lower Push Buttons to top
+	// VERSION = "(Version 1.0, 11/15/2016)";
+	//	Self Contained Version From George Johnson of rapid-app
+
+
+
+</script>
+
+<!-- ******************************************************************************************************** -->
+<!-- **************************************** START OF HTML ************************************************* -->
+<!-- ******************************************************************************************************** -->
+
+<form name='scratch'>
+
+	<body onload="Initialize()">
+
+		<center>
+			<span class="title">Scratch Pad</span>
+			<br><span id="Version"></span>
+			<script>Version.innerHTML = VERSION;</script>
+		</center>
+
+		<input type="hidden" name="nexttab" value=2>
+		<span class="cp"><input type="text" id="clip" style="border:none;color:white;font-size:.01px;"></span>
+		<br>
+		<div class="noprint">Tax Payer:<input type="text" name="tp" id="tp" style="width:300px;"> Tax Year:<input
+				type="text" name="ty" id="ty" size=5" value=""></div>
+		<!-- <br><BR> -->
+
+		<table width="80%" align="center" class="noprint">
+			<tr>
+				<td style="text-align:center;width:33%;"><button type="button" name="addtab" onclick="AddPad();">New
+						Scratch Pad</button></td>
+				<td style="text-align:center;width:33%;"><button type="button" name="addtab"
+						onclick="location.reload(true)">Reset</button></td>
+				<td style="text-align:center;width:33%;"><button type="button" name="addtab" onclick="PrintIt(0);">Print
+					</button></center>
+				</td>
+			</tr>
+		</table>
+
+		<ul class="tabs noprint" id="tabmain">
+			<li id="firsttab"><a href="#tab1"><span id="tb1">New Scratch Pad</span></a></li>
+		</ul>
+
+		<center>
+
+			<div id="maindiv" style="border:solid 0.15em black;" class="noprint">
+				<div id="tab1" class="tab_content ">
+					<br><br>
+					<div id='sdiv1' style="overflow:auto; height:500px;width:750px;">
+						<table id="table1" border=1 width="99%">
+							<th colspan=2><input type="text" name="title1" id="title1"
+									value="<Enter Scratch Pad Name Here>"
+									style="font-size:14pt;font-weight:bolder;width:100%;text-align:center;background-color:lightgray;"
+									onfocus="this.select();"
+									onkeyup="document.getElementById('tb1').innerHTML=this.value;"></th>
+							<tr>
+								<td width="70%"><input type="text" style="width:99%;"></td>
+								<td width="30%"><input class="table1" type="text" style="width:99%;text-align:right;"
+										value="0.00" onfocus="this.select();"
+										onblur="Calc(1);this.value=FormatNumber(this.value); "
+										onkeyup="if (!IsNumeric(this.value)){this.value=Left(this.value,this.value.length-1);}">
+								</td>
+							</tr>
+
+							<tr>
+								<td width="70%"><input type="text" style="width:99%;"></td>
+								<td width="30%"><input class="table1" type="text" style="width:99%;text-align:right;"
+										value="0.00" onfocus="this.select();"
+										onblur="Calc(1);this.value=FormatNumber(this.value); "
+										onkeyup="if (!IsNumeric(this.value)){this.value=Left(this.value,this.value.length-1);}">
+								</td>
+							</tr>
+
+							<tr>
+								<td width="70%"><input type="text" style="width:99%;"></td>
+								<td width="30%"><input class="table1" type="text" style="width:99%;text-align:right;"
+										value="0.00" onfocus="this.select();"
+										onblur="Calc(1);this.value=FormatNumber(this.value); "
+										onkeyup="if (!IsNumeric(this.value)){this.value=Left(this.value,this.value.length-1);}">
+								</td>
+							</tr>
+
+							<tr>
+								<td width="70%"><input type="text" style="width:99%;"></td>
+								<td width="30%"> <input class="table1" type="text" style="width:99%;text-align:right;"
+										value="0.00" onfocus="this.select();"
+										onblur="Calc(1);this.value=FormatNumber(this.value); "
+										onkeyup="if (!IsNumeric(this.value)){this.value=Left(this.value,this.value.length-1);}">
+								</td>
+							</tr>
+
+							<tr>
+								<td width="70%"><input type="text" style="width:99%;"></td>
+								<td width="30%"><input class="table1" type="text" style="width:99%;text-align:right;"
+										value="0.00" onfocus="this.select();"
+										onblur="Calc(1);this.value=FormatNumber(this.value); "
+										onkeyup="if (!IsNumeric(this.value)){this.value=Left(this.value,this.value.length-1);}">
+								</td>
+							</tr>
+							<tr>
+								<td style="text-align:right;">Total:</td>
+								<td width="70%" id="total1" colspan=2 align="right" READONLY>0.00</td>
+							</tr>
+						</table>
+						<br>
+						<table width="70%">
+							<tr>
+								<td width="33%" align="center"><button type="button" style="width:100px;" name="addrows"
+										onclick="AddRow(1);">Add Row</button></td>
+
+								<!-- Changed to use direct refernece. -->
+
+								<td width="33%" align="center"><button type="button" class="btn"
+										data-clipboard-action="copy" data-clipboard-target="#total1"> Copy Total To
+										Clipboard </button></td>
+
+								<!--<td width="33%" align="center"><button type="button" style="width:100px;" name="addrows" onclick="PrintIt(1);"> Print </button></td>-->
+							</tr>
+						</table>
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<center>
+				<div id="prn" class="nodisplay" width="750px"></div>
+			</center>
+	</body>
+</form>
+
+<!-- ******************************************************************************************************** -->
+<!-- **************************************** START OF JAVASCRIPT ******************************************* -->
+<!-- ******************************************************************************************************** -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/clipboard.js/1.5.12/clipboard.min.js"></script>
+<script language="javascript">
+
+
+	$(document).ready(function () {
+		var activetabid = '';
+
+		$(".tab_content").hide(); //Hide all content
+		/*-- Original Implemetation. --*/
+		$("ul.tabs li:first").addClass("active").show(); //Activate first tab
+		$(".tab_content:first").show(); //Show first tab content
+
+		//On Click Event
+		$("ul.tabs li").click(function () {
+
+			$("ul.tabs li").removeClass("active"); //Remove any "active" class
+			$(this).addClass("active"); //Add "active" class to selected tab
+			$(".tab_content").hide(); //Hide all tab content
+			activetab = $(this).find("a").attr("href");
+
+			var activeTab = $(this).find("a").attr("href"); //Find the href attribute value to identify the active tab + content
+
+			$(activeTab).fadeIn(); //Fade in the active ID content
+			if (typeof (document.getElementById('title' + Right(activeTab, 1).value) === null)) { $('title' + Right(activeTab, 1)).focus(); }
+			return false;
+		});
+
+	});
+	//----------------------------------------------------------------------------------------
+	//                                   Initialize()
+	//----------------------------------------------------------------------------------------
+
+	function Initialize() {
+		var d = new Date();
+		d.setDate(d.getDate() - 180);
+		document.getElementById("ty").value = d.getFullYear();
+	}
+
+	function Calc(tblclass) {
+		val = document.getElementsByClassName("table" + tblclass);
+		var i = 0;
+		var total = 0;
+
+		for (i = 0; i < val.length; i++) {
+			if (IsNumeric(val[i].value)) {
+				total = total + (val[i].value * 1);
+			}
+		}
+
+		document.getElementById("total" + tblclass).innerHTML = total.toFixed(2);
+
+	}
+
+	function PrintIt(tbl) {
+		var prndiv = document.getElementById("prn");
+		var nexttab = document.scratch.nexttab.value;
+		var prntbl = '';
+
+		prndiv.innerHTML = '';
+
+		var i = 0;
+		var x = 0;
+		var tbllen = 0;
+		prntbl = '<table style="width:750px;">';
+		prntbl = prntbl + '<tr><td  colspan=2>Tax Payer:' + document.getElementById("tp").value + ' Tax Year:' + document.getElementById("ty").value + '</td></tr></table><br>';
+
+		for (i = 1; i < nexttab; i++) {
+			tbl = document.getElementById("table" + i);
+			tbllen = tbl.rows.length * 1;
+			prntbl = prntbl + '<table style="width:750px;">';
+			for (x = 0; x < tbllen; x++) {
+				if (x == 0) {
+					prntbl = prntbl + '<tr><td style="font-size:14pt;font-weight:bolder;width:100%;text-align:center;background-color:lightgray;border-bottom:solid 0.15em black;" colspan=2>' + tbl.rows[x].cells[0].children[0].value + "</td></tr>";
+				} else {
+					if (tbl.rows[x].cells[0].children[0] == undefined) {
+						prntbl = prntbl + '<tr><td width="70%" align="right">' + tbl.rows[x].cells[0].innerHTML + "</td>";
+						prntbl = prntbl + '<td  style="width:30%;text-align:right;border-top: solid 0.15em black;">' + tbl.rows[x].cells[1].innerHTML + "</td></tr>";
+					} else {
+						// Print Lines:
+						if (tbl.rows[x].cells[1].children[0].value != 0 || tbl.rows[x].cells[0].children[0].value != "") {
+							prntbl = prntbl + '<tr><td width="70%" >' + tbl.rows[x].cells[0].children[0].value + "</td>";
+							prntbl = prntbl + '<td   width="30%" align="right">' + tbl.rows[x].cells[1].children[0].value + "</td></tr>";
+						}
+					}
+				}
+
+			}
+			prntbl = prntbl + "</table>";
+			prndiv.innerHTML = prntbl;
+		}
+		window.print();
+
+	}
+
+	function AddRow(tbl) {
+		var table = document.getElementById("table" + tbl);
+		var row = table.insertRow(table.rows.length - 1);
+
+		// Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+		var cell1 = row.insertCell(0);
+		var cell2 = row.insertCell(1);
+
+		// Add some text to the new cells:
+		cell1.innerHTML = '<input type="text"  style="width:99%;">';
+		cell1.style = 'width:70%';
+		cell2.innerHTML = '<input class="table' + tbl + '" type="text"  style="width:99%;text-align:right;" value="0.00" onblur="Calc(' + tbl + ');this.value=FormatNumber(this.value); " onkeyup="if (!IsNumeric(this.value)){this.value=Left(this.value,this.value.length-1);}">';
+		cell2.style = 'width:30%';
+	}
+
+	function AddPad() {
+		var ul = document.getElementById("tabmain");
+		var li = document.createElement("li");
+		var maindiv = document.getElementById("maindiv");
+		var newdiv = document.createElement("div");
+		var atag = document.createElement("a");
+		var nexttab = document.scratch.nexttab.value;
+		var divcontent = '';
+		var sp = document.createElement("span");
+
+		atag.href = '#tab' + nexttab;
+		sp.id = 'tb' + nexttab;
+		sp.innerHTML = "New Scratch Pad"
+
+		atag.appendChild(sp);
+
+		li.appendChild(atag);
+
+		ul.appendChild(li);
+
+		newdiv.id = "tab" + nexttab;
+		newdiv.style.display = "none";
+		newdiv.className = " tab_content ";
+
+		tabtitle = " 'tb" + nexttab + "'";
+
+		divcontent = '<br><br>';
+		divcontent = divcontent + '<div id="sdiv' + nexttab + '" style="overflow:auto; height:500px;width:750px;">';
+		divcontent = divcontent + '<table  id="table' + nexttab + '" border=1 width="99%">';
+		divcontent = divcontent + '<th colspan=2 width="100%"><input type="text" name="title"' + nexttab + '"  id="title"' + nexttab + '" value="<Enter Scratch Pad Name Here>" style="font-size:14pt;font-weight:bolder;width:100%;text-align:center;background-color:lightgray;" onfocus="this.select();" onkeyup="document.getElementById(' + tabtitle + ').innerHTML=this.value;"></th>';
+		divcontent = divcontent + '<tr><td width="70%"><input type="text"  style="width:99%;"></td><td width="30%"><input class="table' + nexttab + '" onfocus="this.select();" type="text"  style="width:99%;text-align:right;" value="0.00" onblur="Calc(' + nexttab + ');this.value=FormatNumber(this.value); " onkeyup="if (!IsNumeric(this.value)){this.value=Left(this.value,this.value.length-1);}"></td></tr>';
+		divcontent = divcontent + '<tr><td width="70%"><input type="text"  style="width:99%;"></td><td width="30%"><input class="table' + nexttab + '" onfocus="this.select();" type="text"  style="width:99%;text-align:right;" value="0.00" onblur="Calc(' + nexttab + ');this.value=FormatNumber(this.value); " onkeyup="if (!IsNumeric(this.value)){this.value=Left(this.value,this.value.length-1);}"></td></tr>';
+		divcontent = divcontent + '<tr><td width="70%"><input type="text"  style="width:99%;"></td><td width="30%"><input class="table' + nexttab + '" onfocus="this.select();" type="text"  style="width:99%;text-align:right;" value="0.00" onblur="Calc(' + nexttab + ');this.value=FormatNumber(this.value); " onkeyup="if (!IsNumeric(this.value)){this.value=Left(this.value,this.value.length-1);}"></td></tr>';
+		divcontent = divcontent + '<tr><td width="70%"><input type="text"  style="width:99%;"></td><td width="30%"><input class="table' + nexttab + '" onfocus="this.select();" type="text"  style="width:99%;text-align:right;" value="0.00" onblur="Calc(' + nexttab + ');this.value=FormatNumber(this.value); " onkeyup="if (!IsNumeric(this.value)){this.value=Left(this.value,this.value.length-1);}"></td></tr>';
+		divcontent = divcontent + '<tr><td width="70%"><input type="text"  style="width:99%;"></td><td width="30%"><input class="table' + nexttab + '" onfocus="this.select();" type="text"  style="width:99%;text-align:right;" value="0.00" onblur="Calc(' + nexttab + ');this.value=FormatNumber(this.value); " onkeyup="if (!IsNumeric(this.value)){this.value=Left(this.value,this.value.length-1);}"></td></tr>';
+		divcontent = divcontent + '<tr><td style="text-align:right;">Total:</td><td width="70%" id="total' + nexttab + '" align="right" READONLY>0.00</td></tr></table>';
+		divcontent = divcontent + '<BR>	<table width="70%"><tr>';
+		divcontent = divcontent + '<td width="33%" align="center"><button type="button" style="width:100px;" name="addrows" onclick="AddRow(' + "'" + nexttab + "'" + ');">Add Row</button></td>';
+
+		divcontent = divcontent + '<td width="33%" align="center"><button type="button" class="btn" data-clipboard-action="copy" data-clipboard-target=' + " '#total" + nexttab + "'" + ' > Copy Total To Clipboard </button></td>';
+
+		//divcontent=divcontent+'<td width="33%" align="center"><button type="button" style="width:100px;" name="addrows" onclick="PrintIt('+"'"+nexttab+"'"+');"> Print </button></td>';
+		divcontent = divcontent + '</tr></table>';
+		newdiv.innerHTML = divcontent;
+
+		maindiv.appendChild(newdiv);
+		nexttab++;
+		document.scratch.nexttab.value = nexttab;
+		ActivateTab();
+	}
+
+
+	function ActivateTab() {
+		$(document).ready(function () {
+			//On Click Event
+			$("ul.tabs li").click(function () {
+
+				$("ul.tabs li").removeClass("active"); //Remove any "active" class
+				$(this).addClass("active"); //Add "active" class to selected tab
+				$(".tab_content").hide(); //Hide all tab content
+				activetab = $(this).find("a").attr("href");
+
+				var activeTab = $(this).find("a").attr("href"); //Find the href attribute value to identify the active tab + content
+
+				$(activeTab).fadeIn(); //Fade in the active ID content
+				return false;
+			});
+
+		});
+	}
+
+	function IsNumeric(sText) {
+		var ValidChars = "-0123456789.";
+		//   var FirstValidChars = "-0123456789.";
+		var IsNumber = true;
+		var Char;
+		var i = 0;
+		var decimalcount = 0;
+		if (sText == null) { return false; }
+
+		// Test for leading Neg
+		Char = sText.charAt(0);
+		if (Char == '.') { decimalcount++; }
+		if (ValidChars.indexOf(Char) == -1 || decimalcount > 1) { IsNumber = false; }
+
+		// Test remaining chars
+		ValidChars = "0123456789.";
+		for (i = 1; i < sText.length && IsNumber == true; i++) {
+			Char = sText.charAt(i);
+			if (Char == '.') { decimalcount++; }
+			if (ValidChars.indexOf(Char) == -1 || decimalcount > 1) { IsNumber = false; }
+		}
+		return IsNumber;
+
+	}
+
+	function FormatCurrency(num) {
+		num.value = num.toFixed(2);
+	}
+
+
+
+	function FormatNumber(num) {
+		var retval = new Number(num);
+		if (retval.toFixed(2) == 'NaN') { retval = 0; }
+		return (retval.toFixed(2));
+	}
+
+	function Left(str, n) {
+		if (n <= 0)
+			return "";
+		else if (n > String(str).length)
+			return str;
+		else
+			return String(str).substring(0, n);
+	}
+
+
+
+	var clipboard = new Clipboard('.btn');
+
+	clipboard.on('success', function (e) {
+		//       console.log(e);
+		tooltip.pop(this, "Success");
+	});
+
+	clipboard.on('error', function (e) {
+		console.log(e);
+	});
+
+
+	function Right(str, n) {
+		if (n <= 0)
+			return "";
+		else if (n > String(str).length)
+			return str;
+		else {
+			var iLen = String(str).length;
+			return String(str).substring(iLen, iLen - n);
+		}
+	}
+
+</script>

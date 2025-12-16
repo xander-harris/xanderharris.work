@@ -1,0 +1,2582 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Special Oregon Medical Subtraction Calculator</title>
+
+	<meta name="author" content="V. Joseph Bowman, Jr, OR1 D9 ">
+	<meta name="author" content="Barbara Smith-Thomas, OR1 Portland Metro">
+	<meta name="description"
+		content="Calculates Special Oregon Medical Subtraction for Tax Years 2016-2019 and Self Employment Health Insurance">
+
+	<style type="text/css">
+		table,
+		td {
+			border: 1px solid black;
+			border-collapse: collapse;
+		}
+
+		.tooltitle {
+			font-size: 125%;
+			font-weight: bold;
+		}
+
+		.workaroundtitle {
+			font-weight: bold;
+		}
+
+		.headerfield {
+			text-align: center;
+			font-weight: bold;
+		}
+
+		.inputfield {
+			background-color: yellow;
+		}
+
+		.inputfield #TPName {
+			width: 25em;
+			text-align: center;
+		}
+
+		.inputfielddisabled {
+			background-color: gray;
+		}
+
+		.commentfield {
+			text-align: right;
+		}
+
+		.linedescription {
+			width: 17em;
+		}
+
+		.resultsfield {
+			background-color: lightgreen;
+			font-weight: bold;
+		}
+
+		.resultsfield2 {
+			background-color: tomato;
+			font-weight: bold;
+		}
+
+		.resultsfieldinterim {
+			text-align: right;
+		}
+
+		.resultsfieldmileage .flex-container {
+			display: -webkit-flex;
+			display: flex;
+			-webkit-justify-content: center;
+			justify-content: center;
+		}
+
+		.flex-item {
+			width: 600px;
+			margin: 10px;
+			text-align: left;
+		}
+
+		#TPMedicare,
+		#SPMedicare,
+		#OtherMedicare {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPOtherIns,
+		#SPOtherIns,
+		#OtherOtherIns {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPDoc,
+		#SPDoc,
+		#OtherDoc {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPPrescr,
+		#SPPrescr,
+		#OtherPrescr {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPHosp,
+		#SPHosp,
+		#OtherHosp {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPEyecare,
+		#SPEyecare,
+		#OtherEyecare {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPDentist,
+		#SPDentist,
+		#OtherDentist {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPMiles,
+		#SPMiles,
+		#OtherMiles {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPMiles2,
+		#SPMiles2,
+		#OtherMiles2 {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPOther,
+		#SPOther,
+		#OtherOther {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPLab,
+		#SPLab,
+		#OtherLab {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPNurse,
+		#SPNurse,
+		#OtherNurse {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPLTCare,
+		#SPLTCare,
+		#OtherLTCare {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPDrug,
+		#SPDrug,
+		#OtherDrug {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPTotal,
+		#SPTotal,
+		#OtherTotal,
+		#GrandTotal {
+			text-align: right;
+		}
+
+		#MedicareInsSubTotal {
+			text-align: right;
+		}
+
+		#OtherInsSubTotal,
+		#DoctorCopaysSubTotal,
+		#PrescriptionSubTotal,
+		#HospitalSubTotal {
+			text-align: right;
+		}
+
+		#EyeCareSubTotal,
+		#DentistSubTotal,
+		#MilesSubTotal,
+		#OtherSubTotal {
+			text-align: right;
+		}
+
+		#LabSubTotal,
+		#NurseSubTotal,
+		#DrugSubTotal {
+			text-align: right;
+		}
+
+		#OtherInsSubTotalTSO,
+		#DoctorCopaysSubTotalTSO,
+		#PrescriptionSubTotalTSO,
+		#HospitalSubTotalTSO {
+			text-align: right;
+		}
+
+		#EyeCareSubTotalTSO,
+		#DentistSubTotalTSO,
+		#MilesSubTotalTSO,
+		#OtherSubTotalTSO,
+		#LTCareSubTotal {
+			text-align: right;
+		}
+
+		#LabSubTotalTSO,
+		#NurseSubTotalTSO,
+		#DrugSubTotalTSO {
+			text-align: right;
+		}
+
+		#SETotalInsurance,
+		#SEInsuranceAmt {
+			width: 8em;
+			text-align: right;
+		}
+
+		#AGI {
+			width: 8em;
+			text-align: right;
+		}
+
+		#Line3 {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPBirthday,
+		#SPBirthday {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPStdMedExp,
+		#SPStdMedExp,
+		#TPStdMaxAllow,
+		#SPStdMaxAllow {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPStdPerPers,
+		#SPStdPerPers {
+			width: 8em;
+			text-align: right;
+		}
+
+		#StdTotal {
+			width: 8em;
+			text-align: right;
+			font-weight: bold;
+		}
+
+		#TPItemMedExp,
+		#SPItemMedExp,
+		#TPTotalMedExp,
+		#SPTotalMedExp {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPPercent,
+		#SPPercent,
+		#TPFromSchedA,
+		#SPFromSchedA {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPPerPerson,
+		#SPPerPerson,
+		#TPItemMaxAllow,
+		#SPItemMaxAllow {
+			width: 8em;
+			text-align: right;
+		}
+
+		#TPItemPerPers,
+		#SPItemPerPers {
+			width: 8em;
+			text-align: right;
+		}
+
+		#ItemTotal {
+			width: 8em;
+			text-align: right;
+			font-weight: bold;
+		}
+
+		#SchALine1,
+		#SchALine3,
+		#TPExp,
+		#TPToEnter,
+		#SPExp,
+		#SPToEnter {
+			width: 8em;
+			text-align: right;
+		}
+
+		/* VJB Added variables    */
+		#SchALine1Dup,
+		#SchALine3Dup,
+		#TPToEnterTSO,
+		#SPToEnterTSO,
+		#Total351Amt,
+		#MedDecuctAmt {
+			width: 8em;
+			text-align: right;
+		}
+
+		#ItemDeductTable,
+		#StdDeductTable {
+			display: none;
+		}
+
+		#Instructions20142015 {
+			display: none;
+		}
+
+		#ButtonType {
+			background-color: lightblue;
+			font-weight: bold;
+			font-size: 105%;
+		}
+
+		button {
+			background-color: lightblue;
+			font-weight: bold;
+		}
+
+		#ButtonBox {
+			margin-bottom: 0.5em;
+		}
+
+		button {
+			font-size: 105%;
+			font-weight: bold;
+		}
+
+		.versiondisplay {
+			font-weight: bold;
+			margin-left: 4em;
+			margin-right: 4em;
+		}
+
+		html {
+			background-color: #cccccc;
+		}
+
+		body {
+			background-color: #eeeeee;
+			font-family: sans-serif;
+			font-size: 0.9em;
+		}
+
+		h1 {
+			text-align: center;
+			font-size: 1.1em;
+			font-weight: bold;
+			text-decoration: underline;
+		}
+
+		.printalternative {
+			display: none;
+		}
+
+		.donotuse {
+			font-size: 300%;
+			position: relative;
+			top: -7em;
+			right: -2em;
+			font-weight: bold;
+			z-index: 2;
+		}
+
+		#userInput {
+			margin-top: 0.5em;
+			margin-bottom: 0.5em;
+		}
+
+		.email {
+			unicode-bidi: bidi-override;
+			direction: rtl;
+		}
+
+		@media print {
+			html {
+				background-color: transparent;
+			}
+
+			body {
+				background-color: transparent;
+				font-size: 0.7em;
+			}
+
+			.printalternative {
+				display: inline;
+			}
+
+			.printhide {
+				display: none;
+			}
+
+			#pageBreakDiv {
+				page-break-before: always
+			}
+
+			#Disclaimer {
+				display: none;
+			}
+		}
+	</style>
+
+	<script type="text/javascript">
+		// *************** HOW TO DO YEARLY UPDATE *****************
+		//	Change TAX_YR, Enter new values for MileageRate[], AgeFloor[], LT_CARE_DATA{}, and SEInsuranceLocation[].
+		//		If there is a second mileage rate need to also define MileageRate2[], EndDateMileageRate1[] and BeginDateMileageRate2[]
+		//				leave these undefined otherwise.
+		//	Display of radio button tax year selection is based on the value of TAX_YR.
+		//	Check for changes in instructions.
+		//
+		// ***************Contributors *****************************
+		// 		Paul Dickey
+		//		Stev Hochspeier
+		// ***************Versions *****************************
+		var VERSION;
+		// --------------------------------------------------------------------------------
+		// KNOWN BUGS:
+		//	Printing of S-E Insurance on Edge generates 3 pages.
+		// TODO:
+		//		Check for input order in TSO each year. Assists QR in validating numbers with sheet input.
+		// CHANGE HISTORY:
+		VERSION = "(Version TY2025.1.0, &nbsp &nbsp 12/08/2025)";
+		// 		Added Row for Alcohol/Drug Rehab
+		//VERSION = "(Version TY2023.1.0, &nbsp &nbsp 11/14/2023)";
+		//		Changed Tax Year to 2023
+		//		Entered mileage rate = .22, Copied Age Floor and SEInsuranceLocation from 2022
+		//		Updated LT Care Data
+		//VERSION = "(Version TY2022.2.0, &nbsp &nbsp 01/08/2023)";
+		//		Added processing for second medical mileage rate.
+		//		Deleted alert to check TaxSlayer for 2022 sequence.
+		//		System now recalculates when changing years (needed for mileage)
+		//		Changed Text on Medicate Row.
+		//		Blanked out entry for Dependent Medicare Expense.
+		//VERSION = "(Version TY2022.1.0, &nbsp &nbsp 11/02/2022)";
+		//		Changed Tax Year to 2022
+		//		Entered mileage rate = .18, Copied Age Floor and SEInsuranceLocation from 2021
+		//		Updated LT Care Data
+		// 		Turned on alert() for checking sequence.
+		//VERSION = "(Version TY2021.1.2, &nbsp &nbsp 1/25/2022)";
+		//		Corrected error in Location of SEInsuranceLocation for 2021 TAX_YR
+		//		Deleted Alert for looking at order of items in TSO.
+		//VERSION = "(Version TY2021.1.1, &nbsp &nbsp 11/12/2021)";
+		//		Corrected Error on getSubTOtal returning char instead of number
+		//		Changed Location of 1B button.
+		//VERSION = "(Version TY2021.1.0, &nbsp &nbsp 10/22/2021)";
+		//		Changed TAX_YR
+		//		Entered values for Mileage and for Agefloor()
+		//		Entered values for Long Term Care and location of SE on Scheule 1
+		//		Change mileage in subtotal to $? No add another grey line showing $ milage amounts
+		//		Round Subtotal column and TSO Schedule A column to the nearest dollar.
+		//		Changed Instructions eliminating any references to prior to 2018
+		//		Moved Step 1B button to front from back of row
+		//VERSION = "(Version TY2020.1.0, &nbsp &nbsp 12/24/2020)";
+		//		Changed TAX_YR, 
+		//		Changed default radio button to prior year
+		//		Enterd new values for MileageRate[] from 4012, AgeFloor[], LT_CARE_DATA{} from 4012, and SEInsuranceLocation[] from 1040s1.
+		//VERSION = "(Version TY2019.1.1, &nbsp &nbsp 11/24/2019)";
+		//		Added info on how to update
+		//		Added Line Description for SE Adjustment
+		//		Hide Instructions when printing Taxpayer Copy.
+		//		Made instuctions an ordered list.
+		// 		Changed taxYear to TAX_YR
+		//VERSION = "(Version TY2019.1.0, &nbsp &nbsp 10/24/2019)";
+		//		Add S-E Insurance to title
+		//		Make Instructions dependent on Year and S-E choice.
+		//		2019 value changes: Mileage, AgeFloor, Long Term Care
+		//		Deleted Nofification that SOMS working in TSO
+		//		Changed Years in Display to be based on the value of taxYear
+		//VERSION = "(Version TY2018.2.0, &nbsp &nbsp 4/09/2019)";
+		//		Hide Step 2 for 2018 since working correctly
+		//		Make SOMS Data entry ORANGE
+		//VERSION = "(Version TY2018.1.8, &nbsp &nbsp 2/23/2019)";
+		//		Removed the word TEST from version name.
+		//VERSION = "(Version TEST TY2018.1.7, &nbsp &nbsp 2/6/2019)";
+		//		Changed print to 0.7em so would always fit on 2 pages. Solves the SE Print problem except on Edge
+		//		Detail tables no longer display at start up.
+		//		Buttons do not display on Print
+		//		Changed Name to SOMS 
+		//		Changed misspelling of Schedule
+		//VERSION = "(Version TEST TY2018.1.6, &nbsp &nbsp 1/20/2019)";
+		//		Changed Duplicate ID's
+		//		Changed Wording on Totals from Insurance to Expenses
+		//		Reworded Schedule A Info
+		// VERSION = "(Version TY2018.1.5, &nbsp &nbsp 1/10/2019)";
+		//	VJB: Added recovery of S-E Insurance.
+		//VERSION = "(Version TY2018.1.4, &nbsp &nbsp 1/9/2019)";
+		//	VJB Corrected some misspellings
+		//VERSION = "(Version TY2018.1.3, &nbsp &nbsp 1/7/2019)";
+		// 	VJB: Added long term Care
+		//VERSION = "(Version 4.1.2, 11/24/2018)";
+		//	VJB: 	Corrected problem with Other Insurance not subtotaling correctly
+		//		Changed Calculation of Grandtotal so that it comes from Subtotals so will agree with Shed A Line 1
+		//		Changed Calculation of Column totals so will equal Grand Total. Takes care of rounding problem
+		//			because of mileage. Rouding compensated by Other or Largest Expense if other is 0.
+		//VERSION = "(Version 4.1.1, 11/19/2018)";
+		// 	VJB:	Add new rows for TSO 2018
+		//		Display Mileage Rate
+		//		Added a bookmark for Instructions
+		//VERSION = "(Version 4.1.0, 11/19/2018)";
+		//	VJB: Changed ordering of data in ME_INPUT and functions getSubTotal and computeMedicalExpenses
+		//		Added ME_INPUT_INDEX Array to add flexability.
+		//  	Added "Step 1 and Step 2" in Instructions.
+		//VERSION = "(Version 4.0.3, 11/03/2018)";
+		//	VJB: Added Medicare to Subtotal per Paul Dickey
+		//VERSION = "(Version 4.0.2, 10/26/2018)";
+		// 	VJB:Incorporated Comments from Paul Dickey
+		//	-Changed TSOL to TSO in variables and in text except in this comment area
+		//	-Corrected misspellings
+		//VERSION = "(Version 4.0.1, 10/08/2018)";
+		//	Closed the branch.
+		//	VJB took over for Barbara Smith-Thomas
+		//	Set up to TY 2018 Milage Rate and Age Floor
+		//	Updated Comments
+		//VERSION = "(Version X3.1.4, 03/16/2018)";
+		//	VJB: Resequenced the Tabs
+		//	Added page break that works with chrome
+		//VERSION = "(Version X3.1.3, 03/15/2018)";
+		// 	VJB: Change display of calc table for Medical on Schedule A Line 1
+		//VERSION = "(Version X3.1.2, 03/14/2018)";
+		// 	VJB: Cleaned up verbage and added instructions
+		//	TODO: Add Long Term Insurance
+		//VERSION = "(Version X3.1.1, 03/09/2018)";
+		//	VJB: Added TSOL entry column to Medical Cost Table
+		//	Added Print Button
+		//VERSION = "(Version X3.1.0, 03/08/2018)";
+		//	VJB This is a branch. Created to redisplay the data and to make use more compatible with our site.
+		//	Only for working with 2016 and 2017 at this point in time. 
+		//	Added ReSet, Rewrote Instructions, Change Disclaimer at the bottom. Make Detailed Calc Tables Dynamic.
+		//	TODO  Add TSOL Schedule A entry in separate col in Next iteration. 
+		//VERSION = "(version 3.0.2 Beta, 02/15/2018)";
+		//	VJB Consolidated TaxSlayer Entry Info into one table.
+		//    Added variables for indicating standard or itemized deductions. And eliminated the need for the logic tree
+		//	Left all of the old page in for testing purposes
+		//var VERSION = "(version 3.0.1, 12/20/2017)";
+		//Improved instruction wording
+		//var VERSION = "(version 3.0, 12/17/2017)";
+		//updated for 2017
+		//var VERSION = "(version 2.2, 2/10/2017)"
+		//clarified workaround instructions for 2016
+		//added medical expense category subtotals
+		//var VERSION = "(version 2.1, 2/2/2017)"
+		//added workaround for 2016 TaxSlayer bug
+		//var VERSION = "(version 2.0, 12/31/2016)";
+		//Calculate subtraction for tax years 2013-2016; compute eligiblity based on taxpayer
+		//and spouse birthdays
+		//var VERSION = "(version 1.2, 8/20/2016)";
+		//improved instructions; make milage entry actual miles, not $ amount
+		//var VERSION = "(version 1.1, 8/9/2016)";
+		//Fixed divide by 0 bug; improved display
+		//var VERSION = "(version 1.0, 7/19/2016)";
+
+		var filingStatusSelected = false;
+		var FS = "";
+
+		// VJB Added Variables
+		var FedDeductTypeSelected = false;
+		var OregonDeductTypeSelected = false;
+		var MedOnSchedAYNSelected = false;
+		var FedDeductType = "";
+		var OregonDeductType = "";
+		var MedOnSchedAYN = "";
+		var SEInsuranceOnly = SEInsuranceLTC = "";
+		var SEInsuranceTP = SEInsuranceSP = SEInsuranceDP = "";
+		var useSE = false;
+		var calcButtonType = "";
+
+		//default to TY2017
+		var taxYearSelected = true;
+		var TAX_YR = "2025";
+
+		var MileageRate = new Array;
+		MileageRate[2013] = 0.24;
+		MileageRate[2014] = 0.235;
+		MileageRate[2015] = 0.23;
+		MileageRate[2016] = 0.19;
+		MileageRate[2017] = 0.17;
+		MileageRate[2018] = 0.18;
+		MileageRate[2019] = 0.20;
+		MileageRate[2020] = 0.17;
+		MileageRate[2021] = 0.16;
+		MileageRate[2022] = 0.18;
+		MileageRate[2023] = 0.22;
+		MileageRate[2024] = 0.21;
+		MileageRate[2025] = 0.21;
+
+		// Second Mileage rate in a year. Do not define if only one rate for the year
+		// You must also specify  EndDateMileageRate1[] and BeginDateMileageRate2[]
+		var hasMileageRate2 = false
+
+		var MileageRate2 = new Array;
+		MileageRate2[2022] = 0.22;
+
+		var EndDateMileageRate1 = new Array;
+		EndDateMileageRate1[2022] = "on or before 6/30"
+
+
+		var BeginDateMileageRate2 = new Array;
+		BeginDateMileageRate2[2022] = "on or after 7/1"
+
+		var AgeFloor = new Array;
+		AgeFloor[2013] = 62;
+		AgeFloor[2014] = 63;
+		AgeFloor[2015] = 63;
+		AgeFloor[2016] = 64;
+		AgeFloor[2017] = 64;
+		AgeFloor[2018] = 65;
+		AgeFloor[2019] = 65;
+		AgeFloor[2020] = 66;   //This is the value for 2020 and beyond
+		AgeFloor[2021] = 66;
+		AgeFloor[2022] = 66;
+		AgeFloor[2023] = 66;
+		AgeFloor[2024] = 66;
+		AgeFloor[2025] = 66;
+
+		var LT_CARE_DATA = new Array;
+		LT_CARE_DATA[2015] = "<ul><li> 40 or less ..... $380.00" +
+			"<li> 41 to 50 ....... $710.00" +
+			"<li> 51 to 60 ..... $1,430.00" +
+			"<li> 61 to 70 ..... $3,800.00" +
+			"<li> 70 or more ... $4,750.00</ul>";
+		LT_CARE_DATA[2016] = "<ul><li> 40 or less ..... $390.00" +
+			"<li> 41 to 50 ....... $730.00" +
+			"<li> 51 to 60 ..... $1,460.00" +
+			"<li> 61 to 70 ..... $3,900.00" +
+			"<li> 70 or more ... $4,870.00</ul>";
+		LT_CARE_DATA[2017] = "<ul><li> 40 or less ..... $410.00" +
+			"<li> 41 to 50 ....... $770.00" +
+			"<li> 51 to 60 ..... $1,530.00" +
+			"<li> 61 to 70 ..... $4,090.00" +
+			"<li> 70 or more ... $5,110.00</ul>";
+		LT_CARE_DATA[2018] = "<ul><li> 40 or less ..... $420.00" +
+			"<li> 41 to 50 ....... $780.00" +
+			"<li> 51 to 60 ..... $1,560.00" +
+			"<li> 61 to 70 ..... $4,160.00" +
+			"<li> 70 or more ... $5,200.00</ul>";
+		LT_CARE_DATA[2019] = "<ul><li> 40 or less ..... $420.00" +
+			"<li> 41 to 50 ....... $790.00" +
+			"<li> 51 to 60 ..... $1,580.00" +
+			"<li> 61 to 70 ..... $4,220.00" +
+			"<li> 70 or more ... $5,270.00</ul>";
+		LT_CARE_DATA[2020] = "<ul><li> 40 or less ..... $430.00" +
+			"<li> 41 to 50 ....... $810.00" +
+			"<li> 51 to 60 ..... $1,630.00" +
+			"<li> 61 to 70 ..... $4,350.00" +
+			"<li> 70 or more ... $5,430.00</ul>";
+		LT_CARE_DATA[2021] = "<ul><li> 40 or less ..... $450.00" +
+			"<li> 41 to 50 ....... $850.00" +
+			"<li> 51 to 60 ..... $1,690.00" +
+			"<li> 61 to 70 ..... $4,520.00" +
+			"<li> 70 or more ... $5,640.00</ul>";
+		LT_CARE_DATA[2022] = "<ul><li> 40 or less ..... $450.00" +
+			"<li> 41 to 50 ....... $850.00" +
+			"<li> 51 to 60 ..... $1,690.00" +
+			"<li> 61 to 70 ..... $4,510.00" +
+			"<li> 71 & older ... $5,640.00</ul>";
+		LT_CARE_DATA[2023] = "<ul><li> 40 or less ..... $480.00" +
+			"<li> 41 to 50 ....... $890.00" +
+			"<li> 51 to 60 ..... $1,790.00" +
+			"<li> 61 to 70 ..... $4,770.00" +
+			"<li> 71 & older ... $5,960.00</ul>";
+		LT_CARE_DATA[2024] = "<ul><li> 40 or less ..... $470.00" +
+			"<li> 41 to 50 ....... $880.00" +
+			"<li> 51 to 60 ..... $1,760.00" +
+			"<li> 61 to 70 ..... $4,710.00" +
+			"<li> 71 & older ... $5,880.00</ul>";
+		LT_CARE_DATA[2025] = "<ul><li> 40 or less ..... $480.00" +
+			"<li> 41 to 50 ....... $900.00" +
+			"<li> 51 to 60 ..... $1,800.00" +
+			"<li> 61 to 70 ..... $4,810.00" +
+			"<li> 71 & older ... $6,020.00</ul>";
+
+		var SEInsuranceLocation = new Array;
+		SEInsuranceLocation[2018] = "Schedule 1 Line 29"
+		SEInsuranceLocation[2019] = "Schedule 1 Line 16"
+		SEInsuranceLocation[2020] = "Schedule 1 Line 16"
+		SEInsuranceLocation[2021] = "Schedule 1 Line 17"
+		SEInsuranceLocation[2022] = "Schedule 1 Line 17"
+		SEInsuranceLocation[2023] = "Schedule 1 Line 17"
+		SEInsuranceLocation[2024] = "Schedule 1 Line 17"
+		SEInsuranceLocation[2025] = "Schedule 1 Line 17"
+
+		var NEWDATE = "";	// builds the date to be displayed, remembers the last one
+
+		var EDIT_MODE = new Array;	// date is being edited, don't evaluate yet
+		EDIT_MODE["TPBirthday"] = 0;
+		EDIT_MODE["SPBirthday"] = 0;
+
+		var BirthYear = new Array;	// remembers the birth year(s)
+		BirthYear["TPBirthday"] = 0;
+		BirthYear["SPBirthday"] = 0;
+
+		// Version 4.1.0 Grouped Types together and made miles index 0
+		// Version TY2022.2.0 Added Second miles as Index 3 
+		//	Version TY2023.2.0 Added Alcohol and Drug Line.
+
+		//Explanation: 
+		//		ME_INPUT[0,n] contains ID to get particular data	by getElementById()
+		//		ME_INPUT[ID] gives index into ME_INPUT{} for three items TP, SP, Other.
+		//
+
+
+		var ME_INPUT = [
+			["TPMiles", "Taxpayer's Medical Miles"],
+			["SPMiles", "Spouse's Medical Miles"],
+			["OtherMiles", "Other Family Medical Miles"],
+			["TPMiles2", "Taxpayer's Medical Miles2"],
+			["SPMiles2", "Spouse's Medical Miles2"],
+			["OtherMiles2", "Other Family Medical Miles2"],
+			["TPMedicare", "Taxpayer's Medicare"],
+			["SPMedicare", "Spouse's Medicare"],
+			["OtherMedicare", "Other Family Medicare"],
+			["TPOtherIns", "Taxpayer's Other Medical Insurance", "SE"],
+			["SPOtherIns", "Spouse's Other Medical Insurance"],
+			["OtherOtherIns", "Other Family Other Medical Insurance"],
+			["TPDoc", "Taxpayer's Doctor Copays"],
+			["SPDoc", "Spouse's Doctor Copays"],
+			["OtherDoc", "Other Family Doctor Copays"],
+			["TPPrescr", "Taxpayer's Prescription Drugs"],
+			["SPPrescr", "Spouse's Prescription Drugs"],
+			["OtherPrescr", "Other Family Prescription Drugs"],
+			["TPHosp", "Taxpayer's Hospital Expenses"],
+			["SPHosp", "Spouse's Hospital Expenses"],
+			["OtherHosp", "Other Family Hospital Expenses"],
+			["TPEyecare", "Taxpayer's Eyecare Expenses"],
+			["SPEyecare", "Spouse's Eyecare Expenses"],
+			["OtherEyecare", "Other Family Eyecare Expenses"],
+			["TPDentist", "Taxpayer's Dental Expenses"],
+			["SPDentist", "Spouse's Dental Expenses"],
+			["OtherDentist", "Other Family Dental Expenses"],
+			["TPOther", "Taxpayer's Other Medical Expenses"],
+			["SPOther", "Spouse's Other Medical Expenses"],
+			["OtherOther", "Other Family Other Medical Expenses"],
+			["TPLab", "Taxpayer's Dental Expenses"],
+			["SPLab", "Spouse's Dental Expenses"],
+			["OtherLab", "Other Family Dental Expenses"],
+			["TPNurse", "Taxpayer's Dental Expenses"],
+			["SPNurse", "Spouse's Dental Expenses"],
+			["OtherNurse", "Other Family Dental Expenses"],
+			["TPLTCare", "Taxpayer's Long Term Care"],
+			["SPLTCare", "Spouse's Long Term Care"],
+			["OtherLTCare", "Other Long Term Cares"],
+			["TPDrug", "Taxpayer's Alchol/Drug Rehab Expenses"],
+			["SPDrug", "Spouse's Alchol/Drug Rehab Expenses"],
+			["OtherDrug", "Other Family Alchol/Drug Rehab Expenses"]
+		];
+
+		var ME_INPUT_INDEX = new Array;
+		ME_INPUT_INDEX["Miles"] = 0;
+		ME_INPUT_INDEX["Miles2"] = 3;
+		ME_INPUT_INDEX["Medicare"] = 6;
+		ME_INPUT_INDEX["OtherIns"] = 9;
+		ME_INPUT_INDEX["Doc"] = 12;
+		ME_INPUT_INDEX["Prescr"] = 15;
+		ME_INPUT_INDEX["Hosp"] = 18;
+		ME_INPUT_INDEX["Eyecare"] = 21;
+		ME_INPUT_INDEX["Dentist"] = 24;
+		ME_INPUT_INDEX["Other"] = 27;
+		ME_INPUT_INDEX["Lab"] = 30;
+		ME_INPUT_INDEX["Nurse"] = 33;
+		ME_INPUT_INDEX["LTCare"] = 36;
+		ME_INPUT_INDEX["Drug"] = 39;
+
+
+
+		//----------------------------------------------------------------------------------------
+		//                                   Initialize()
+		//----------------------------------------------------------------------------------------
+
+		function Initialize() {
+			setTaxYear(TAX_YR);
+			SEInsuranceNo.checked = "checked";
+			settaxYearDisplay();
+		}
+
+
+		//----------------------------------------------------------------------------------------
+		//                                   settaxYearDisplay()
+		// This function sets the display amd valies for th tax year based on the value of TAX_YR.
+		// This makes the system easy to change from year to year.
+		//----------------------------------------------------------------------------------------
+
+		function settaxYearDisplay() {
+			radioTY_0.value = labelTY_0.innerHTML = TAX_YR;
+			radioTY_1.value = labelTY_1.innerHTML = TAX_YR - 1;
+			radioTY_2.value = labelTY_2.innerHTML = TAX_YR - 2;
+			radioTY_3.value = labelTY_3.innerHTML = TAX_YR - 3;
+
+			// Set the checked radio button
+			var todaydate = new Date()
+
+			if (todaydate.getFullYear() == TAX_YR) {
+				radioTY_1.checked = true
+				setTaxYear(TAX_YR - 1);  //Sets data to default year
+			} else {
+				radioTY_0.checked = true
+			}
+
+
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   checkNumeric(index)
+		// This function verifies that the input is numeric
+		//----------------------------------------------------------------------------------------
+
+		function checkNumeric(index) {
+			var bdvar = document.getElementById(index);
+			var a = bdvar.value + ""; // This forces bdvar.value to be a string
+
+			//	alert("function checkNumeric(" + index + ") called");
+			//	alert("bdvar.value = " + bdvar.value);
+
+			if (bdvar.value === "") { // OK not to enter 0
+				return;
+			}
+			if (isNaN(bdvar.value)) {
+				alert("Entry is not a valid number. \n \n$, Spaces or commas are not permitted in the number." +
+					" \n \nEntry may be a whole or decimal number. \nDecimal numbers will be rounded to the nearest whole number.");
+
+				return;
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   setFilingStatus(code)
+		// This function records the filing status choice
+		//----------------------------------------------------------------------------------------
+
+		function setFilingStatus(code) {
+			filingStatusSelected = true;
+			FS = code;
+		}
+
+		//---VJB----------------------------------------------------------------------------------
+		//                                   setFedDeductType(code)
+		// This function records the Federal Deduction Type 
+		//----------------------------------------------------------------------------------------
+
+		function setFedDeductType(code) {
+			FedDeductTypeSelected = true;
+			FedDeductType = code;
+		}
+
+
+		//---VJB----------------------------------------------------------------------------------
+		//                                   setOregonDeductType(code)
+		// This function records the Federal Deduction Type 
+		//----------------------------------------------------------------------------------------
+
+		function setOregonDeductType(code) {
+			OregonDeductTypeSelected = true;
+			OregonDeductType = code;
+		}
+
+		//---VJB----------------------------------------------------------------------------------
+		//                                   setUseSE(code)
+		// This function sets the useSE variable = true or false
+		//----------------------------------------------------------------------------------------
+		//----------------------------------------------------------------------------------------
+
+		function setUseSE(code) {
+			SEInsuranceAmt.disabled = true;
+			Adjbutton.disabled = true;
+
+			clearSEInsurance();
+
+			if (code === "Y") {
+				useSE = true;
+				SEInsuranceRow.style.display = 'table-row';
+				SEAdjustmentRow.style.display = 'table-row';
+				NetInsuranceRow.style.display = 'table-row';
+				AdjustmentTable.style.display = 'table';
+				document.getElementById("Calcbutton").innerHTML = "STEP 1A: Click here to Calculate Medical Expense Totals";
+				MedicareInsSubTotalTSO.innerHTML = "<b style='color : red;'>DO NOT ENTER into TSO</b>";
+				OtherInsSubTotalTSO.innerHTML = "<span style='color : red;'>DO NOT ENTER into TSO</span>";
+				LTCareSubTotalTSO.innerHTML = "<b style='color : red;'>DO NOT ENTER into TSO</b>";
+			} else {
+				useSE = false;
+				SEInsuranceRow.style.display = 'none';
+				SEAdjustmentRow.style.display = 'none';
+				NetInsuranceRow.style.display = 'none';
+				AdjustmentTable.style.display = 'none';
+				document.getElementById("Calcbutton").innerHTML = "STEP 1A: Click here to Calculate Medical Expense Totals";
+				MedicareInsSubTotalTSO.innerHTML = OtherInsSubTotalTSO.innerHTML = LTCareSubTotalTSO.innerHTML = ""
+			}
+			if (useSE) {
+				NetTPTotal.style.backgroundColor = "orange";
+				NetSPTotal.style.backgroundColor = "orange";
+				TPTotal.style.backgroundColor = "";
+				SPTotal.style.backgroundColor = "";
+			} else {
+				NetTPTotal.style.backgroundColor = "";
+				NetSPTotal.style.backgroundColor = "";
+				TPTotal.style.backgroundColor = "orange";
+				SPTotal.style.backgroundColor = "orange";
+
+			}
+		}
+
+		//---VJB----------------------------------------------------------------------------------
+		//                                   clearSEInsurance()
+		// This function records the Federal Deduction Type 
+		//----------------------------------------------------------------------------------------
+		function clearSEInsurance() {
+			TPSEAdj.innerHTML = SPSEAdj.innerHTML = DPSEAdj.innerHTML = "";
+			NetTPTotal.innerHTML = NetSPTotal.innerHTML = NetDPTotal.innerHTML = "";
+			GrandTotal.innerHTML = "";
+			TPTotal.innerHTML = SPTotal.innerHTML = OtherTotal.innerHTML = SumTotal.innerHTML = "";
+			SETotalInsurance.innerHTML = SETotalInsuranceSum.innerHTML = "";
+			if (calcButtonType === "STEP1") {
+				SEInsuranceAmt.value = "";
+			}
+		}
+
+		//---VJB----------------------------------------------------------------------------------
+		//                                   setCalcButton()
+		// This sets the which Calculate button was pushed 
+		//----------------------------------------------------------------------------------------
+
+		function setCalcButton(type) {
+			calcButtonType = type;
+			if (calcButtonType === "STEP1") {
+				calcMedExp();
+			} else if (calcButtonType === "ADJ") {
+				calcSEAjustment();
+			} else if (calcButtonType === "STEP2") {
+				calcMedSub();
+			} else {
+				alert("MAJOR ERROR: in setCalcButton() ");
+			}
+		}
+		//---VJB----------------------------------------------------------------------------------
+		//                                   calcTotalSEInsurance()
+		// This function records the Federal Deduction Type 
+		//----------------------------------------------------------------------------------------
+
+		function calcTotalSEInsurance() {
+
+			SETotalInsurance.innerHTML = "";
+
+			if (calcButtonType === "STEP1") {
+				SEInsuranceAmt.value = "";
+			}
+			if (useSE) {
+				// Sum the insurances and display
+				// enable SEInsuranceAmt
+
+				SEInsuranceOnly = getSubTotal(ME_INPUT_INDEX["Medicare"])
+					+ getSubTotal(ME_INPUT_INDEX["OtherIns"]);
+				SEInsuranceLTC = getSubTotal(ME_INPUT_INDEX["LTCare"]);
+
+				SEInsuranceTP = getSubTotal(ME_INPUT_INDEX["Medicare"], "TP")
+					+ getSubTotal(ME_INPUT_INDEX["OtherIns"], "TP")
+					+ getSubTotal(ME_INPUT_INDEX["LTCare"], "TP")
+				SEInsuranceSP = getSubTotal(ME_INPUT_INDEX["Medicare"], "SP")
+					+ getSubTotal(ME_INPUT_INDEX["OtherIns"], "SP")
+					+ getSubTotal(ME_INPUT_INDEX["LTCare"], "SP")
+				SEInsuranceDP = SEInsuranceOnly + SEInsuranceLTC - SEInsuranceTP - SEInsuranceSP
+
+				SETotalInsurance.innerHTML = SEInsuranceOnly + "<br>" + SEInsuranceLTC;
+				SETotalInsuranceSum.innerHTML = SEInsuranceOnly + SEInsuranceLTC;
+			} else {
+
+
+				SEInsuranceOnly = SEInsuranceLTC = SEInsuranceTP = SEInsuranceSP = SEInsuranceDP = "";
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   calcSEAjustment(code)
+		// This function calculates the adjustment to make for SE-Insurance.
+		//----------------------------------------------------------------------------------------
+
+		function calcSEAjustment() {
+
+			var SEInsuranceAdjust = SEInsuranceAmt.value - 0;
+			var TotalSEInsurance = SEInsuranceOnly + SEInsuranceLTC;
+			var AdjTP = AdjSP = AdjDP = 0
+
+			if (SEInsuranceAdjust + "" == "") {
+				alert(SEInsuranceLocation[TAX_YR] + " not entered");
+				return 0;
+			}
+
+			if (TotalSEInsurance - SEInsuranceAdjust < 0) {
+				alert(SEInsuranceLocation[TAX_YR] + " is greater than the combined Insuraance and LTC");
+				return 0;
+			}
+			AdjTP = ((SEInsuranceTP / TotalSEInsurance) * SEInsuranceAdjust).toFixed(0);
+			AdjSP = ((SEInsuranceSP / TotalSEInsurance) * SEInsuranceAdjust).toFixed(0);
+			AdjDP = ((SEInsuranceDP / TotalSEInsurance) * SEInsuranceAdjust).toFixed(0);
+
+			// Calculate TP & SP Total to take care of rounding.
+			if (AdjDP > 0) {     //Take rounding from other col if can
+				TPSEAdj.innerHTML = - AdjTP;
+				SPSEAdj.innerHTML = - AdjSP;
+				DPSEAdj.innerHTML = - (SEInsuranceAdjust - AdjTP - AdjSP);
+			} else if (AdjSP == 0) {  //Take from TP if SP and Other are zero
+				TPSEAdj.innerHTML = - SEInsuranceAdjust;
+				SPSEAdj.innerHTML = 0;
+				DPSEAdj.innerHTML = 0;
+			} else if ((TPSEAdj - SPSEAdj) < 0) {     // Take from one with highest Amount
+				//Spouse Higher
+				TPSEAdj.innerHTML = - AdjTP;
+				SPSEAdj.innerHTML = - (SEInsuranceAdjust - AdjTP);
+				DPSEAdj.innerHTML = 0;
+			} else {  // TP Higher
+				TPSEAdj.innerHTML = - (SEInsuranceAdjust - AdjSP);
+				SPSEAdj.innerHTML = - AdjSP;
+				DPSEAdj.innerHTML = 0;
+			}
+
+			NetTPTotal.innerHTML = (TPTotal.innerHTML - 0) + (TPSEAdj.innerHTML - 0);  // Adjustments are negavtive
+			NetSPTotal.innerHTML = (SPTotal.innerHTML - 0) + (SPSEAdj.innerHTML - 0);  // Adjustments are negavtive
+			NetDPTotal.innerHTML = (OtherTotal.innerHTML - 0) + (DPSEAdj.innerHTML - 0);  // Adjustments are negavtive
+
+			GrandTotal.innerHTML = (NetTPTotal.innerHTML - 0) + (NetSPTotal.innerHTML - 0) + (NetDPTotal.innerHTML - 0);
+
+
+		}
+
+
+		//----------------------------------------------------------------------------------------
+		//                                   setTaxYear(code)
+		// This function records the tax year choice
+		//----------------------------------------------------------------------------------------
+
+		function setTaxYear(code) {
+			taxYearSelected = true;
+			TAX_YR = code;
+
+			// Check if multiple rates in a year
+			if (typeof (MileageRate2[TAX_YR]) === "undefined") {
+				// Second Tax Rate not defined
+				MilesTitle.innerHTML = "Medical Miles (Enter actual mileage)";
+				MilesExpenseTitle.innerHTML = "Medical Miles Expense ($" + MileageRate[TAX_YR] + " per mile)";
+				MilesTitle2.innerHTML = "This row should not be showing";
+				MilesExpenseTitle2.innerHTML = "This row should not be showing";
+				SecondMileageRow1.style.display = "none";
+				SecondMileageRow2.style.display = "none";
+
+				hasMileageRate2 = false;
+
+			} else {
+				//Second Rate is defined.
+				MilesTitle.innerHTML = "Medical Miles (Enter actual mileage) " + EndDateMileageRate1[TAX_YR];
+				MilesExpenseTitle.innerHTML = "Medical Miles Expense ($" + MileageRate[TAX_YR] + " per mile)";
+				MilesTitle2.innerHTML = "Medical Miles (Enter actual mileage) " + BeginDateMileageRate2[TAX_YR];
+				MilesExpenseTitle2.innerHTML = "Medical Miles Expense ($" + MileageRate2[TAX_YR] + " per mile)";
+				SecondMileageRow1.style.display = "table-row";
+				SecondMileageRow2.style.display = "table-row";
+
+				hasMileageRate2 = true;
+
+			}
+
+
+			LTCareCapData.innerHTML = TAX_YR + " Long-Term Care Premiums are limited based on age:<br>" + LT_CARE_DATA[TAX_YR];
+
+			// Processing for TSO Error. Error still exists in 2016 and 2017 
+			if (TAX_YR == "2015" || TAX_YR == "2016" || TAX_YR == "2017") {
+				TSOError1.style.display = "block";
+				TSOError2.style.display = "block";
+				TPTotal.style.backgroundColor = "";
+				SPTotal.style.backgroundColor = ""
+				NetTPTotal.style.backgroundColor = "";
+				NetSPTotal.style.backgroundColor = "";
+
+			} else {
+
+				AdjustCell.innerHTML = "<b>&nbsp Enter Amount from" + SEInsuranceLocation[TAX_YR] + "&nbsp</b>";
+				SEInsuranceAmt.title = "Enter amount from " + SEInsuranceLocation[TAX_YR];
+				instructLocation.innerHTML = SEInsuranceLocation[TAX_YR];
+
+				TSOError1.style.display = "none";
+				TSOError2.style.display = "none";
+				if (useSE) {
+					NetTPTotal.style.backgroundColor = "orange";
+					NetSPTotal.style.backgroundColor = "orange";
+
+				} else {
+					TPTotal.style.backgroundColor = "orange";
+					SPTotal.style.backgroundColor = "orange";
+
+				}
+
+			}
+			// Need to do a recalc if change year
+			setCalcButton('STEP1');
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   Edit_date(index)
+		// index = "TPBirthday", or "SPBirthday" for corresponding date fields
+		// This function captures the current value of the field in NEWDATE 
+		//----------------------------------------------------------------------------------------
+
+		function Edit_date(index) {
+			var bdvar = document.getElementById(index);
+
+			NEWDATE = bdvar.value;
+			if (bdvar.value != "") {
+				EDIT_MODE[index] = 1;
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   Build_date(index)
+		// index = "TPBirthday", or "SPBirthday" for corresponding date fields
+		// This function constructs a date for display as characters are entered
+		//----------------------------------------------------------------------------------------
+
+		function Build_date(index) {
+			var bdvar = document.getElementById(index);
+
+			// Get the characters in the text box
+			var x_val = bdvar.value;
+			var x_len = x_val.length;
+			if (x_len < 2) {
+				NEWDATE = "";
+				EDIT_MODE[index] = 0;
+				return;
+			} // nothing there so clear EDIT_MODE flag and return
+
+			if (EDIT_MODE[index] == 1) return; // date is being edited, wait until done to validate
+
+			// See if the last character was a "/".
+			var x_char = x_val.slice(-1); // get the last character
+			var x_brk = (x_char == "/") ? 1 : 0;
+
+			// Check conditions for an invalid character typed at the wrong time.
+			if (((!x_brk) && isNaN(x_char)) || ((x_brk) && (x_len > 6))) {
+				bdvar.value = x_val.substring(0, x_len - 1);
+				return;
+			}
+
+			// See if a "/" or some other character was just deleted by using the backspace.
+			if (((x_val + "/") == NEWDATE) || ((NEWDATE != "") && (x_len < NEWDATE.length))) {
+				NEWDATE = x_val; // remember the value of the edited field
+				return; // return with no formating or validation of the field
+			}
+
+			// Ignore arrows used to move cursor for editing
+			if (x_val == NEWDATE) { return; }
+
+			// Get the Mo, Dy, Yr from the date string.
+			x_val += "//"; // Forces DY and YR to be defined to null below
+			var x_date = x_val.split("/"); // Creates array from date entered by user
+			MO = DY = YR = ""; // Clear any earlier values
+			MO = x_date[0];
+			DY = x_date[1];
+			YR = x_date[2];
+			if (isNaN(MO) || isNaN(DY) || isNaN(YR)) {
+				bdvar.value = NEWDATE; // restore the previous valid entry
+				return;
+			}
+
+			// Adjust the Month characters
+			if (DY.length == 0) {
+				if ((MO.length == 1) && (x_brk || (MO > 2))) MO = "0" + MO; // single digit month
+				if (MO > 12) { // must be a 1-digit month followed by 1st digit of the day
+					DY = MO.substring(1);
+					MO = "0" + MO.substring(0, 1);
+				}
+			}
+
+			if ((DY.length > 0) && (MO.length != 2)) {
+				MO = "0" + MO;
+				MO = MO.slice(-2);
+			}
+
+			// Adjust the Day characters
+			if (YR.length == 0) {
+				if ((DY.length == 1) && (x_brk || (DY > 3))) DY = "0" + DY; // single digit day
+				if (DY > 31) { // must be a 1-digit day followed by 1st digit of the year
+					YR = DY.substring(1);
+					DY = "0" + DY.substring(0, 1);
+				}
+			}
+
+			if ((YR.length > 0) && (DY.length != 2)) {
+				DY = "0" + DY;
+				DY = DY.slice(-2);
+			}
+
+			// Adjust the Year characters
+			if (YR.length > 4) YR = YR.substring(0, 4);
+
+			// Build the string to be displayed
+			NEWDATE = MO;
+			if (MO.length == 2) NEWDATE += "/";
+			NEWDATE += DY;
+			if (DY.length == 2) NEWDATE += "/";
+			NEWDATE += YR;
+
+			// Write the date string into the variable field
+			// NEWDATE saves the string for possible future use (e.g. was a "/" deleted
+			bdvar.value = NEWDATE;
+
+			// If the full date has been entered remember BirthYear of TP or SP
+			if (NEWDATE.length == 10) {
+				BirthYear[index] = YR;
+				EDIT_MODE[index] = 1;
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   Update_BirthYear(index)
+		// index = "TPBirthday", or "SPBirthday" for corresponding date fields
+		// This function captures the current value of the birth year in BirthYear[index]	
+		//----------------------------------------------------------------------------------------
+
+		function Update_BirthYear(index) {
+
+			// get the Mo, Dy, and Yr represented by the date characters
+			var bdvar = document.getElementById(index);
+			var y_date = bdvar.value;
+			x_date = y_date.split("/"); // Creates array from date entered by user
+			if (y_date.length == 10) {
+				BirthYear[index] = x_date[2];
+			} else {
+				EDIT_MODE[index] = 0;
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+
+		//                                   getSubTotal(i,type)
+		// This function returns the subtotal of the expenses in row 'i'. 
+		//----------------------------------------------------------------------------------------
+
+		function getSubTotal(i, type) {
+			var returnval;
+
+			if (type === undefined) {
+				returnval = ((document.getElementById(ME_INPUT[+i][0]).value - 0)
+					+ (document.getElementById(ME_INPUT[+i + 1][0]).value - 0)
+					+ (document.getElementById(ME_INPUT[+i + 2][0]).value - 0));
+			} else if (type === "TP") {
+				returnval = ((document.getElementById(ME_INPUT[+i][0]).value - 0));
+			} else if (type === "SP") {
+				returnval = ((document.getElementById(ME_INPUT[+i + 1][0]).value - 0));
+			} else {
+				returnval = ((document.getElementById(ME_INPUT[+i + 2][0]).value - 0));
+			}
+			return Number(returnval.toFixed(0));
+		}
+
+
+
+		//----------------------------------------------------------------------------------------
+
+		//                                   calculateColumnTotal()
+		// This function calculates the row totals to account for rounding with mileage.
+		// makes sure Grand total equals Line 1 of Schedule A and TP and SP do not excede it
+		// Rounding is subtacted from Spouse
+		//----------------------------------------------------------------------------------------
+
+		function calculateColumnTotal(TPExpTotal, SPExpTotal, OtherExpTotal, TotalSubTotal) {
+
+
+
+			// Round Totals
+			TPExpTotal = TPExpTotal.toFixed(0);
+			SPExpTotal = SPExpTotal.toFixed(0);
+			OtherExpTotal = OtherExpTotal.toFixed(0);
+			TotalSubTotal = TotalSubTotal.toFixed(0);
+			SumTotal.innerHTML = TotalSubTotal;
+
+			// Set Grand Total
+			if (useSE) {
+				GrandTotal.innerHTML = "<b>Need S-E Adjust</b>";
+			} else {
+				GrandTotal.innerHTML = TotalSubTotal;
+			}
+			// Calculate TP & SP Total so will not exceed Schedule A Line 1
+			if (OtherExpTotal > 0) {     //Take rounding from other col if can
+				TPTotal.innerHTML = TPExpTotal;
+				SPTotal.innerHTML = SPExpTotal;
+				OtherTotal.innerHTML = TotalSubTotal - TPExpTotal - SPExpTotal
+			}
+			else if (SPExpTotal == 0) {  //Take from TP if SP and Other are zero
+				TPTotal.innerHTML = TotalSubTotal;
+				SPTotal.innerHTML = 0;
+				OtherTotal.innerHTML = 0
+			}
+			else if ((TPExpTotal - SPExpTotal) < 0) {     // Take from one with highest Amount
+				TPTotal.innerHTML = TPExpTotal;
+				SPTotal.innerHTML = TotalSubTotal - TPExpTotal;
+				OtherTotal.innerHTML = 0
+			}
+			else {
+				TPTotal.innerHTML = TotalSubTotal - SPExpTotal;
+				SPTotal.innerHTML = SPExpTotal;
+				OtherTotal.innerHTML = 0
+			}
+
+			return 1;
+
+		}
+		//----------------------------------------------------------------------------------------
+
+		//                                   computeMedicalExpenses()
+		// This function computes the Medical Expense totals, verifying that any entries in the
+		// Medical Expenses input section are numeric and entering them in the totals cells. 
+		//----------------------------------------------------------------------------------------
+
+		function computeMedicalExpenses() {
+			var bdvar, temp;
+			var i;
+			var a;
+			var TPExpTotal = 0; SPExpTotal = 0; OtherExpTotal = 0;
+			var TPMileageExpense = 0; SPMileageExpense = 0; OtherMileageExpense = 0;
+			var TPMileageExpense2 = 0; SPMileageExpense2 = 0; OtherMileageExpense2 = 0;
+			var INPUT_ERROR = 0;
+			var TotalSubTotal = 0;
+
+			for (i = 0; i < ME_INPUT.length; i = i + 3) {
+				// Process taxpayer
+				bdvar = document.getElementById(ME_INPUT[i][0]);
+
+				if (bdvar.value === "") { }   // OK not to enter 0
+				else if (isNaN(bdvar.value)) {
+					alert(ME_INPUT[i][1] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+					return 0;
+				}
+				else if (i == 0) {	// Mileage is index 0
+					TPExpTotal = TPMileageExpense += (bdvar.value - 0) * MileageRate[TAX_YR];
+
+				}
+				else if ((i == 3) && (hasMileageRate2)) {  //Second Mileage Rate is index 3
+					TPExpTotal += TPMileageExpense2 += (bdvar.value - 0) * MileageRate2[TAX_YR];
+				}
+				else {
+					TPExpTotal += bdvar.value - 0; // force value to a number
+
+				}
+				// Process Spouse
+				bdvar = document.getElementById(ME_INPUT[i + 1][0]);
+
+				if (bdvar.value === "") { }   // OK not to enter 0
+				else if (isNaN(bdvar.value)) {
+					alert(ME_INPUT[i][1] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+					return 0;
+				}
+				else if (i == 0) {	// Mileage is index 0
+					SPExpTotal = SPMileageExpense += (bdvar.value - 0) * MileageRate[TAX_YR];
+				}
+				else if ((i == 3) && (hasMileageRate2)) {  //Second Mileage Rate is index 3
+					SPExpTotal += SPMileageExpense2 += (bdvar.value - 0) * MileageRate2[TAX_YR];
+				}
+				else {
+					SPExpTotal += bdvar.value - 0; // force value to a number
+
+				}
+
+				// Process Other
+				bdvar = document.getElementById(ME_INPUT[i + 2][0]);
+
+				if (bdvar.value === "") { }   // OK not to enter 0
+				else if (isNaN(bdvar.value)) {
+					alert(ME_INPUT[i][1] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+					return 0;
+				}
+				else if (i == 0) {	// Mileage is index 0
+					OtherExpTotal = OtherMileageExpense += (bdvar.value - 0) * MileageRate[TAX_YR];
+				}
+				else if ((i == 3) && (hasMileageRate2)) {  //Second Mileage Rate is index 3
+					OtherExpTotal += OtherMileageExpense2 += (bdvar.value - 0) * MileageRate2[TAX_YR];
+				}
+				else {
+					OtherExpTotal += bdvar.value - 0; // force value to a number
+
+				}
+
+			}   // End of for Loop
+
+			// Fill Mileage cost line
+			TPExpenseMiles.innerHTML = "$" + TPMileageExpense.toFixed(0);
+			SPExpenseMiles.innerHTML = "$" + SPMileageExpense.toFixed(0);
+			OtherExpenseMiles.innerHTML = "$" + OtherMileageExpense.toFixed(0);
+			temp = Number(TPMileageExpense) + Number(SPMileageExpense) + Number(OtherMileageExpense);
+			MilesExpenseSubTotal.innerHTML = temp.toFixed(0);
+
+			// Fill Secomd Mileage cost line
+			TPExpenseMiles2.innerHTML = "$" + TPMileageExpense2.toFixed(0);
+			SPExpenseMiles2.innerHTML = "$" + SPMileageExpense2.toFixed(0);
+			OtherExpenseMiles2.innerHTML = "$" + OtherMileageExpense2.toFixed(0);
+			temp = Number(TPMileageExpense2) + Number(SPMileageExpense2) + Number(OtherMileageExpense2);
+			MilesExpenseSubTotal2.innerHTML = temp.toFixed(0);
+
+
+			//MilesSubTotal.innerHTML = getSubTotal(ME_INPUT_INDEX["Miles"]); 
+			//	TotalSubTotal += (MilesSubTotal.innerHTML - 0) * MileageRate[TAX_YR];
+			TotalSubTotal += (getSubTotal(ME_INPUT_INDEX["Miles"]) - 0) * MileageRate[TAX_YR];
+			if (hasMileageRate2) {
+				TotalSubTotal += (getSubTotal(ME_INPUT_INDEX["Miles2"]) - 0) * MileageRate2[TAX_YR];
+			}
+			MedicareInsSubTotal.innerHTML = getSubTotal(ME_INPUT_INDEX["Medicare"]);
+			TotalSubTotal += MedicareInsSubTotal.innerHTML - 0;
+			OtherInsSubTotal.innerHTML = getSubTotal(ME_INPUT_INDEX["OtherIns"]);
+			TotalSubTotal += OtherInsSubTotal.innerHTML - 0;
+			DoctorCopaysSubTotal.innerHTML = getSubTotal(ME_INPUT_INDEX["Doc"]);
+			TotalSubTotal += DoctorCopaysSubTotal.innerHTML - 0;
+			PrescriptionSubTotal.innerHTML = getSubTotal(ME_INPUT_INDEX["Prescr"]);
+			TotalSubTotal += PrescriptionSubTotal.innerHTML - 0;
+			HospitalSubTotal.innerHTML = getSubTotal(ME_INPUT_INDEX["Hosp"]);
+			TotalSubTotal += HospitalSubTotal.innerHTML - 0;
+			EyeCareSubTotal.innerHTML = getSubTotal(ME_INPUT_INDEX["Eyecare"]);
+			TotalSubTotal += EyeCareSubTotal.innerHTML - 0;
+			DentistSubTotal.innerHTML = getSubTotal(ME_INPUT_INDEX["Dentist"]);
+			TotalSubTotal += DentistSubTotal.innerHTML - 0;
+			OtherSubTotal.innerHTML = getSubTotal(ME_INPUT_INDEX["Other"]);
+			TotalSubTotal += OtherSubTotal.innerHTML - 0;
+			LabSubTotal.innerHTML = getSubTotal(ME_INPUT_INDEX["Lab"]);
+			TotalSubTotal += LabSubTotal.innerHTML - 0;
+			NurseSubTotal.innerHTML = getSubTotal(ME_INPUT_INDEX["Nurse"]);
+			TotalSubTotal += NurseSubTotal.innerHTML - 0;
+			LTCareSubTotal.innerHTML = getSubTotal(ME_INPUT_INDEX["LTCare"]);
+			TotalSubTotal += LTCareSubTotal.innerHTML - 0;
+			DrugSubTotal.innerHTML = getSubTotal(ME_INPUT_INDEX["Drug"]);
+			TotalSubTotal += DrugSubTotal.innerHTML - 0;
+
+			// Take care of rounding problem
+			calculateColumnTotal(TPExpTotal, SPExpTotal, OtherExpTotal, TotalSubTotal);
+
+
+
+			if (!useSE) {
+				OtherInsSubTotalTSO.innerHTML = OtherInsSubTotal.innerHTML;
+			}
+			DoctorCopaysSubTotalTSO.innerHTML = Number(DoctorCopaysSubTotal.innerHTML) + Number(DentistSubTotal.innerHTML);
+			PrescriptionSubTotalTSO.innerHTML = PrescriptionSubTotal.innerHTML;
+			HospitalSubTotalTSO.innerHTML = HospitalSubTotal.innerHTML;
+			EyeCareSubTotalTSO.innerHTML = EyeCareSubTotal.innerHTML;
+			DentistSubTotalTSO.innerHTML = "In Doctors";
+			OtherSubTotalTSO.innerHTML = OtherSubTotal.innerHTML;
+			MilesSubTotalTSO.innerHTML = getSubTotal(ME_INPUT_INDEX["Miles"]);  // So we can keep the Subtotal column blank
+			MilesSubTotalTSO2.innerHTML = getSubTotal(ME_INPUT_INDEX["Miles2"]);  // So we can keep the Subtotal column blank
+			MilesExpenseSubTotalTSO.innerHTML = "Enter Mileage not $.."
+			MilesExpenseSubTotalTSO2.innerHTML = "Enter Mileage not $.."
+			LabSubTotalTSO.innerHTML = LabSubTotal.innerHTML;
+			NurseSubTotalTSO.innerHTML = NurseSubTotal.innerHTML;
+			DrugSubTotalTSO.innerHTML = DrugSubTotal.innerHTML;
+
+
+			calcTotalSEInsurance()
+			if (useSE) {
+				SEInsuranceAmt.disabled = false;
+				Adjbutton.disabled = false;
+
+
+			}
+			return 1;
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   checkAGI()
+		// This function checks the Federal AGI field for validity
+		//----------------------------------------------------------------------------------------
+
+		function checkAGI() {
+
+			var a = AGI.value + ""; // This forces AGI.value to be a string
+
+			if (AGI.value === "0") {
+				return 0; // AGI must be a positive number
+			}
+
+			if (AGI.value == "") {
+				return 0; // AGI must be provided
+			}
+
+			if (isNaN(AGI.value)) {
+				return 0;
+			}
+			return 1;
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                           computeMaxAllowed()
+		// This function compututes the maximum allowable subtraction based on filing status and AGI
+		//----------------------------------------------------------------------------------------
+
+		function computeMaxAllowed() {
+			// can only get here if filingStatusSelected == true, no need to check
+			var A = +AGI.value; // force numeric
+			if (FS == "S") {
+				if (0 <= A && A < 25000) { return 1800; }
+				if (25000 <= A && A < 50000) { return 1400; }
+				if (50000 <= A && A < 100000) { return 1000; }
+				return 0;
+			}
+			else { // FS == "J"
+				if (0 <= A && A < 50000) { return 1800; }
+				if (50000 <= A && A < 100000) { return 1400; }
+				if (100000 <= A && A < 200000) { return 1000; }
+				return 0;
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                             checkLine3()
+		// This function checks the "Line 3 in schedule A" field for validity
+		//----------------------------------------------------------------------------------------
+
+		function checkLine3() {
+
+			var a = Line3.value + ""; // This forces AGI.value to be a string
+
+			if (Line3.value === "0") {
+				return 0; // Line 1 or 3 value must be a positive number
+			}
+
+			if (Line3.value == "") {
+				return 0; // If line 1 or 3 value not provided skip computing
+				// table for itemized deductions
+			}
+
+			if (isNaN(Line3.value)) {
+				return 0;  // must be a valid number
+			}
+			return 1;
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   CalcMedExp()
+		// This function calculates the medical expense totals
+		//----------------------------------------------------------------------------------------
+
+		function calcMedExp() {
+			// Clear previous totals
+			TPTotal.innerHTML = ""; SPTotal.innerHTML = ""; OtherTotal.innerHTML = "";
+			GrandTotal.innerHTML = "";
+			MedicareInsSubTotal.innerHTML = "";
+			OtherInsSubTotal.innerHTML = ""; DoctorCopaysSubTotal.innerHTML = "";
+			PrescriptionSubTotal.innerHTML = ""; HospitalSubTotal.innerHTML = "";
+			EyeCareSubTotal.innerHTML = ""; DentistSubTotal.innerHTML = "";
+			MilesSubTotal.innerHTML = ""; OtherSubTotal.innerHTML = "";
+			DrugSubTotal.innerHTML = "";
+
+			if (!taxYearSelected) {
+				alert("Please select a tax year.");
+				return;
+			}
+			computeMedicalExpenses();
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   clearPreviousValues()
+		// This function clears previously computed values
+		//----------------------------------------------------------------------------------------
+
+		function clearPreviousValues() {
+
+			TPStdMedExp.innerHTML = "";
+			SPStdMedExp.innerHTML = "";
+			TPStdMaxAllow.innerHTML = "";
+			SPStdMaxAllow.innerHTML = "";
+			TPStdPerPers.innerHTML = "";
+			SPStdPerPers.innerHTML = "";
+			StdTotal.innerHTML = "";
+			TPItemMedExp.innerHTML = "";
+			SPItemMedExp.innerHTML = "";
+			TPTotalMedExp.innerHTML = "";
+			SPTotalMedExp.innerHTML = "";
+			TPPercent.innerHTML = "";
+			SPPercent.innerHTML = "";
+			SPFromSchedA.innerHTML = "";
+			TPPerPerson.innerHTML = "";
+			SPPerPerson.innerHTML = "";
+			TPItemMaxAllow.innerHTML = "";
+			SPItemMaxAllow.innerHTML = "";
+			TPItemPerPers.innerHTML = "";
+			SPItemPerPers.innerHTML = "";
+			ItemTotal.innerHTML = "";
+			SchALine1.innerHTML = "";
+			SchALine3.innerHTML = "";
+			TPExp.innerHTML = "";
+			SPExp.innerHTML = "";
+			TPToEnter.innerHTML = "";
+			SPToEnter.innerHTML = "";
+
+			// VJB Varialbes added 	
+			SchALine1Dup.innerHTML = "";
+			SchALine3Dup.innerHTML = "";
+			Total351Amt.innerHTML = "";
+			TPToEnterTSO.innerHTML = "";
+			SPToEnterTSO.innerHTML = "";
+
+
+			return;
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   CalcMedSub()
+		// This function calculates the Oregon Medical Subtraction
+		//----------------------------------------------------------------------------------------
+
+		function calcMedSub() {
+			//		alert("function calcMedSub() called");
+
+			clearPreviousValues();
+
+			if (!taxYearSelected) {
+				alert("Please select a tax year.");
+				return;
+			}
+			// Recompute medical expenses in case user changed something and forgot to do it
+			if (!computeMedicalExpenses()) {
+				return;
+			} else if (useSE) {
+				calcSEAjustment();
+
+			}
+			if (!checkAGI()) {
+				alert("Federal AGI missing, 0, or not a valid number. Please verify.");
+				return;
+			}
+			if (!checkLine3()) {
+				alert("Line 3 amount missing, 0, or not a valid number. Please verify.");
+				return;
+			}
+			if (!filingStatusSelected) {
+				alert("Please select a filing status.");
+				return;
+			}
+			//  Selection Checking
+			if (!FedDeductTypeSelected) {
+				alert("Please select a Federal Deduction Type.");
+				return;
+			}
+			if (!OregonDeductTypeSelected) {
+				alert("Please select a Oregon Deduction Type.");
+				return;
+			}
+
+			if (!EDIT_MODE["TPBirthday"]) {
+				alert("Taxpayer's birthday missing or incorrectly formatted. Please verify.");
+				return;
+			}
+			// Rudimentary TP birthday checking
+			if ((BirthYear["TPBirthday"] < 1900) || (BirthYear["TPBirthday"] > 2000)) {
+				alert("Taxpayer born before 1900 or after 2000. Please check Taxpayer's birth year.");
+				return;
+			}
+			if (FS == "J" && !EDIT_MODE["SPBirthday"]) {
+				alert("Spouse's birthday missing or incorrectly formatted. Please verify.");
+				return;
+			}
+			// Rudimentary SP birthday checking
+			if (FS == "J" && ((BirthYear["SPBirthday"] < 1900) || (BirthYear["SPBirthday"] > 2000))) {
+				alert("Spouse born before 1900 or after 2000. Please check Spouse's birth year.");
+				return;
+			}
+
+			if (TAX_YR - BirthYear["TPBirthday"] >= AgeFloor[TAX_YR]) {
+
+				if (useSE) {// Calc for SE Adjust
+					TPStdMedExp.innerHTML = NetTPTotal.innerHTML;
+				} else {
+					TPStdMedExp.innerHTML = TPTotal.innerHTML;
+				}
+			}
+			if ((FS == "J") && (TAX_YR - BirthYear["SPBirthday"] >= AgeFloor[TAX_YR])) {
+
+				if (useSE) {// Calc for SE Adjust
+					SPStdMedExp.innerHTML = NetSPTotal.innerHTML;
+				} else {
+					SPStdMedExp.innerHTML = SPTotal.innerHTML;
+				}
+			}
+
+			//Standard Deduction Computation
+			TPStdMaxAllow.innerHTML = computeMaxAllowed();
+			SPStdMaxAllow.innerHTML = TPStdMaxAllow.innerHTML;
+			TPStdPerPers.innerHTML = Math.min(TPStdMedExp.innerHTML, TPStdMaxAllow.innerHTML);
+			SPStdPerPers.innerHTML = Math.min(SPStdMedExp.innerHTML, SPStdMaxAllow.innerHTML);
+			StdTotal.innerHTML = +TPStdPerPers.innerHTML + +SPStdPerPers.innerHTML;
+			// force to numeric
+
+			//Itemized deduction computation
+			TPItemMedExp.innerHTML = TPStdMedExp.innerHTML;
+			SPItemMedExp.innerHTML = SPStdMedExp.innerHTML;
+			TPTotalMedExp.innerHTML = GrandTotal.innerHTML;
+			SPTotalMedExp.innerHTML = GrandTotal.innerHTML;
+			if (TPTotalMedExp.innerHTML == 0) {
+				TPPercent.innerHTML = 0;
+			} else {
+				TPPercent.innerHTML = (TPItemMedExp.innerHTML / TPTotalMedExp.innerHTML).toFixed(3);
+			}
+			if (SPTotalMedExp.innerHTML == 0) {
+				SPPercent.innerHTML = 0;
+			} else {
+				SPPercent.innerHTML = (SPItemMedExp.innerHTML / SPTotalMedExp.innerHTML).toFixed(3);
+			}
+
+			TPFromSchedA.innerHTML = Math.min(Line3.value, GrandTotal.innerHTML);
+			SPFromSchedA.innerHTML = TPFromSchedA.innerHTML;
+			TPPerPerson.innerHTML = Math.min((TPPercent.innerHTML * TPFromSchedA.innerHTML).toFixed(0),
+				TPItemMedExp.innerHTML); //correct for possible rounding error
+			SPPerPerson.innerHTML = Math.min((SPPercent.innerHTML * SPFromSchedA.innerHTML).toFixed(0),
+				SPItemMedExp.innerHTML); //correct for possible rounding error;
+			TPItemMaxAllow.innerHTML = TPStdMaxAllow.innerHTML;
+			SPItemMaxAllow.innerHTML = SPStdMaxAllow.innerHTML;
+			TPItemPerPers.innerHTML = Math.min(TPPerPerson.innerHTML, TPItemMaxAllow.innerHTML);
+			SPItemPerPers.innerHTML = Math.min(SPPerPerson.innerHTML, SPItemMaxAllow.innerHTML);
+			ItemTotal.innerHTML = +TPItemPerPers.innerHTML + +SPItemPerPers.innerHTML;
+
+			// Set MedOnSchedAYN 
+
+
+			if ((TAX_YR == "2016") || (TAX_YR == "2017") || (TAX_YR == "2018")) { // complete Workaround table
+				SchALine1.innerHTML = GrandTotal.innerHTML;
+				SchALine3.innerHTML = Line3.value;
+
+				if (useSE) {
+					TPExp.innerHTML = NetTPTotal.innerHTML;
+					SPExp.innerHTML = NetSPTotal.innerHTML;
+				} else {
+					TPExp.innerHTML = TPTotal.innerHTML;
+					SPExp.innerHTML = SPTotal.innerHTML;
+				}
+				TPToEnter.innerHTML = TPItemPerPers.innerHTML;
+				SPToEnter.innerHTML = SPItemPerPers.innerHTML;
+
+
+				if (Number(SchALine1.innerHTML) > 0) { //set MedOnSchedA 
+					MedOnSchedAYN = "Y";
+				} else {
+					MedOnSchedAYN = "N";
+				}
+				if ((FedDeductType == "S") && (OregonDeductType == "I")) { // Fed Standard & Oregon Itemized
+					TPToEnterTSO.innerHTML = TPToEnter.innerHTML;
+					SPToEnterTSO.innerHTML = SPToEnter.innerHTML;
+
+				} else {
+					TPToEnterTSO.innerHTML = TPExp.innerHTML;
+					SPToEnterTSO.innerHTML = SPExp.innerHTML;
+				}
+
+				document.getElementById("TSinstructions2").style.display = "inline-block" // Show Header
+
+				if ((MedOnSchedAYN == "Y") && (OregonDeductType == "I")) { // Medical in Deduction & Oregon Itemized
+					Total351Amt.innerHTML = ItemTotal.innerHTML;
+					MedDecuctAmt.innerHTML = Math.max(0, GrandTotal.innerHTML - Line3.value);
+					document.getElementById("StdDeductTable").style.display = "none"
+					document.getElementById("ItemDeductTable").style.display = "inline-block"
+				} else {
+					Total351Amt.innerHTML = StdTotal.innerHTML;
+					document.getElementById("StdDeductTable").style.display = "inline-block"   // x3.1.0
+					document.getElementById("ItemDeductTable").style.display = "none" // x3.1.0
+
+					if (OregonDeductType == "S") {
+						MedDecuctAmt.innerHTML = "Standard Deduction";;
+					} else {
+						MedDecuctAmt.innerHTML = 0;
+					}
+				}
+
+
+				StdTotal.style.backgroundColor = "tomato";
+				StdInstr.innerHTML = " ";
+				StdInstr.style.backgroundColor = "tomato";
+				ItemTotal.style.backgroundColor = "tomato";
+				ItemInstr.innerHTML = " ";
+				ItemInstr.style.backgroundColor = "tomato";
+
+				TPToEnter.style.backgroundColor = TPExp.style.backgroundColor = "LightGreen";
+				SPToEnter.style.backgroundColor = SPExp.style.backgroundColor = "LightGreen";
+				TPExpDesc.style.backgroundColor = TPToEnterDesc.style.backgroundColor = "LightGreen";
+				SPExpDesc.style.backgroundColor = SPToEnterDesc.style.backgroundColor = "LightGreen";
+
+
+			} else {       // This is for year  2015
+				TPToEnter.innerHTML = TPExp.innerHTML = "Not Applicable for " + TAX_YR;
+				TPToEnter.style.backgroundColor = TPExp.style.backgroundColor = "tomato";
+				SPToEnter.innerHTML = SPExp.innerHTML = "Not Applicable for " + TAX_YR;
+				SPToEnter.style.backgroundColor = SPExp.style.backgroundColor = "tomato";
+				TPExpDesc.style.backgroundColor = TPToEnterDesc.style.backgroundColor = "tomato";
+				SPExpDesc.style.backgroundColor = SPToEnterDesc.style.backgroundColor = "tomato";
+
+				StdInstr.innerHTML = "Enter on Oregon<br /> Subs worksheet";
+				ItemInstr.innerHTML = "Enter on Oregon<br /> Subs worksheet";
+
+				StdTotal.style.backgroundColor = "LightGreen";
+				StdInstr.style.backgroundColor = "LightGreen";
+				ItemTotal.style.backgroundColor = "LightGreen";
+				ItemInstr.style.backgroundColor = "LightGreen";
+
+
+			}
+			// VJB New variables
+			SchALine1Dup.innerHTML = SchALine1.innerHTML;
+			SchALine3Dup.innerHTML = SchALine3.innerHTML;
+
+
+			return;
+		}
+
+	</script>
+
+</head>
+
+
+
+<!-- ************************************************************************************************ -->
+<!-- ********************************* START OF HTML ************************************************ -->
+<!-- ************************************************************************************************ -->
+
+<body onload="Initialize()">
+	<center>
+
+		<span class="tooltitle">Special Oregon Medical Subtraction (SOMS) <br>
+			and Self Employment Health Insurance Calculator</span>
+
+
+		<br><button class="printhide" onclick="location.reload(true)"><b>Clear and reset calculator</b></button>
+		<span id="Version" class="versiondisplay"></span>
+		<script>Version.innerHTML = VERSION;</script>
+		<button class="printhide" onclick="window.print()"> Print a taxpayer copy</button>
+		<br><br>
+
+		<div style="width:60em" class="flex-item printhide"><b>Use this Calculator for:</b>
+			<ul><b>
+					<li>Organizing Medical Expenses for entry into TSO Schedule A. Values in <b
+							style="background-color:lightgreen">green cells</b>
+						are in the same order as input values for TSO Federal Schedule A. Dental Values are combined
+						with Doctor Copays per TSO.
+					</li>
+					<li>Splitting Medical Expenses for Speical Oregon Medical Subtraction. Values in <b
+							style="background-color:orange">orange cells</b>
+						are the input values for SOMS in TSO. </li>
+					<li>Calculating Self-Employment Medical Insurance.</li>
+				</b>
+			</ul>
+
+			<span> More detailed <a href="#Procedure"> instructions</a> are at the bottom. Calculator includes
+				workaround for 2016, and 2017 Tax Slayer Error.
+				Items marked with an asterisk are required </span>
+		</div>
+		<br>
+
+		<br>
+
+		<!-- Medical Expenses Table </span> -->
+		<table id="medExpInput" cols=6>
+			<tbody>
+				<tr>
+					<td class="headerfield" colspan="6">Medical Expenses Table</td>
+				</tr>
+				<tr>
+					<td colspan="6" class="workaroundtitle">The data in the <b style="background-color:lightgreen">green
+							cells</b> are the values
+						to be entered into TSO Federal Schedule A Medical Expenses Screen. <br>Data in the <b
+							style="background-color:orange">orange cells</b> are the SOMS amounts to be entered
+						into TSO.
+						Data in the <b style="background-color:tomato">red cell</b> should match Schedule A Line 1.
+					</td>
+				</tr>
+				<tr>
+					<td class="inputfield">Taxpayer's Name</td>
+					<td class="inputfield" colspan="5">
+						<input id="TPName" tabindex="1" title="Optionally, enter the Taxpayer&#39;s name." value="">
+					</td>
+				</tr>
+				<tr>
+					<td class="inputfield" colspan="2">*Tax Year &nbsp &nbsp &nbsp
+						<input="" type="radio" name="Year" value="N">
+							<input id="radioTY_3" type="radio" name="Year" value=""
+								onclick="setTaxYear(this.value)"><label id="labelTY_3" for="radioTY_3">0</label>
+							<input id="radioTY_2" type="radio" name="Year" value=""
+								onclick="setTaxYear(this.value)"><label id="labelTY_2" for="radioTY_2">0</label>
+							<input id="radioTY_1" type="radio" name="Year" value=""
+								onclick="setTaxYear(this.value)"><label id="labelTY_1" for="radioTY_1">0</label>
+							<input id="radioTY_0" type="radio" name="Year" value="" checked="checked"
+								onclick="setTaxYear(this.value)"><label id="labelTY_0" for="radioTY_0">0</label>
+					</td>
+					<td class="inputfield" colspan="4">Calculate Self-Employment Insurance
+						<input id="SEInsuranceYes" type="radio" name="SEInsurance" value="Y"
+							onclick="setUseSE(this.value)">Yes
+						<input id="SEInsuranceNo" type="radio" name="SEInsurance" value="N"
+							onclick="setUseSE(this.value)">No
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6">Only enter Schedule A expenses not entered elsewhere on the return
+						e.g. do not enter self employed<br> insurance premiums from Schedule C.</td>
+				</tr>
+				<tr> <!-- VJB X3.1.0  -->
+					<td colspan="6" class="inputfield"><b>Use TSO Column to enter Federal Schedule A Medical Expenses
+							into TaxSlayer.<br> (Row sequence is the same as TSO.
+							Doctor and Dentist Expenses are added together in the Doctor Row.)</b></td>
+				</tr>
+				<tr>
+					<td class="headerfield">Medical Expenses</td>
+					<td class="headerfield">Taxpayer</td>
+					<td class="headerfield">Spouse<br>If filing<br>jointly</td>
+					<td class="headerfield">Other Medical<br>Dependents</td>
+					<td class="headerfield"> Subtotals </td> <!-- VJB X3.1.0  -->
+					<td class="inputfield"><b>TSO Schedule A <br>Medical Expenses</b></td>
+				</tr> <!-- VJB X3.1.1 -->
+
+				<tr>
+					<td class="inputfield">Medicare Insurance Entered on SSA-1099 in TaxSlayer</td>
+					<td class="inputfield" background-color="gray">
+						<input id="TPMedicare" tabindex="11" title="Total of Taxpayer&#39;s Medicare premiums."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="SPMedicare" tabindex="12" title="Total of Spouse&#39;s Medicare premiums."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfielddisabled">
+						<input id="OtherMedicare" disabled tabindex="13"
+							title="Other Family Members&#39; Medicare premiums &#10 are entered as Other Medical Insurance."
+							onblur="checkNumeric(this.id)">
+					</td>
+
+					<td id="MedicareInsSubTotal"></td>
+					<td id="MedicareInsSubTotalTSO"></td>
+				<tr>
+					<td class="inputfield">Other Medical Insurance</td>
+					<td class="inputfield">
+						<input id="TPOtherIns" tabindex="21" title="Total of Taxpayer&#39;s other insurance premiums."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="SPOtherIns" tabindex="22" title="Total of Spouse&#39;s other insurance premiums."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="OtherOtherIns" tabindex="23"
+							title="Total of Other Family Members&#39; other insurance premiums."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td id="OtherInsSubTotal"></td>
+					<td id="OtherInsSubTotalTSO" class="resultsfield"></td>
+				</tr>
+				<tr>
+					<td class="inputfield">Doctor Copays</td>
+					<td class="inputfield">
+						<input id="TPDoc" tabindex="31" title="Total of Taxpayer&#39;s doctor copays."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="SPDoc" tabindex="32" title="Total of Spouse&#39;s doctor copays."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="OtherDoc" tabindex="33" title="Total of Other Family Members&#39; doctor copays."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td id="DoctorCopaysSubTotal"></td>
+					<td id="DoctorCopaysSubTotalTSO" class="resultsfield"></td>
+				</tr>
+				<tr>
+					<td class="inputfield">Prescription Drugs</td>
+					<td class="inputfield">
+						<input id="TPPrescr" tabindex="41" title="Total of Taxpayer&#39;s prescription drug costs."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="SPPrescr" tabindex="42" title="Total of Spouse&#39;s prescription drug costs."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="OtherPrescr" tabindex="43"
+							title="Total of Other Family Members&#39; prescription drug costs."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td id="PrescriptionSubTotal"></td>
+					<td id="PrescriptionSubTotalTSO" class="resultsfield"></td>
+				</tr>
+				<tr>
+					<td class="inputfield">X-rays, Labs and Tests, etc</td>
+					<td class="inputfield">
+						<input id="TPLab" tabindex="51" title="Total of Taxpayer&#39;s X-rays, Lab, Etc"
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="SPLab" tabindex="52" title="Total of Spouse&#39;s X-rays, Lab, Etc"
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="OtherLab" tabindex="53" title="Total of Other Family Members&#39; X-rays, Lab, Etc."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td id="LabSubTotal"></td>
+					<td id="LabSubTotalTSO" class="resultsfield"></td>
+				</tr>
+				<tr>
+					<td class="inputfield">Nursing Help</td>
+					<td class="inputfield">
+						<input id="TPNurse" tabindex="61" title="Total of Taxpayer&#39;s Nursing Help."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="SPNurse" tabindex="62" title="Total of Spouse&#39;s Nursing Help."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="OtherNurse" tabindex="63" title="Total of Other Family Members&#39; Nursing Help."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td id="NurseSubTotal"></td>
+					<td id="NurseSubTotalTSO" class="resultsfield"></td>
+				</tr>
+				<tr>
+					<td class="inputfield">Hospital Care</td>
+					<td class="inputfield">
+						<input id="TPHosp" tabindex="71" title="Total of Taxpayer&#39;s hospital copays."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="SPHosp" tabindex="72" title="Total of Spouse&#39;s hospital copays."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="OtherHosp" tabindex="73" title="Total of Other Family Members&#39; hospital copays."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td id="HospitalSubTotal"></td>
+					<td id="HospitalSubTotalTSO" class="resultsfield"></td>
+				</tr>
+				<tr>
+					<td class="inputfield">Alcohol/Drug Rehab</td>
+					<td class="inputfield">
+						<input id="TPDrug" tabindex="81"
+							title="Total of Taxpayer&#39;s Alcohol and Drug Rehabilitation Expenses."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="SPDrug" tabindex="82"
+							title="Total of Spouse&#39;s Alcohol and Drug Rehabilitation Expenses."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="OtherDrug" tabindex="83"
+							title="Total of Other Family Members&#39; Alcohol and Drug Rehabilitation Expenses."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td id="DrugSubTotal"></td>
+					<td id="DrugSubTotalTSO" class="resultsfield"></td>
+				</tr>
+				<tr>
+				<tr>
+					<td class="inputfield">Medical Aids (Glasses, Hearing Aids, etc.)</td>
+					<td class="inputfield">
+						<input id="TPEyecare" tabindex="91"
+							title="Total of Taxpayer&#39;s Medical Aids (Glasses, Hearting Aids, etc.)."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="SPEyecare" tabindex="92"
+							title="Total of Spouse&#39;s Medical Aids (Glasses, Hearting Aids, etc.)."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="OtherEyecare" tabindex="93"
+							title="Total of Other Family Members&#39; Medical Aids (Glasses, Hearting Aids, etc.)."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td id="EyeCareSubTotal"></td>
+					<td id="EyeCareSubTotalTSO" class="resultsfield"></td>
+				</tr>
+				<tr>
+					<td class="inputfield">Dentist</td>
+					<td class="inputfield">
+						<input id="TPDentist" tabindex="101" title="Total of Taxpayer&#39;s dental costs."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="SPDentist" tabindex="102" title="Total of Spouse&#39;s dental costs."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="OtherDentist" tabindex="103" title="Total of Other Family Members&#39; dental costs."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td id="DentistSubTotal"></td>
+					<td id="DentistSubTotalTSO" class="resultsfield"></td>
+				</tr>
+				<tr>
+					<td class="inputfield" id="MilesTitle">
+					</td>
+					<td class="inputfield">
+						<input id="TPMiles" tabindex="111" title="Total of Taxpayer&#39;s medical miles."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="SPMiles" tabindex="112" title="Total of Spouse&#39;s medical miles."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="OtherMiles" tabindex="113" title="Total of Other Family Members&#39; medical miles."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td id="MilesSubTotal"></td>
+					<td id="MilesSubTotalTSO" class="resultsfield"></td>
+				</tr>
+
+				<tr>
+					<td class="resultsfieldinterim" id="MilesExpenseTitle"> </td>
+					<td class="resultsfieldinterim" id="TPExpenseMiles"></td>
+					<td class="resultsfieldinterim" id="SPExpenseMiles"></td>
+					<td class="resultsfieldinterim" id="OtherExpenseMiles"></td>
+					<td class="resultsfieldinterim" id="MilesExpenseSubTotal"></td>
+					<td id="MilesExpenseSubTotalTSO" class="resultsfieldinterim"></td>
+				</tr>
+
+				<tr id="SecondMileageRow1" style="display : none;">
+
+					<td class="inputfield" id="MilesTitle2"> </td>
+					<td class="inputfield">
+						<input id="TPMiles2" tabindex="121" title="Total of Taxpayer&#39;s medical miles."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="SPMiles2" tabindex="122" title="Total of Spouse&#39;s medical miles."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="OtherMiles2" tabindex="123" title="Total of Other Family Members&#39; medical miles."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td id="MilesSubTotal2"></td>
+					<td id="MilesSubTotalTSO2" class="resultsfield"></td>
+				</tr>
+
+				<tr id="SecondMileageRow2" style="display : none;">
+					<td class="resultsfieldinterim" id="MilesExpenseTitle2"> </td>
+					<td class="resultsfieldinterim" id="TPExpenseMiles2"></td>
+					<td class="resultsfieldinterim" id="SPExpenseMiles2"></td>
+					<td class="resultsfieldinterim" id="OtherExpenseMiles2"></td>
+					<td class="resultsfieldinterim" id="MilesExpenseSubTotal2"></td>
+					<td id="MilesExpenseSubTotalTSO2" class="resultsfieldinterim"></td>
+				</tr>
+
+
+				<tr>
+					<td class="inputfield">Other</td>
+					<td class="inputfield">
+						<input id="TPOther" tabindex="131" title="Total of Taxpayer&#39;s other medical payments."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="SPOther" tabindex="132" title="Total of Spouse&#39;s other medical payments."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="OtherOther" tabindex="133"
+							title="Total of Other Family Members&#39;s other medical payments."
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td id="OtherSubTotal"></td>
+					<td id="OtherSubTotalTSO" class="resultsfield"></td>
+				</tr>
+
+				<tr onmouseover="LTCareCapRow.style.display='table-row';"
+					onmouseout="LTCareCapRow.style.display='none';">
+					<td class="inputfield">Long Term Care (Enter $ up to the limit)</td>
+					<td class="inputfield">
+						<input id="TPLTCare" tabindex="141" title="TP's Long Term Care Deduction"
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="SPLTCare" tabindex="142" title="SP's Long Term Care Deduction"
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="OtherLTCare" tabindex="143" title="Total of Dependents Long Term Care Deduction(s)"
+							onblur="checkNumeric(this.id)">
+					</td>
+					<td id="LTCareSubTotal"></td>
+					<td id="LTCareSubTotalTSO">Separately Enter Each <br>Individual in TSO</td>
+				</tr>
+
+				<tr id="LTCareCapRow" style="display : none; background-color : white">
+					<td id="LTCareCapData" class="headerfield" colspan="6"> This is data </td>
+				</tr>
+
+
+				<tr>
+					<td>Total Medical Expenses</td>
+					<td id="TPTotal" style="background-color:orange"></td>
+					<td id="SPTotal" style="background-color:orange"></td>
+					<td id="OtherTotal"></td>
+					<td id="SumTotal" class="resultsfieldinterim"></td>
+				</tr>
+
+				<tr id="SEInsuranceRow" style="display : none;">
+					<td class="inputfield">Self-Employment Insurance</td>
+					<td class="inputfield" colspan="2">Health Insurance Available for S-E =<br>
+						Long Term Care Available for S-E =</td>
+					<td class="resultsfield" id="SETotalInsurance" tabindex="0" style="font-weight: bold;"></td>
+					<td id="SETotalInsuranceSum" class="resultsfieldinterim"></td>
+
+				</tr>
+
+
+				<tr id="SEAdjustmentRow" style="display : none;">
+					<td>Self Employment Adjustment</td>
+					<td id="TPSEAdj" class="resultsfieldinterim"></td>
+					<td id="SPSEAdj" class="resultsfieldinterim"></td>
+					<td id="DPSEAdj" class="resultsfieldinterim"></td>
+				</tr>
+
+				<tr id="NetInsuranceRow" style="display : none;">
+					<td>Net Medical Expenses</td>
+					<td id="NetTPTotal" class="resultsfieldinterim"></td>
+					<td id="NetSPTotal" class="resultsfieldinterim"></td>
+					<td id="NetDPTotal" class="resultsfieldinterim"></td>
+				</tr>
+				<tr>
+					<td>Grand Total</td>
+					<td id="GrandTotal" class="resultsfield2"></td>
+					<td colspan="2"><b><--< /b> Verify equal to Schedule A line 1</td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+
+		<button id="Calcbutton" class="printhide" tabindex="0" onclick="setCalcButton('STEP1')">
+			STEP 1A: Click here to Calculate Medical Expense Totals</button>
+
+		<br><br>
+		<Span id="AdjustmentTable" style="display : none;">
+			<table>
+				<tbody>
+					<tr>
+						<td id="AdjustCell" class="inputfield"><b> Enter Amount from Schedule 1 Line 29 </b><br></td>
+						<td><input id="SEInsuranceAmt" tabindex="0" title="Enter amount from Schedule 1 Line 29"
+								onblur="checkNumeric(this.id)"> </td>
+					</tr>
+
+
+				</tbody>
+			</table>
+			<br>
+			<button id="Adjbutton" class="printhide" onclick="setCalcButton('ADJ')">STEP 1B: Calculate SE
+				Adjustment</button>
+		</span>
+		<br>
+
+		<div id="TSOError1" style="display : none;">
+			<span id="sp_req"> Spouse's birthday is only required if filing status is MFJ </span>
+			<br>
+			<table id="otherInfoInput">
+				<tbody>
+					<tr>
+						<td class="inputfield">*Federal Filing Status</td>
+						<td class="inputfield" colspan="3" tabindex="0" <input="" type="radio" name="filingStatus"
+							value="N">
+							<input type="radio" name="filingStatus" value="S" onclick="setFilingStatus('S')">Single or
+							MFS
+							<input type="radio" name="filingStatus" value="J" onclick="setFilingStatus('J')">MFJ
+							<input type="radio" name="filingStatus" value="O" onclick="setFilingStatus('O')">HoH
+							or QW
+						</td>
+					</tr>
+
+					<tr>
+						<td class="inputfield">*Federal Deduction</td>
+						<td class="inputfield" colspan="3" tabindex="0" <input="" type="radio" name="filingStatus"
+							value="FN">
+							<input type="radio" name="FederalDeduction" value="S"
+								onclick="setFedDeductType('S')">Standard
+							<input type="radio" name="FederalDeduction" value="I"
+								onclick="setFedDeductType('I')">Itemized
+						</td>
+					</tr>
+					<tr>
+						<td class="inputfield">*State Deduction</td>
+						<td class="inputfield" colspan="3" tabindex="0" <input="" type="radio" name="filingStatus"
+							value="SN">
+							<input type="radio" name="OregonDeduction" value="S"
+								onclick="setOregonDeductType('S')">Standard
+							<input type="radio" name="OregonDeduction" value="I"
+								onclick="setOregonDeductType('I')">Itemized
+						</td>
+					</tr>
+
+
+					<tr>
+						<td class="inputfield">*Federal AGI</td>
+						<td class="inputfield" colspan="3">
+							<input id="AGI" tabindex="0" title="From line 7 of Form 40 or line 29F of Form 40N or 40P."
+								onblur="checkNumeric(this.id)">
+						</td>
+					</tr>
+					<tr>
+						<td class="inputfield">*Line 3 on Schedule A</td>
+						<td class="inputfield" colspan="3">
+							<input id="Line3" tabindex="0" title="Amount on Line 3 of Schedule A."
+								onblur="checkNumeric(this.id)">
+						</td>
+					</tr>
+					<tr>
+						<td class="inputfield">*Taxpayer's birthday</td>
+						<td class="inputfield">
+							<input id="TPBirthday" tabindex="36"
+								title="Taxpayer&#39;s birthday entered as m/d/yyyy, mm/dd/yyyy, or mmddyyyy."
+								onfocus="Edit_date(this.id)" onkeyup="Build_date(this.id)"
+								onchange="Update_BirthYear(this.id)">
+						</td>
+						<td class="inputfield">*Spouse's birthday</td>
+						<td class="inputfield">
+							<input id="SPBirthday" tabindex="0"
+								title="Spouse&#39;s birthday entered as m/d/yyyy, mm/dd/yyyy, or mmddyyyy."
+								onfocus="Edit_date(this.id)" onkeyup="Build_date(this.id)"
+								onchange="Update_BirthYear(this.id)">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<br><br>
+			<!--	<p page-break-inside="always"> </p>   Doesn't work in Chrome -->
+			<!-- <div id="pageBreakDiv"> </div> -->
+
+			<p page-break-after="always"> </p>
+			<div id="TSOError2" style="display : none;">
+				<button id="Calcbutton2" class="printhide" tabindex="0" onclick="setCalcButton('STEP2')">
+					Step 2:Click here to Calculate<br>Special Oregon Medical Subtraction</button>
+				<br><br>
+
+
+				<!-- **************** VJB CHANGES START NEW SUMMARY DATA ********************************************* -->
+
+				<br> <span id="TSinstructions1" class="workaroundtitle">
+					Oregon Special Medical Subtraction Table</span>
+
+				<table>
+					<tbody>
+						<tr>
+							<td colspan="3" class="workaroundtitle">1. Enter the amounts in <b
+									style="background-color:lightgreen">green cells</b>
+								into TSO Oregon Medical Subtraction
+								<br> 2. Verify the amounts in <b style="background-color:tomato">red cells</b> in TSO
+							</td>
+						</tr>
+						<tr>
+							<td class="headerfield">Oregon Medical Subtraction</td>
+							<td class="headerfield">Taxpayer</td>
+							<td class="headerfield">Spouse</td>
+						</tr>
+						<tr>
+							<td class="linedescription">Amounts to <b>Enter into TaxSlayer</b></td>
+							<td class="resultsfield" id="TPToEnterTSO" style="background-color:orange"></td>
+							<td class="resultsfield" id="SPToEnterTSO" style="background-color:orange"></td>
+						</tr>
+						<tr>
+							<td class="linedescription"><b>Verify</b> Amount on Schedule A, Line 1</td>
+							<td colspan="2" class="resultsfield2" id="SchALine1Dup"></td>
+						</tr>
+						<tr>
+							<td class="linedescription"><b>Verify</b> Amount on Schedule A, Line 3</td>
+							<td colspan="2" class="resultsfield2" id="SchALine3Dup"></td>
+						</tr>
+						<tr>
+							<td class="linedescription">Itemized Medical Deduction Amount</td>
+							<td colspan="2" class="linedescription" id="MedDecuctAmt"></td>
+						</tr>
+						<tr>
+							<td class="linedescription"><b>Verify</b> Oregon 351 Subtraction</td>
+							<td colspan="2" class="resultsfield2" id="Total351Amt"></td>
+						</tr>
+					</tbody>
+				</table>
+				<br><br>
+
+				<br> <span id="TSinstructions2" class="workaroundtitle" style="display:none;">
+					Details on Calculation of Oregon Special Medical Subtraction Amount </span>
+				<br>
+
+				<!-- **************** VJB CHANGES END ********************************************* -->
+				<table id="StdDeductTable" style="display:none;">
+					<tbody>
+						<tr>
+							<td colspan="3" text-align="center">For Taxpayers who take the Oregon Standard Deduction or
+								do not include<br>
+								medical expenses on Schedule A Line 1</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td class="headerfield">Taxpayer</td>
+							<td class="headerfield">Spouse</td>
+						</tr>
+						<tr>
+							<td class="linedescription">Allowed Medical Expenses</td>
+							<td id="TPStdMedExp"></td>
+							<td id="SPStdMedExp"></td>
+						</tr>
+						<tr>
+							<td class="linedescription">Max Allowable Subtraction</td>
+							<td id="TPStdMaxAllow"></td>
+							<td id="SPStdMaxAllow"></td>
+						</tr>
+						<tr>
+							<td class="linedescription">Per Person Subraction</td>
+							<td id="TPStdPerPers"></td>
+							<td id="SPStdPerPers"></td>
+						</tr>
+						<tr>
+							<td class="linedescription">Total Subtraction A</td>
+							<td class="resultsfield2" id="StdTotal"></td>
+							<!-- X3.1.0 <td class="resultsfield2" id="StdInstr">See Instructions below</td> -->
+							<td class="resultsfield2" id="StdInstr"> </td>
+						</tr>
+					</tbody>
+				</table>
+
+				<!-- VJB X3.1.0 Hide This Table -->
+
+				<table id="ItemDeductTable" style="display:none;">
+					<tbody>
+						<tr>
+							<td colspan="3" text-align="center">For Taxpayers who Itemize for Oregon and include medical
+								expenses on
+								<br>Schedule A Line 1
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td class="headerfield">Taxpayer</td>
+							<td class="headerfield">Spouse</td>
+						</tr>
+						<tr>
+							<td class="linedescription">Individual Medical Expenses</td>
+							<td id="TPItemMedExp"></td>
+							<td id="SPItemMedExp"></td>
+						</tr>
+						<tr>
+							<td class="linedescription">Total Medical Expenses</td>
+							<td id="TPTotalMedExp"></td>
+							<td id="SPTotalMedExp"></td>
+						</tr>
+						<tr>
+							<td class="linedescription">Applicable Percent</td>
+							<td id="TPPercent"></td>
+							<td id="SPPercent"></td>
+						</tr>
+						<tr>
+							<td class="linedescription">Lesser of line 1 or 3 on Schedule A</td>
+							<td id="TPFromSchedA"></td>
+							<td id="SPFromSchedA"></td>
+						</tr>
+						<tr>
+							<td class="linedescription">Per Person Amount</td>
+							<td id="TPPerPerson"></td>
+							<td id="SPPerPerson"></td>
+						</tr>
+						<tr>
+							<td class="linedescription">Max Allowable Subtraction</td>
+							<td id="TPItemMaxAllow"></td>
+							<td id="SPItemMaxAllow"></td>
+						</tr>
+						<tr>
+							<td class="linedescription">Per Person Subraction</td>
+							<td id="TPItemPerPers"></td>
+							<td id="SPItemPerPers"></td>
+						</tr>
+						<tr>
+							<td class="linedescription">Total Subtraction B</td>
+							<td class="resultsfield2" id="ItemTotal"></td>
+							<!-- X3.1.0 <td class="resultsfield2" id="ItemInstr">See Instructions below</td> -->
+							<td class="resultsfield2" id="ItemInstr"> </td>
+						</tr>
+					</tbody>
+				</table>
+				<br><br>
+
+
+
+				<table hidden>
+					<tbody>
+						<tr>
+							<td>1. Amount on Schedule A, line 1</td>
+							<td id="SchALine1"></td>
+						</tr>
+						<tr>
+							<td>2. Amount on Schedule A, line 3</td>
+							<td id="SchALine3"></td>
+						</tr>
+						<tr>
+							<td id="TPExpDesc" class="resultsfield">3. Taxpayer's Actual Medical Expenses:</td>
+							<td id="TPExp" class="resultsfield"></td>
+						</tr>
+						<tr>
+							<td id="SPExpDesc" class="resultsfield">4. Spouse's Actual Medical Expenses:</td>
+							<td id="SPExp" class="resultsfield"></td>
+						</tr>
+						<tr>
+							<td id="TPToEnterDesc" class="resultsfield">5.Workaround amount to enter in TP field
+								on<br>Medical Subtraction Screen if itemizing for<br> Oregon
+								and NOT itemizing for federal:</td>
+							<td id="TPToEnter" class="resultsfield"></td>
+						</tr>
+						<tr>
+							<td id="SPToEnterDesc" class="resultsfield">6. Workaround amount to enter in SP field
+								on<br>Medical Subtraction Screen if itemizing for<br>Oregon
+								and NOT itemizing for federal:</td>
+							<td id="SPToEnter" class="resultsfield"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div> <!-- End of TSO Error Processing -->
+
+
+		<div id="Procedure" class="flex-container printhide">
+			<div class="flex-item">
+				<b>INSTRUCTIONS:</b>
+				<br>
+				<b> STEP 1A: After assembling Taxpayer's medical data:</b>
+				<ol>
+					<li>Enter the Medical Expenses into the Medical Expense table (the 1st table).</li>
+					<li>Click the "Calculate the Medical Expense Totals" button.</li>
+					<li>Enter the data in the <b style="background-color:lightgreen">green cells</b>
+						into TSO Federal Medical Expenses. The data is in the same sequence as the TSO entry cells.</li>
+					<li>Enter the data in the <b style="background-color:orange">orange cells</b>
+						into TSO Special Oregon Medical Subtractions.</li>
+					<li>If using S-E Insurance DO NOT ENTER any of the three insurance line amounts into TSO. These
+						make up the S-E Insurance Amount.</li>
+				</ol>
+				<b> STEP 1B: Only appears when using Self Employed Insurance (which is not eligible for the premium tax
+					credit)</b>
+				<ol>
+					<li>Complete the federal return. Including entering the insurance and LTC amounts into the
+						S-E Health Insurance Form on Schedule C. </li>
+					<li>Enter the amount from <span id="instructLocation"></span> into the designated box.</li>
+					<li>Click on the "STEP 1B: Calculate SE adjustment" button. This will subtract the amount of S-E
+						Insurance from the totals. The Grand Total should now agree with Schedule A Line 1</li>
+				</ol>
+
+			</div>
+		</div>
+
+		<br><br>
+		<div id="Disclaimer" class="flex-container">
+			<div class="flex-item">
+				Please report any bugs or discrepancies or suggestions to
+				<span class="email">krow.sirrahrednax@rednax</span> with as much information as possible to help resolve
+				the issue.
+			</div>
+		</div>
+		<br><br>
+	</center>
+</body>
+
+</html>
