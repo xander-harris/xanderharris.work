@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<!-- ************************************************************************************************ -->
+<!-- ************************** CALCULATE SUPPORT FOR DEPENDENCY PURPOSES *************************** -->
+<!-- ************************************************************************************************ -->
+
+<html>
+
+<head>
+	<title>Support Calculator</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="author" content="Barbara Smith-Thomas, OR Portland Metro" />
+	<meta name="description" content="Determines support percent for dependency" />
+
+	<style type="text/css">
+		table,
+		td {
+			margin: auto;
+			border: 1px solid black;
+			border-collapse: collapse;
+		}
+
+		button {
+			font-size: 105%;
+			font-weight: bold;
+		}
+
+		.versiondisplay {
+			font-weight: bold;
+			margin-left: 4em;
+			margin-right: 4em
+		}
+
+		.tooltitle {
+			font-size: 150%;
+			font-weight: bold;
+		}
+
+		.workaroundtitle {
+			font-weight: bold;
+		}
+
+		.headerfield {
+			text-align: center;
+			font-weight: bold;
+			font-size: 125%
+		}
+
+		.headerfield2 {
+			width: 6em;
+			text-align: center;
+			font-weight: bold;
+		}
+
+		.headerfield3 {
+			font-weight: bold;
+			text-align: left;
+		}
+
+		.inputfield {
+			background-color: yellow;
+		}
+
+		.inputfieldtabbed {
+			background-color: yellow;
+			padding-left: 3em;
+		}
+
+		.inputfield #TPName {
+			width: 35em;
+			text-align: center;
+		}
+
+		.inputfield #DepName {
+			width: 35em;
+			text-align: center;
+		}
+
+		.spacerfield {
+			width: 1em;
+		}
+
+		.calculated {
+			width: 6em;
+			background-color: tan;
+		}
+
+		.totalcost {
+			text-align: right;
+			font-weight: bold;
+		}
+
+		.resultsfield {
+			background-color: lightgreen;
+			font-weight: bold;
+		}
+
+		.linenumber {
+			width: 2em;
+			text-align: center;
+		}
+
+		#header,
+		#Calcbutton {
+			text-align: center;
+		}
+
+		#Savings,
+		#Income,
+		#Borrowed {
+			width: 6em;
+			text-align: right;
+		}
+
+		#Support,
+		#Other,
+		#Remaining {
+			width: 6em;
+			text-align: right;
+		}
+
+		#FundsIn,
+		#FundsOut {
+			width: 6em;
+			text-align: right;
+		}
+
+		#MonthlyRent,
+		#NoMonthsRent,
+		#AnnualRent {
+			width: 6em;
+			text-align: right;
+		}
+
+		#MonthlyFMV,
+		#NoMonthsFMV,
+		#AnnualFMV {
+			width: 6em;
+			text-align: right;
+		}
+
+		#MonthlyElec,
+		#NoMonthsElec,
+		#AnnualElec {
+			width: 6em;
+			text-align: right;
+		}
+
+		#MonthlyGas,
+		#NoMonthsGas,
+		#AnnualGas {
+			width: 6em;
+			text-align: right;
+		}
+
+		#MonthlyWater,
+		#NoMonthsWater,
+		#AnnualWater {
+			width: 6em;
+			text-align: right;
+		}
+
+		#MonthlyGarbage,
+		#NoMonthsGarbage,
+		#AnnualGarbage {
+			width: 6em;
+			text-align: right;
+		}
+
+		#MonthlyOtherUtil,
+		#NoMonthsOtherUtil,
+		#AnnualOtherUtil {
+			width: 6em;
+			text-align: right;
+		}
+
+		#Owned,
+		#NumInHH {
+			width: 2em;
+			text-align: left;
+		}
+
+		#MonthlyFood,
+		#NoMonthsFood,
+		#AnnualFood {
+			width: 6em;
+			text-align: right;
+		}
+
+		#Lodging,
+		#Food,
+		#Utilities,
+		#TotalExp {
+			width: 6em;
+			text-align: right;
+		}
+
+		#Repairs,
+		#OtherExpenses {
+			width: 6em;
+			text-align: right;
+		}
+
+		#MonthlyClothing,
+		#NoMonthsClothing,
+		#AnnualClothing {
+			width: 6em;
+			text-align: right;
+		}
+
+		#MonthlyEducation,
+		#NoMonthsEducation,
+		#AnnualEducation {
+			width: 6em;
+			text-align: right;
+		}
+
+		#MonthlyMedical,
+		#NoMonthsMedical,
+		#AnnualMedical {
+			width: 6em;
+			text-align: right;
+		}
+
+		#MonthlyTravel,
+		#NoMonthsTravel,
+		#AnnualTravel {
+			width: 6em;
+			text-align: right;
+		}
+
+		#MonthlyOtherPers,
+		#NoMonthsOtherPers,
+		#AnnualOtherPers {
+			width: 6em;
+			text-align: right;
+		}
+
+		#FromOthers {
+			width: 6em;
+			text-align: right;
+		}
+
+		#HalfOfSupport,
+		#SuppliedByPerson {
+			width: 6em;
+			text-align: right;
+		}
+
+		#NonTPProvided,
+		#TPProvided {
+			width: 6em;
+			text-align: right;
+		}
+
+		#QCTest,
+		#QRTest {
+			font-weight: bold;
+			text-align: center;
+		}
+
+		.commentfield {
+			text-align: right;
+		}
+
+		.flex-container {
+			display: -webkit-flex;
+			display: flex;
+			-webkit-justify-content: center;
+			justify-content: center;
+		}
+
+		.flex-item {
+			width: 600px;
+			margin: 10px;
+			text-align: left;
+		}
+
+		button {
+			background-color: lightblue;
+		}
+
+		#ButtonBox {
+			margin-bottom: 0.5em;
+		}
+
+		html {
+			background-color: #cccccc;
+		}
+
+		body {
+			background-color: #eeeeee;
+			font-family: sans-serif;
+			font-size: 0.9em;
+		}
+
+		h1 {
+			text-align: center;
+			font-size: 1.1em;
+			font-weight: bold;
+			text-decoration: underline;
+		}
+
+		.printalternative {
+			display: none;
+		}
+
+		.donotuse {
+			font-size: 300%;
+			position: relative;
+			top: -7em;
+			right: -2em;
+			font-weight: bold;
+			z-index: 2;
+		}
+
+		#userInput {
+			margin-top: 0.5em;
+			margin-bottom: 0.5em;
+		}
+
+		@media print {
+			html {
+				background-color: transparent;
+			}
+
+			body {
+				background-color: transparent;
+				font-size: 80%;
+			}
+
+			.printalternative {
+				display: inline;
+			}
+
+			.printhide {
+				display: none;
+			}
+		}
+	</style>
+
+	<script type="text/javascript">
+		// *************** HOW TO DO YEARLY UPDATE ******************
+		//		1) Change TAX_YR. Radio buttons automatically adjust
+		//		2) Update Version variable
+		// **********************************************************
+		// *************** DEV BACKLOG ******************************
+		//      1) Replace input validation with regex, refactor alert to visual input error
+		var VERSION = "(Version TY2025.1.0  12/08/2025)";
+		var taxYearSelected = true;
+		var TAX_YR = "2025";
+
+		var FUNDS_INPUT = [["Savings", "Amount in person's accounts at beginning of year"],
+		["Income", "Person's income during the year"],
+		["Borrowed", "Amount person borrowed during the year"],
+		["Support", "Amount person spent for their own support"],
+		["Other", "Amount person spent for other purposes"],
+		["Remaining", "Amount remaining at end of year"]];
+
+		var HHEXP_INPUT =
+			[["MonthlyRent", "Monthly Rent Amount",
+				"NoMonthsRent", "Number of Months Rent",
+				"AnnualRent", "Annual Rent"],
+			["MonthlyFMV", "Monthly Fair Rental Value",
+				"NoMonthsFMV", "Number of Months Fair Rental Value",
+				"AnnualFMV", "Annual Fair Rental Value"],
+			["MonthlyFood", "Monthly Household Food Expenses",
+				"NoMonthsFood", "Number of Months Food Expenses",
+				"AnnualFood", "Annual Household Food Expenses"],
+			["MonthlyElec", "Monthly Household Electricity Amount",
+				"NoMonthsElec", "Number of Months Electricity",
+				"AnnualElec", "Annual Household Electricity Amount"],
+			["MonthlyGas", "Monthly Household Natural Gas Amount",
+				"NoMonthsGas", "Number of Months Natural Gas",
+				"AnnualGas", "Annual Household Natural Gas Amount"],
+			["MonthlyWater", "Monthly Household Water Amount",
+				"NoMonthsWater", "Number of Months Water",
+				"AnnualWater", "Annual Household Water Amount"],
+			["MonthlyGarbage", "Monthly Household Garbage Amount",
+				"NoMonthsGarbage", "Number of Months Garbage",
+				"AnnualGarbage", "Annual Household Garbage Amount"],
+			["MonthlyOtherUtil", "Monthly Household Other Utilities Amount",
+				"NoMonthsOtherUtil", "Number of Months Other Utilities",
+				"AnnualOtherUtil", "Annual Household Other Utilities Amount"],
+			["Repairs", "Total Repairs",
+				"OtherExpenses", "Total Other Expenses"],
+			["Owned", "Home Ownership",
+				"NumInHH", "Number of Members of Household"]];
+
+		var PERSEXP_INPUT =
+			[["MonthlyClothing", "Person's Monthly Clothing Amount",
+				"NoMonthsClothing", "Person's Number of Months Clothing",
+				"AnnualClothing", "Person's Annual Clothing"],
+			["MonthlyEducation", "Person's Monthly Education Amount",
+				"NoMonthsEducation", "Person's Number of Months Education",
+				"AnnualEducation", "Person's Annual Education Amount"],
+			["MonthlyMedical", "Person's Monthly Medical Amount",
+				"NoMonthsMedical", "Person's Number of Months Medical",
+				"AnnualMedical", "Person's Annual Medical Amount"],
+			["MonthlyTravel", "Person's Monthly Travel and Recreation Amount",
+				"NoMonthsTravel", "Person's Number of Months Travel and Recreation",
+				"AnnualTravel", "Person's Annual Travel and Recreation Amount"],
+			["MonthlyOtherPers", "Person's Monthly Other Personal Expenses Amount",
+				"NoMonthsOtherPers", "Person's Number of Months Other Personal Expenses",
+				"AnnualOtherPers", "Person's Annual Other Personal Expenses Amount"]];
+
+		//----------------------------------------------------------------------------------------
+		//                                   Initialize()
+		//----------------------------------------------------------------------------------------
+		function Initialize() {
+			settaxYearDisplay();
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   settaxYearDisplay()
+		// This function sets the display amd valies for th tax year based on the value of TAX_YR.
+		// This makes the system easy to change from year to year.
+		//----------------------------------------------------------------------------------------
+		function settaxYearDisplay() {
+
+			radioTY_0.value = labelTY_0.innerHTML = TAX_YR;
+			radioTY_1.value = labelTY_1.innerHTML = TAX_YR - 1;
+			radioTY_2.value = labelTY_2.innerHTML = TAX_YR - 2;
+			radioTY_3.value = labelTY_3.innerHTML = TAX_YR - 3;
+
+			// Set the checked radio button to current tax year
+			var todaydate = new Date()
+
+			if (todaydate.getFullYear() == TAX_YR) {
+				radioTY_1.checked = true
+			} else {
+				radioTY_0.checked = true
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   setTaxYear(code)
+		// This function records the tax year choice
+		//----------------------------------------------------------------------------------------
+		function setTaxYear(code) {
+			TAX_YR = code;
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   checkNumeric(index)
+		// This function verifies that the input is numeric
+		//----------------------------------------------------------------------------------------
+		function checkNumeric(index) {
+			var bdvar = document.getElementById(index);
+			var a = bdvar.value + ""; // This forces bdvar.value to be a string
+
+			if (bdvar.value === "") { // OK not to enter 0
+				return;
+			}
+			if (isNaN(bdvar.value)) {
+				alert("Entry is not a valid number. \n \n$, spaces, or commas are not permitted in the number." +
+					" \n \nEntry may be a whole or decimal number. \nDecimal numbers will be rounded to the nearest whole number.");
+				return;
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   checkYN(index)
+		// This function verifies that the input is either "Y", "y", "N", or "n"
+		//----------------------------------------------------------------------------------------
+		function checkYN(index) {
+			var bdvar = document.getElementById(index);
+			var a = bdvar.value + ""; // This forces bdvar.value to be a string
+
+			if ((bdvar.value === "Y") || (bdvar.value === "y") || (bdvar.value === "N") || (bdvar.value === "n")) {
+				return 1;
+			}
+			else {
+				alert("Home ownership entry must be 'Y', 'y', 'N', or 'n'.");
+				return 0;
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                      calcSupport()
+		// This function determines whether the support tests for QC and QR are met by the taxpayer
+		// with respect to the potential dependent.
+		//----------------------------------------------------------------------------------------
+		function calcSupport() {
+			var bdvar, bdvar2, bdvar3;
+			var i;
+			var a;
+
+			// clear previous values
+			FundsIn.innerHTML = ""; FundsOut.innerHTML = "";
+			Lodging.innerHTML = ""; Food.innerHTML = "";
+			Utilities.innerHTML = ""; TotalExp.innerHTML = "";
+			HHExpShare.innerHTML = ""; TotalSupport.innerHTML = "";
+			HalfOfSupport.innerHTML = ""; SuppliedByPerson.innerHTML = "";
+			NonTPProvided.innerHTML = ""; TPProvided.innerHTML = "";
+			QCTest.innerHTML = "?"; QRTest.innerHTML = "?";
+
+			// verify inputs have valid syntax (Meaning nums w/o chars, spaces, commas, dollar signs)
+			for (i = 0; i <= 5; i++) {
+				bdvar = document.getElementById(FUNDS_INPUT[i][0]);
+				a = bdvar.value + ""; // This forces bdvar.value to be a string
+				//alert("bdvar.value = " + bdvar.value);
+
+				if (bdvar.value === "") { }   // OK not to enter 0
+				else if (isNaN(bdvar.value)) {
+					alert(FUNDS_INPUT[i][1] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+					return 0;
+				}
+			}
+
+			for (i = 0; i <= 7; i++) {
+				bdvar = document.getElementById(HHEXP_INPUT[i][0]);
+				a = bdvar.value + ""; // This forces bdvar.value to be a string
+
+				if (bdvar.value === "") { }   // OK not to enter 0
+				else if (isNaN(bdvar.value)) {
+					alert(HHEXP_INPUT[i][1] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+					return 0;
+				}
+
+				bdvar2 = document.getElementById(HHEXP_INPUT[i][2]);
+				a = bdvar2.value + ""; // This forces bdvar2.value to be a string
+
+				if (bdvar2.value === "") { }   // OK not to enter 0
+				else if (isNaN(bdvar2.value)) {
+					alert(HHEXP_INPUT[i][3] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+					return 0;
+				}
+				a = bdvar2.value - 0;	// force numeric
+
+				if ((a < 0) || (a > 12)) {
+					alert(HHEXP_INPUT[i][3] + " must be between 0 and 12.");
+					return 0;
+				}
+
+				bdvar3 = document.getElementById(HHEXP_INPUT[i][4]);
+				a = bdvar3.value + ""; // This forces bdvar3.value to be a string
+
+				if (bdvar3.value === "") { }   // OK not to enter 0
+				else if (isNaN(bdvar3.value)) {
+					alert(HHEXP_INPUT[i][5] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+					return 0;
+				}
+
+				if ((bdvar.value != "") && (bdvar3.value != "")) {
+					alert(HHEXP_INPUT[i][1] + " and " + HHEXP_INPUT[i][5] +
+						" should not both have values.");
+					return 0;
+				}
+			}
+
+			bdvar = document.getElementById(HHEXP_INPUT[8][0]);
+			a = bdvar.value + ""; // This forces bdvar.value to be a string
+
+			if (bdvar.value === "") { }   // OK not to enter 0
+			else if (isNaN(bdvar.value)) {
+				alert(HHEXP_INPUT[8][1] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+				return 0;
+			}
+
+			bdvar = document.getElementById(HHEXP_INPUT[8][2]);
+			a = bdvar.value + ""; // This forces bdvar.value to be a string
+
+			if (bdvar.value === "") { }   // OK not to enter 0
+			else if (isNaN(bdvar.value)) {
+				alert(HHEXP_INPUT[8][3] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+				return 0;
+			}
+
+			if (checkYN(HHEXP_INPUT[9][0]) == 0) {
+				return 0;
+			}
+
+			bdvar = document.getElementById(HHEXP_INPUT[9][2]);
+			a = bdvar.value + ""; // This forces bdvar.value to be a string
+
+			if (bdvar.value === "") { }   // OK not to enter 0
+			else if (isNaN(bdvar.value)) {
+				alert(HHEXP_INPUT[9][3] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+				return 0;
+			}
+			a = bdvar.value - 0;	// force numeric
+
+			if (a <= 0) {
+				alert(HHEXP_INPUT[9][3] + " must be greater than 0.");
+				return 0;
+			}
+
+			for (i = 0; i <= 4; i++) {
+				bdvar = document.getElementById(PERSEXP_INPUT[i][0]);
+				a = bdvar.value + ""; // This forces bdvar.value to be a string
+
+				if (bdvar.value === "") { }   // OK not to enter 0
+				else if (isNaN(bdvar.value)) {
+					alert(PERSEXP_INPUT[i][1] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+					return 0;
+				}
+
+				bdvar2 = document.getElementById(PERSEXP_INPUT[i][2]);
+				a = bdvar2.value + ""; // This forces bdvar2.value to be a string
+
+				if (bdvar2.value === "") { }   // OK not to enter 0
+				else if (isNaN(bdvar2.value)) {
+					alert(PERSEXP_INPUT[i][3] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+					return 0;
+				}
+				a = bdvar2.value - 0;	// force numeric
+
+				if ((a < 0) || (a > 12)) {
+					alert(PERSEXP_INPUT[i][3] + " must be between 0 and 12.");
+					return 0;
+				}
+
+				bdvar3 = document.getElementById(PERSEXP_INPUT[i][4]);
+				a = bdvar3.value + ""; // This forces bdvar3.value to be a string
+
+				if (bdvar3.value === "") { }   // OK not to enter 0
+				else if (isNaN(bdvar3.value)) {
+					alert(PERSEXP_INPUT[i][5] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+					return 0;
+				}
+
+				if ((bdvar.value != "") && (bdvar3.value != "")) {
+					alert(PERSEXP_INPUT[i][1] + " and " + PERSEXP_INPUT[i][5] +
+						" should not both have values.");
+					return 0;
+				}
+			}
+
+			bdvar = document.getElementById("FromOthers");
+			a = bdvar.value + ""; // This forces bdvar.value to be a string
+
+			if (bdvar.value === "") { }   // OK not to enter 0
+			else if (isNaN(bdvar.value)) {
+				alert("Amount provided by others is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+				return 0;
+			}
+
+			// Inputs are valid. Do the calculation.
+
+			FundsIn.innerHTML = +document.getElementById("Savings").value
+				+ +document.getElementById("Income").value
+				+ +document.getElementById("Borrowed").value;
+
+			FundsOut.innerHTML = +document.getElementById("Support").value
+				+ +document.getElementById("Other").value
+				+ +document.getElementById("Remaining").value;
+
+			if (FundsIn.innerHTML != FundsOut.innerHTML) {
+				alert("Lines 1 and 5 should be the same.");
+			}
+
+			Lodging.innerHTML = document.getElementById("MonthlyRent").value *
+				document.getElementById("NoMonthsRent").value
+				+ +document.getElementById("AnnualRent").value
+				+ document.getElementById("MonthlyFMV").value *
+				document.getElementById("NoMonthsFMV").value
+				+ +document.getElementById("AnnualFMV").value;
+
+			Food.innerHTML = document.getElementById("MonthlyFood").value *
+				document.getElementById("NoMonthsFood").value
+				+ +document.getElementById("AnnualFood").value;
+
+			Utilities.innerHTML = document.getElementById("MonthlyElec").value *
+				document.getElementById("NoMonthsElec").value
+				+ +document.getElementById("AnnualElec").value
+				+ document.getElementById("MonthlyGas").value *
+				document.getElementById("NoMonthsGas").value
+				+ +document.getElementById("AnnualGas").value
+				+ document.getElementById("MonthlyWater").value *
+				document.getElementById("NoMonthsWater").value
+				+ +document.getElementById("AnnualWater").value
+				+ document.getElementById("MonthlyGarbage").value *
+				document.getElementById("NoMonthsGarbage").value
+				+ +document.getElementById("AnnualGarbage").value
+				+ document.getElementById("MonthlyOtherUtil").value *
+				document.getElementById("NoMonthsOtherUtil").value
+				+ +document.getElementById("AnnualOtherUtil").value;
+
+			TotalExp.innerHTML = +Lodging.innerHTML + +Food.innerHTML + +Utilities.innerHTML
+				+ +document.getElementById("Repairs").value
+				+ +document.getElementById("OtherExpenses").value;
+
+			HHExpShare.innerHTML = (TotalExp.innerHTML / document.getElementById("NumInHH").value).toFixed(0);
+
+			TotalSupport.innerHTML = +HHExpShare.innerHTML
+				+ document.getElementById("MonthlyClothing").value *
+				document.getElementById("NoMonthsClothing").value
+				+ +document.getElementById("AnnualClothing").value
+				+ document.getElementById("MonthlyEducation").value *
+				document.getElementById("NoMonthsEducation").value
+				+ +document.getElementById("AnnualEducation").value
+				+ document.getElementById("MonthlyMedical").value *
+				document.getElementById("NoMonthsMedical").value
+				+ +document.getElementById("AnnualMedical").value
+				+ document.getElementById("MonthlyTravel").value *
+				document.getElementById("NoMonthsTravel").value
+				+ +document.getElementById("AnnualTravel").value
+				+ document.getElementById("MonthlyOtherPers").value *
+				document.getElementById("NoMonthsOtherPers").value
+				+ +document.getElementById("AnnualOtherPers").value;
+
+			HalfOfSupport.innerHTML = (TotalSupport.innerHTML / 2).toFixed(0);
+
+			if ((document.getElementById("Owned").value == "N") || (document.getElementById("Owned").value == "n")) {
+				SuppliedByPerson.innerHTML = document.getElementById("Support").value;
+			} else {
+				SuppliedByPerson.innerHTML = +document.getElementById("Support").value
+					+ document.getElementById("MonthlyFMV").value * document.getElementById("NoMonthsFMV").value
+					+ +document.getElementById("AnnualFMV").value;
+			}
+
+			if (+SuppliedByPerson.innerHTML > +HalfOfSupport.innerHTML) {
+				QCTest.innerHTML = "YES";
+			} else {
+				QCTest.innerHTML = "NO";
+			}
+
+			NonTPProvided.innerHTML = +SuppliedByPerson.innerHTML
+				+ +document.getElementById("FromOthers").value;
+
+			TPProvided.innerHTML = TotalSupport.innerHTML - SuppliedByPerson.innerHTML
+				- document.getElementById("FromOthers").value;
+
+			if (+TPProvided.innerHTML > +HalfOfSupport.innerHTML) {
+				QRTest.innerHTML = "YES";
+			} else {
+				QRTest.innerHTML = "NO";
+			}
+
+			return;
+		}
+	</script>
+</head>
+
+<!-- ************************************************************************************************ -->
+<!-- ********************************* START OF HTML ************************************************ -->
+<!-- ************************************************************************************************ -->
+
+<body onload="Initialize()">
+	<div id="header">
+		<span class="tooltitle"> Worksheet for Determining Support </span>
+		<br><button onclick="location.reload(true)"><b>Clear and reset calculator</b></button>
+		<span id="Version" class="versiondisplay"></span>
+		<script>Version.innerHTML = VERSION;</script>
+		<button onclick="window.print()"> Print a taxpayer copy</button>
+	</div>
+	<br>
+
+	<div id="Input">
+		<table id="NamesYear">
+			<tbody>
+				<tr>
+					<td class="inputfield">Taxpayer's Name</td>
+					<td class="inputfield">
+						<input id="TPName" tabindex="1" title="Optionally, enter the Taxpayer&#39;s name." value="">
+					</td>
+				</tr>
+				<tr>
+					<td class="inputfield">Possible Dependent's Name</td>
+					<td class="inputfield">
+						<input id="DepName" tabindex="2" title="Optionally, enter the Taxpayer&#39;s name." value="">
+					</td>
+				</tr>
+				<tr>
+					<td class="inputfield" tabindex="3">Tax Year</td>
+					<td class="inputfield" tabindex="3">
+						<input id="radioTY_3" type="radio" name="Year" value="" /><label id="labelTY_3"
+							for="radioTY_3">0</label>
+						<input id="radioTY_2" type="radio" name="Year" value="" /><label id="labelTY_2"
+							for="radioTY_2">0</label>
+						<input id="radioTY_1" type="radio" name="Year" value="" /><label id="labelTY_1"
+							for="radioTY_1">0</label>
+						<input id="radioTY_0" type="radio" name="Year" value="" checked="checked">
+						<label id="labelTY_0" for="radioTY_0">0</label>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<br><br>
+
+		<table id="DependentFunds">
+			<tbody>
+				<tr>
+					<td class="headerfield2" colspan="3">Funds Belonging to the Person You Supported</td>
+					<td class="headerfield2">Totals</td>
+				</tr>
+				<tr>
+					<td class="linenumber">-</td>
+					<td class="inputfield">Amount in savings and other accounts at the beginning of the year</td>
+					<td class="inputfield">
+						<input id="Savings" tabindex="4" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">-</td>
+					<td class="inputfield">Income received (taxable and non-taxable)</td>
+					<td class="inputfield">
+						<input id="Income" tabindex="5" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">-</td>
+					<td class="inputfield">Amount borrowed during the year</td>
+					<td class="inputfield">
+						<input id="Borrowed" tabindex="6" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">1</td>
+					<td colspan="2">Total funds belonging to the person you supported</td>
+					<td class="calculated" id="FundsIn"></td>
+				</tr>
+				<tr>
+					<td class="linenumber">2</td>
+					<td class="inputfield">Amount from person's funds used for his/her support</td>
+					<td class="inputfield">
+						<input id="Support" tabindex="7" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">3</td>
+					<td class="inputfield">Amount from person's funds used for other purposes</td>
+					<td class="inputfield">
+						<input id="Other" tabindex="8" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">4</td>
+					<td class="inputfield">Amount in person's savings and other accounts<br />at the end of the year
+					</td>
+					<td class="inputfield">
+						<input id="Remaining" tabindex="9" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">5</td>
+					<td colspan="2">Amount spent during the year and remaining at end of year.
+						<br />Should equal Total Funds above
+					</td>
+					<td class="calculated" id="FundsOut"></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<br><br>
+
+		<table id="HouseholdExpenses">
+			<tbody>
+				<tr>
+					<td class="headerfield3" colspan="2">Expenses for the Entire Household<br />
+						(Where the person you supported lived)</td>
+					<td class="headerfield2">Monthy</td>
+					<td class="headerfield2">No. of<br />Months</td>
+					<td></td>
+					<td class="headerfield2">Annually</td>
+					<td class="headerfield2">Totals</td>
+				</tr>
+				<tr>
+					<td class="linenumber">6</td>
+					<td class="inputfield">Lodging (generally a. or b. below, but see note at bottom)</td>
+				</tr>
+				<tr>
+					<td class="linenumber">-</td>
+					<td class="inputfieldtabbed"><b>a.</b> Rent Paid</td>
+					<td class="inputfield">
+						<input id="MonthlyRent" tabindex="10" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="NoMonthsRent" tabindex="11" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td>or</td>
+					<td class="inputfield">
+						<input id="AnnualRent" tabindex="12" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">-</td>
+					<td class="inputfieldtabbed"><b>b.</b> Fair Rental Value of Home
+						<a href="https://www.huduser.gov/portal/datasets/fmr.html" target="_blank">
+							<b> Get Fair Market Rental Value Here!</b></a>
+					</td>
+					<td class="inputfield">
+						<input id="MonthlyFMV" tabindex="13" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="NoMonthsFMV" tabindex="14" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td>or</td>
+					<td class="inputfield">
+						<input id="AnnualFMV" tabindex="15" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">-</td>
+					<td class="inputfield">If the person you supported owned the home, enter Y here</td>
+					<td class="inputfield">
+						<input id="Owned" tabindex="16" value="N" onblur="checkYN(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">-</td>
+					<td colspan="5">Logding Total</td>
+					<td class="calculated" id="Lodging"></td>
+				</tr>
+				<tr>
+					<td class="linenumber">7</td>
+					<td class="inputfield">Food Expenses</td>
+					<td class="inputfield">
+						<input id="MonthlyFood" tabindex="17" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="NoMonthsFood" tabindex="18" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td>or</td>
+					<td class="inputfield">
+						<input id="AnnualFood" tabindex="19" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td class="calculated" id="Food"></td>
+				</tr>
+				<tr>
+					<td class="linenumber">8</td>
+					<td class="inputfield">Utilities not included in Lodging above</td>
+				</tr>
+				<tr>
+					<td class="linenumber">-</td>
+					<td class="inputfieldtabbed">Electric</td>
+					<td class="inputfield">
+						<input id="MonthlyElec" tabindex="20" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="NoMonthsElec" tabindex="21" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td>or</td>
+					<td class="inputfield">
+						<input id="AnnualElec" tabindex="22" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">-</td>
+					<td class="inputfieldtabbed">Natural Gas</td>
+					<td class="inputfield">
+						<input id="MonthlyGas" tabindex="23" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="NoMonthsGas" tabindex="24" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td>or</td>
+					<td class="inputfield">
+						<input id="AnnualGas" tabindex="25" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">-</td>
+					<td class="inputfieldtabbed">Water/Sewer</td>
+					<td class="inputfield">
+						<input id="MonthlyWater" tabindex="26" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="NoMonthsWater" tabindex="27" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td>or</td>
+					<td class="inputfield">
+						<input id="AnnualWater" tabindex="28" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">-</td>
+					<td class="inputfieldtabbed">Garbage</td>
+					<td class="inputfield">
+						<input id="MonthlyGarbage" tabindex="29" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="NoMonthsGarbage" tabindex="30" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td>or</td>
+					<td class="inputfield">
+						<input id="AnnualGarbage" tabindex="31" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">-</td>
+					<td class="inputfieldtabbed">Other</td>
+					<td class="inputfield">
+						<input id="MonthlyOtherUtil" tabindex="32" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="NoMonthsOtherUtil" tabindex="33" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td>or</td>
+					<td class="inputfield">
+						<input id="AnnualOtherUtil" tabindex="34" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">-</td>
+					<td colspan="5">Utilities Total</td>
+					<td class="calculated" id="Utilities"></td>
+				</tr>
+				<tr>
+					<td class="linenumber">9</td>
+					<td class="inputfield" colspan="4">Total Amount of repairs (not included in Lodging, above)</td>
+					<td class="inputfield">
+						<input id="Repairs" tabindex="35" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">10</td>
+					<td class="inputfield" colspan="4">Total other expenses. Do not include expense of
+						maintaining<br />
+						the home, such as mortgage interest, real estate taxes, and insurance.</td>
+					<td class="inputfield">
+						<input id="OtherExpenses" tabindex="36" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">11</td>
+					<td colspan="5">Total Household Expenses</td>
+					<td class="calculated" id="TotalExp"></td>
+				</tr>
+				<tr>
+					<td class="linenumber">12</td>
+					<td class="inputfield" colspan="5">Total number of persons who lived in the household</td>
+					<td class="inputfield">
+						<input id="NumInHH" tabindex="37" value="1" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<br><br>
+
+		<table id="PersonalExpenses">
+			<tbody>
+				<tr>
+					<td class="headerfield3" colspan="2">Expenses for the Person You Supported</td>
+					<td class="headerfield2">Monthy</td>
+					<td class="headerfield2">No. of<br />Months</td>
+					<td></td>
+					<td class="headerfield2">Annually</td>
+					<td class="headerfield2">Totals</td>
+				</tr>
+				<tr>
+					<td class="linenumber">13</td>
+					<td colspan="5">This person's share of household expenses</td>
+					<td class="calculated" id="HHExpShare"></td>
+				</tr>
+				<tr>
+					<td class="linenumber">14</td>
+					<td class="inputfield">This person's total clothing expenses</td>
+					<td class="inputfield">
+						<input id="MonthlyClothing" tabindex="38" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="NoMonthsClothing" tabindex="39" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td>or</td>
+					<td class="inputfield">
+						<input id="AnnualClothing" tabindex="40" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">15</td>
+					<td class="inputfield">This person's total education expenses</td>
+					<td class="inputfield">
+						<input id="MonthlyEducation" tabindex="41" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="NoMonthsEducation" tabindex="42" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td>or</td>
+					<td class="inputfield">
+						<input id="AnnualEducation" tabindex="43" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">16</td>
+					<td class="inputfield">This person's total medical and dental expenses</td>
+					<td class="inputfield">
+						<input id="MonthlyMedical" tabindex="44" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="NoMonthsMedical" tabindex="45" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td>or</td>
+					<td class="inputfield">
+						<input id="AnnualMedical" tabindex="46" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">17</td>
+					<td class="inputfield">This person's total travel and recreational expenses</td>
+					<td class="inputfield">
+						<input id="MonthlyTravel" tabindex="47" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="NoMonthsTravel" tabindex="48" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td>or</td>
+					<td class="inputfield">
+						<input id="AnnualTravel" tabindex="49" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">18</td>
+					<td class="inputfield">This person's total other expenses</td>
+					<td class="inputfield">
+						<input id="MonthlyOtherPers" tabindex="50" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td class="inputfield">
+						<input id="NoMonthsOtherPers" tabindex="51" value="" onblur="checkNumeric(this.id)">
+					</td>
+					<td>or</td>
+					<td class="inputfield">
+						<input id="AnnualOtherPers" tabindex="52" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">19</td>
+					<td colspan="5">Total cost of this person's support for the year</td>
+					<td class="calculated" id="TotalSupport"></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<br><br>
+
+		<div id="header">
+			<button id="Calcbutton" tabindex="53" onclick="calcSupport()">Click here to Calculate</button>
+		</div>
+
+		<br><br>
+
+		<table id="QCSupportTest">
+			<tbody>
+				<tr>
+					<td class="headerfield3" colspan="3">
+						Did the Person Provide More Than Half of His or Her Own Support?</td>
+				</tr>
+				<tr>
+					<td class="linenumber">20</td>
+					<td>Half of the Person's support</td>
+					<td class="calculated" id="HalfOfSupport"></td>
+				</tr>
+				<tr>
+					<td class="linenumber">21</td>
+					<td>Amount supplied by the person</td>
+					<td class="calculated" id="SuppliedByPerson"></td>
+				</tr>
+				<tr>
+					<td class="linenumber">22</td>
+					<td>Did the person provide more than half?</td>
+					<td class="resultsfield" id="QCTest">?</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="flex-container">
+			<div class="flex-item">
+				<ul>
+					<li>If <b>NO</b>, you meet the support test for this person to be your qualifying
+						child. If this person also meets the other tests to be a qualifying child,
+						stop here. Otherwise, fill in the Amount Provided by Others, below, and
+						recalculate to determine if this person is your qualifying relative.</li>
+					<br />
+					<li>If <b>YES</b>, you <b>do not</b> meet the support test for this person to be either
+						your qualifying child or your qualifying relative. <b>Stop here</b></li>
+
+				</ul>
+			</div>
+		</div>
+
+		<br><br>
+
+		<table id="QRSupportTest">
+			<tbody>
+				<tr>
+					<td class="headerfield3" colspan=3>
+						Did You Provide More than Half of this Person's Support?</td>
+				</tr>
+				<tr>
+					<td class="linenumber">23</td>
+					<td class=inputfield>Amount Provided by Others for the person's support. Include amounts<br>
+						provided by state, local, and other welfare societies or agencies. Do not<br>
+						include any amounts included in line 1.</td>
+					<td class="inputfield">
+						<input id="FromOthers" tabindex="54" value="" onblur="checkNumeric(this.id)">
+					</td>
+				</tr>
+				<tr>
+					<td class="linenumber">24</td>
+					<td>Amount provided by person and others</td>
+					<td class="calculated" id="NonTPProvided"></td>
+				</tr>
+				<tr>
+					<td class="linenumber">25</td>
+					<td>Amount you provided (total cost of person's support minus what was provided<br>
+						by person and others)</td>
+					<td class="calculated" id="TPProvided"></td>
+				</tr>
+				<tr>
+					<td class="linenumber">26</td>
+					<td>Did You provide more than half?</td>
+					<td class="resultsfield" id="QRTest">?</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class="flex-container">
+			<div class="flex-item">
+				<ul>
+					<li>If <b>YES</b>, you meet the support test for this person to be your qualifying
+						relative.</li>
+					<br>
+					<li>If <b>NO</b>, you do not meet the support test for this person to be your qualifying
+						relative. You cannot claim an exemption for this person unless you can do so under
+						a multiple support agreement, the support test for children of divorced or
+						separated parents, or the special rule for kidnapped children.</li>
+
+				</ul>
+			</div>
+		</div>
+
+		<br> <br>
+
+		<div class="flex-container">
+			<div class="flex-item">
+				<b>Lodging Note</b> Generally, you either pay rent or one or more members of the household
+				own the home. Renters will complete the Rent Paid line; homeowners will
+				complete the Fair Market Value line. If the rent/own situation changes during the
+				year, you may have entries on both lines 6a. and b.
+			</div>
+		</div>
+</body>
+
+</html>

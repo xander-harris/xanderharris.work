@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<!-- ************************************************************************************************ -->
+<!-- ***************** CALCULATE COST OF HOME UPKEEP, AND PERCENT PAID BY TAXPAYER ****************** -->
+<!-- ************************************************************************************************ -->
+
+<html>
+<head>
+	<title>Home Upkeep Percent Calculator</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="author" content="V. Joseph Bowman, Jr. OR1 D9 Eugene TY2018+" />
+	<meta name="author" content="Barbara Smith-Thomas, OR Portland Metro" />
+	<meta name="description" content="Calculates Annual Home Upkeep and Taxpayer Percent Thereof" />
+
+	<style type="text/css">
+		table,
+		td {
+			border: 1px solid black;
+			border-collapse: collapse;
+		}
+
+		button {
+			font-size: 105%;
+			font-weight: bold;
+		}
+
+		.versiondisplay {
+			font-weight: bold;
+			margin-left: 4em;
+			margin-right: 4em
+		}
+
+		.instructions {
+			font-size: 110%;
+			font-weight: bold;
+		}
+
+		input:not([type]),
+		input[type='text'] {
+			width: 6em;
+			text-align: right;
+		}
+
+		input[type='radio'] {
+			background-color: tan;
+			width: 1em;
+			text-align: right;
+		}
+
+		.tooltitle {
+			font-size: 150%;
+			font-weight: bold;
+		}
+
+		.workaroundtitle {
+			font-weight: bold;
+		}
+
+		.headerfield {
+			text-align: center;
+			font-weight: bold;
+			font-size: 125%
+		}
+
+		.headerfield2 {
+			width: 6em;
+			text-align: center;
+			font-weight: bold;
+		}
+
+		.headerfield3 {
+			font-weight: bold;
+			text-align: left;
+		}
+
+		.inputfield {
+			background-color: yellow;
+		}
+
+		.inputfield #TPName {
+			width: 35em;
+			text-align: center;
+		}
+
+		.spacerfield {
+			width: 1em;
+		}
+
+		.calculated {
+			width: 6em;
+			background-color: tan;
+			text-align: right;
+		}
+
+		.totalcost {
+			text-align: right;
+			font-weight: bold;
+		}
+
+		.resultsfield {
+			background-color: lightgreen;
+			font-weight: bold;
+		}
+
+		#TotalPropertyTaxes,
+		#TaxpayerPropertyTaxes {
+			width: 6em;
+			text-align: right;
+		}
+
+		#TotalFairMarketRental,
+		#TaxpayerFairMarketRental {
+			width: 6em;
+			text-align: right;
+		}
+
+		#TotalMortgageInterest,
+		#TaxpayerMortgageInterest {
+			width: 6em;
+			text-align: right;
+		}
+
+		#TotalMonthlyRent,
+		#TPMonthlyRent,
+		#TotalRent,
+		#TPRent {
+			width: 6em;
+			text-align: right;
+		}
+
+		#TotalNoMonthsRent,
+		#TPNoMonthsRent {
+			width: 6em;
+			text-align: right;
+		}
+
+		#TotalMonthlyUtilities,
+		#TPMonthlyUtilities,
+		#TotalUtilities,
+		#TPUtilities {
+			width: 6em;
+			text-align: right;
+		}
+
+		#TotalNoMonthsUtilities,
+		#TPNoMonthsUtilities {
+			width: 6em;
+			text-align: right;
+		}
+
+		#TotalMonthlyInsurance,
+		#TPMonthlyInsurance,
+		#TotalInsurance,
+		#TPInsurance {
+			width: 6em;
+			text-align: right;
+		}
+
+		#TotalNoMonthsInsurance,
+		#TPNoMonthsInsurance {
+			width: 6em;
+			text-align: right;
+		}
+
+		#TotalMonthlyFood,
+		#TPMonthlyFood,
+		#TotalFood,
+		#TPFood {
+			width: 6em;
+			text-align: right;
+		}
+
+		#TotalNoMonthsFood,
+		#TPNoMonthsFood {
+			width: 6em;
+			text-align: right;
+		}
+
+		#TotalMonthlyOther,
+		#TPMonthlyOther,
+		#TotalOther,
+		#TPOther {
+			width: 6em;
+			text-align: right;
+		}
+
+		#TotalNoMonthsOther,
+		#TPNoMonthsOther {
+			width: 6em;
+			text-align: right;
+		}
+
+		#TotalAnnualCost,
+		#TPAnnualCost {
+			width: 6em;
+			text-align: right;
+		}
+
+		#TotalUpkeep {
+			width: 8em;
+			text-align: center;
+		}
+
+		#PaidbyOthers,
+		#OthersPercent {
+			width: 6em;
+			text-align: center;
+		}
+
+		#PaidbyTP,
+		#TPPercent,
+		#Answer {
+			width: 6em;
+			text-align: center;
+		}
+
+		.commentfield {
+			text-align: right;
+		}
+
+		.flex-container {
+			display: -webkit-flex;
+			display: flex;
+			-webkit-justify-content: center;
+			justify-content: center;
+		}
+
+		.flex-item {
+			width: 800px;
+			margin: 10px;
+			text-align: left;
+		}
+
+
+		button {
+			background-color: lightblue;
+		}
+
+		#ButtonBox {
+			margin-bottom: 0.5em;
+		}
+
+		html {
+			background-color: #cccccc;
+		}
+
+		body {
+			background-color: #eeeeee;
+			font-family: sans-serif;
+			font-size: 0.9em;
+		}
+
+		h1 {
+			text-align: center;
+			font-size: 1.1em;
+			font-weight: bold;
+			text-decoration: underline;
+		}
+
+		.printalternative {
+			display: none;
+		}
+
+		.donotuse {
+			font-size: 300%;
+			position: relative;
+			top: -7em;
+			right: -2em;
+			font-weight: bold;
+			z-index: 2;
+		}
+
+		#userInput {
+			margin-top: 0.5em;
+			margin-bottom: 0.5em;
+		}
+
+		@media print {
+			html {
+				background-color: transparent;
+			}
+
+			body {
+				background-color: transparent;
+				font-size: 80%;
+			}
+
+			.printalternative {
+				display: inline;
+			}
+
+			.printhide {
+				display: none;
+			}
+		}
+	</style>
+	<script type="text/javascript">
+		var VERSION = "(Version TY2025.1.0 &nbsp &nbsp  12/08/2025)";
+		//----------------- HOW TO UPDATE FOR A NEW YEAR ---------------------
+		// 	Change TAX_YR to new new year. 
+		//	Display of tax year options in radio button are automatically generated from value of TAX_YR
+		//  Default year is based on Current Calendar Year.
+		//---------------------------------------------------------------------
+		// To Do:
+		//		- Add a Line for TANF or other payments to Total Column only -> Research before adding (2021 Pub 501 p15)
+		//		- Set up a class for inputdata6emRight	
+		// Known Bugs:
+		//---------------------------------------------------------------------
+
+		var taxYearSelected = true;
+		var TAX_YR = "2025";
+
+		var HousingCostType = "F"
+
+		var ANNUAL_INPUT = [
+			["TotalPropertyTaxes", "Total Property Tax"],
+			["TaxpayerPropertyTaxes", "Property Tax Paid by Taxpayer"],
+			["TotalMortgageInterest", "Total Mortgage Interest"],
+			["TaxpayerMortgageInterest", "Mortgate Interest Paid by Taxpayer"]];
+
+		var MONTHLY_INPUT = [
+			["MonthlyFMRV", "Total Monthly Fair Market Rental Value Amount",
+				"NoMonthsFMRV", "Total Number of Months Fair Market Rental Value"],
+			["TPMonthlyFMRV", "Taxpayer Monthly Fair Market Rental Value Amount",
+				"TPNoMonthsFMRV", "TaxPayer Number of Months Fair Market Rental Value"],
+			["TotalMonthlyRent", "Total Monthly Rent Amount",
+				"TotalNoMonthsRent", "Total Number of Months Rent"],
+			["TPMonthlyRent", "Taxpayer Monthly Rent Amount",
+				"TPNoMonthsRent", "Taxpayer Number of Months Rent"],
+			["TotalMonthlyUtilities", "Total Monthly Utility Amount",
+				"TotalNoMonthsUtilities", "Total Number of Months Utilities"],
+			["TPMonthlyUtilities", "Taxpayer Monthly Utility Amount",
+				"TPNoMonthsUtilities", "Taxpayer Number of Months Utilities"],
+			["TotalMonthlyInsurance", "Total Monthly Insurance Amount",
+				"TotalNoMonthsInsurance", "Total Number of Months Insurance"],
+			["TPMonthlyInsurance", "Taxpayer Monthly Insurance Amount",
+				"TPNoMonthsInsurance", "Taxpayer Number of Months Insurance"],
+			["TotalMonthlyFood", "Total Monthly Food Amount",
+				"TotalNoMonthsFood", "Total Number of Months Food"],
+			["TPMonthlyFood", "Taxpayer Monthly Food Amount",
+				"TPNoMonthsFood", "Taxpayer Number of Months Food"],
+			["TotalMonthlyOther", "Total Monthly Other Expenses",
+				"TotalNoMonthsOther", "Total Number of Months Other"],
+			["TPMonthlyOther", "Taxpayer Monthly Other Expenses",
+				"TPNoMonthsOther", "Taxpayer Number of Months Other"]];
+
+		//----------------------------------------------------------------------------------------
+		//                                   Initialize()
+		//----------------------------------------------------------------------------------------
+		function Initialize() {
+			SetHousingCostType(HousingCostType);
+			settaxYearDisplay();
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   settaxYearDisplay()
+		// This function sets the display amd valies for th tax year based on the value of TAX_YR.
+		// This makes the system easy to change from year to year.
+		//----------------------------------------------------------------------------------------
+		function settaxYearDisplay() {
+			radioTY_0.value = labelTY_0.innerHTML = TAX_YR;
+			radioTY_1.value = labelTY_1.innerHTML = TAX_YR - 1;
+			radioTY_2.value = labelTY_2.innerHTML = TAX_YR - 2;
+			radioTY_3.value = labelTY_3.innerHTML = TAX_YR - 3;
+
+			// Set the checked radio button
+			var todaydate = new Date()
+
+			if (todaydate.getFullYear() == TAX_YR) {
+				radioTY_1.checked = true
+			} else {
+				radioTY_0.checked = true
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   setTaxYear(code)
+		// This function records the tax year choice
+		//----------------------------------------------------------------------------------------
+		function setTaxYear(code) {
+			TAX_YR = code;
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                                   checkNumeric(index)
+		// This function verifies that the input is numeric
+		//----------------------------------------------------------------------------------------
+		function checkNumeric(index) {
+			var bdvar = document.getElementById(index);
+			var a = bdvar.value + ""; // This forces bdvar.value to be a string
+
+			if (bdvar.value === "") { // OK not to enter 0
+				return;
+			}
+			if (isNaN(bdvar.value)) {
+				alert("Entry is not a valid number. \n \n$, spaces, or commas are not permitted in the number." +
+					" \n \nEntry may be a whole or decimal number. \nDecimal numbers will be rounded to the nearest whole number.");
+				return;
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                      clearCalcValues()
+		// This function enables and disables items depending on Actual Housing Costs or Fair Market Value
+		//----------------------------------------------------------------------------------------
+		function clearCalcValues() {
+			TotalFMRV.innerHTML = TPFMRV.innerHTML = "";
+			TotalRent.innerHTML = TPRent.innerHTML = "";
+			TotalUtilities.innerHTML = TPUtilities.innerHTML = "";
+			TotalInsurance.innerHTML = TPInsurance.innerHTML = "";
+			TotalFood.innerHTML = TPFood.innerHTML = "";
+			TotalOther.innerHTML = TPOther.innerHTML = "";
+
+			TotalAnnualCost.innerHTML = TPAnnualCost.innerHTML = "";
+
+			TotalUpkeep.innerHTML = PaidbyOthers.innerHTML = "";
+			OthersPercent.innerHTML = "";
+
+			PaidbyTP.innerHTML = TPPercent.innerHTML = "";
+			Answer.innerHTML = "";
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                      SetHousingCostType(code)
+		// This function enables and disables items depending on Actual Housing Costs or Fair Market Value
+		//----------------------------------------------------------------------------------------
+		function SetHousingCostType(code) {
+			HousingCostType = code
+
+			MonthlyFMRV.value = NoMonthsFMRV.value = "";
+			TPMonthlyFMRV.value = TPNoMonthsFMRV.value = "";
+			TotalPropertyTaxes.value = TaxpayerPropertyTaxes.value = "";
+			TotalMortgageInterest.value = TaxpayerMortgageInterest.value = "";
+			TotalMonthlyInsurance.value = TotalNoMonthsInsurance.value = "";
+			TPMonthlyInsurance.value = TPNoMonthsInsurance.value = "";
+
+			clearCalcValues();
+
+			if (HousingCostType === "A") {    			// Use Actual costs
+				//Disable Fair market
+				document.getElementById("MonthlyFMRV").disabled = true;
+				document.getElementById("NoMonthsFMRV").disabled = true;
+				document.getElementById("TPMonthlyFMRV").disabled = true;
+				document.getElementById("TPNoMonthsFMRV").disabled = true;
+
+				//Enable Actual Property Tax, Mortgage Interest and Property Insurance
+				document.getElementById("TotalPropertyTaxes").disabled = false;
+				document.getElementById("TaxpayerPropertyTaxes").disabled = false;
+
+				document.getElementById("TotalMortgageInterest").disabled = false;
+				document.getElementById("TaxpayerMortgageInterest").disabled = false;
+
+				document.getElementById("TotalMonthlyInsurance").disabled = false;
+				document.getElementById("TotalNoMonthsInsurance").disabled = false;
+				document.getElementById("TPMonthlyInsurance").disabled = false;
+				document.getElementById("TPNoMonthsInsurance").disabled = false;
+			} else if (HousingCostType === "F") {		// Use FairMarket Value
+				//Enable Fair market
+				document.getElementById("MonthlyFMRV").disabled = false;
+				document.getElementById("NoMonthsFMRV").disabled = false;
+				document.getElementById("TPMonthlyFMRV").disabled = false;
+				document.getElementById("TPNoMonthsFMRV").disabled = false;
+
+				//Disable Actual Property Tax, Mortgage Interest and Property Insurance
+				document.getElementById("TotalPropertyTaxes").disabled = true;
+				document.getElementById("TaxpayerPropertyTaxes").disabled = true;
+
+				document.getElementById("TotalMortgageInterest").disabled = true;
+				document.getElementById("TaxpayerMortgageInterest").disabled = true;
+
+				document.getElementById("TotalMonthlyInsurance").disabled = true;
+				document.getElementById("TotalNoMonthsInsurance").disabled = true;
+				document.getElementById("TPMonthlyInsurance").disabled = true;
+				document.getElementById("TPNoMonthsInsurance").disabled = true;
+			} else {									// Use Actual Rent DO NOT USE
+			}
+		}
+
+		//----------------------------------------------------------------------------------------
+		//                      calcHomeUpkeepPercent()
+		// This function calculates the total home upkeep costs and the taxpayers percent of costs
+		//----------------------------------------------------------------------------------------
+		function calcHomeUpkeepPercent() {
+			var bdvar;
+			var i;
+			var a;
+
+			// clear previous values
+			TotalRent.innerHTML = ""; TPRent.innerHTML = "";
+			TotalUtilities.innerHTML = ""; TPUtilities.innerHTML = "";
+			TotalInsurance.innerHTML = ""; TPInsurance.innerHTML = "";
+			TotalFood.innerHTML = ""; TPFood.innerHTML = "";
+			TotalOther.innerHTML = ""; TPOther.innerHTML = "";
+			TotalAnnualCost.innerHTML = ""; TPAnnualCost.innerHTML = "";
+			TotalUpkeep.innerHTML = "";
+			PaidbyOthers.innerHTML = ""; OthersPercent.innerHTML = "";
+			PaidbyTP.innerHTML = ""; TPPercent.innerHTML = ""; Answer.innerHTML = "?";
+
+			// verify inputs have valid syntax
+			for (i = 0; i <= 3; i++) {
+				bdvar = document.getElementById(ANNUAL_INPUT[i][0]);
+				a = bdvar.value + ""; // This forces bdvar.value to be a string
+
+				if (bdvar.value === "") { }   // OK not to enter 0
+				else if (isNaN(bdvar.value)) {
+					alert(ANNUAL_INPUT[i][1] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+					return 0;
+				}
+			}
+
+			for (i = 0; i <= 11; i++) {
+				bdvar = document.getElementById(MONTHLY_INPUT[i][0]);
+				a = bdvar.value + ""; // This forces bdvar.value to be a string
+				//alert("bdvar.value = " + bdvar.value);
+
+				if (bdvar.value === "") { }   // OK not to enter 0
+				else if (isNaN(bdvar.value)) {
+					alert(MONTHLY_INPUT[i][1] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+					return 0;
+				}
+
+				bdvar = document.getElementById(MONTHLY_INPUT[i][2]);
+				a = bdvar.value + ""; // This forces bdvar.value to be a string
+				//alert("bdvar.value = " + bdvar.value);
+
+				if (bdvar.value === "") { }   // OK not to enter 0
+				else if (isNaN(bdvar.value)) {
+					alert(MONTHLY_INPUT[i][3] + " is not a valid number. \n $, Spaces or commas are not permitted in the number.");
+					return 0;
+				} else {
+					a = bdvar.value - 0;	// force numeric
+					if ((a < 0) || (a > 12)) {
+						alert(MONTHLY_INPUT[i][3] + " must be between 0 and 12.");
+						return 0;
+					}
+				}
+			}
+
+			// compute upkeep and percentages
+
+			TotalFMRV.innerHTML = document.getElementById("MonthlyFMRV").value *
+				document.getElementById("NoMonthsFMRV").value;
+			TPFMRV.innerHTML = document.getElementById("TPMonthlyFMRV").value *
+				document.getElementById("TPNoMonthsFMRV").value;
+			TotalRent.innerHTML = document.getElementById("TotalMonthlyRent").value *
+				document.getElementById("TotalNoMonthsRent").value;
+			TPRent.innerHTML = document.getElementById("TPMonthlyRent").value *
+				document.getElementById("TPNoMonthsRent").value;
+			TotalUtilities.innerHTML = document.getElementById("TotalMonthlyUtilities").value *
+				document.getElementById("TotalNoMonthsUtilities").value;
+			TPUtilities.innerHTML = document.getElementById("TPMonthlyUtilities").value *
+				document.getElementById("TPNoMonthsUtilities").value;
+			TotalInsurance.innerHTML = document.getElementById("TotalMonthlyInsurance").value *
+				document.getElementById("TotalNoMonthsInsurance").value;
+			TPInsurance.innerHTML = document.getElementById("TPMonthlyInsurance").value *
+				document.getElementById("TPNoMonthsInsurance").value;
+			TotalFood.innerHTML = document.getElementById("TotalMonthlyFood").value *
+				document.getElementById("TotalNoMonthsFood").value;
+			TPFood.innerHTML = document.getElementById("TPMonthlyFood").value *
+				document.getElementById("TPNoMonthsFood").value;
+			TotalOther.innerHTML = document.getElementById("TotalMonthlyOther").value *
+				document.getElementById("TotalNoMonthsOther").value;
+			TPOther.innerHTML = document.getElementById("TPMonthlyOther").value *
+				document.getElementById("TPNoMonthsOther").value;
+
+			TotalAnnualCost.innerHTML = +TotalFMRV.innerHTML +
+				+document.getElementById("TotalPropertyTaxes").value +
+				+document.getElementById("TotalMortgageInterest").value +
+				+TotalRent.innerHTML + +TotalUtilities.innerHTML +
+				+TotalInsurance.innerHTML + +TotalFood.innerHTML +
+				+TotalOther.innerHTML;
+			TPAnnualCost.innerHTML = +TPFMRV.innerHTML +
+				+document.getElementById("TaxpayerPropertyTaxes").value +
+				+document.getElementById("TaxpayerMortgageInterest").value +
+				+TPRent.innerHTML + +TPUtilities.innerHTML +
+				+TPInsurance.innerHTML + +TPFood.innerHTML +
+				+TPOther.innerHTML;
+			if (TotalAnnualCost.innerHTML == 0) {
+				alert("Total cost of upkeep is 0. Cannot compute percents.");
+				return;
+			}
+			TotalUpkeep.innerHTML = TotalAnnualCost.innerHTML;
+			PaidbyOthers.innerHTML = TotalUpkeep.innerHTML - TPAnnualCost.innerHTML;
+			OthersPercent.innerHTML = (100 * PaidbyOthers.innerHTML / TotalUpkeep.innerHTML).toFixed(0) + "%";
+
+			PaidbyTP.innerHTML = TPAnnualCost.innerHTML;
+			TPPercent.innerHTML = (100 * PaidbyTP.innerHTML / TotalUpkeep.innerHTML).toFixed(0) + "%";
+			if (+PaidbyTP.innerHTML > +PaidbyOthers.innerHTML) {
+				Answer.innerHTML = "YES";
+			} else {
+				Answer.innerHTML = "NO";
+			}
+
+			return;
+		}
+	</script>
+</head>
+
+<!-- ************************************************************************************************ -->
+<!-- ********************************* START OF HTML ************************************************ -->
+<!-- ************************************************************************************************ -->
+<body onload="Initialize()">
+	<center>
+		<span class="tooltitle"> Cost of Keeping Up a Home Calculator </span>
+		<br><button onclick="location.reload(true)"><b>Clear and reset calculator</b></button>
+		<span id="Version" class="versiondisplay"></span>
+		<script>Version.innerHTML = VERSION;</script>
+		<button onclick="window.print()"> Print a taxpayer copy</button>
+		<br><br>
+
+		<div class="flex-container">
+			<div class="flex-item">
+				Fair Market Rental Value can be substituted for the actual cost of Property Taxes,
+				Mortgage Interest Expenses and Property Insurance per IRB 2017-7. If amending a prior return reference
+				this
+				in the explanation.
+				<br><br>
+				Choose which type of cost of housing the Taxpayer wishes to use. The calculator will enable and disable
+				the appropriate fields.
+				<br>
+			</div>
+		</div>
+		<a href="https://www.huduser.gov/portal/datasets/fmr.html" target="_blank"> <b> Get Fair Market Rental Value
+				Here!</b></a>
+		<br><br>
+		<div id="Input">
+			<table id="NameYear">
+				<tbody>
+					<tr>
+						<td class="inputfield">Taxpayer's Name</td>
+						<td class="inputfield">
+							<input id="TPName" tabindex="1" title="Optionally, enter the Taxpayer&#39;s name." value="">
+						</td>
+					</tr>
+					<tr>
+						<td class="inputfield">Tax Year</td>
+						<td class="inputfield" tabindex="2" <input type="radio" name="Year" value="N" />
+						<input id="radioTY_3" type="radio" name="Year" value="" /><label id="labelTY_3"
+							for="radioTY_3">0</label>
+						<input id="radioTY_2" type="radio" name="Year" value="" /><label id="labelTY_2"
+							for="radioTY_2">0</label>
+						<input id="radioTY_1" type="radio" name="Year" value="" /><label id="labelTY_1"
+							for="radioTY_1">0</label>
+						<input id="radioTY_0" type="radio" name="Year" value="" checked="checked"><label id="labelTY_0"
+							for="radioTY_0">0</label>
+						</td>
+					</tr>
+					<tr>
+						<td class="inputfield">Cost of Housing:</td>
+						<td class="inputfield" tabindex="0" <input type="radio" name="Housing" value="N" />
+						<!-- <input type="radio" name="Housing" value="R" onblur="SetHousingCostType"/>Rent -->
+						<input type="radio" name="Housing" value="F" onclick="SetHousingCostType('F')"
+							checked="checked" />Fair Market Rental Value
+						<input type="radio" name="Housing" value="A" onclick="SetHousingCostType('A')" />Actual Housing
+						Costs
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<br><br>
+
+			<table id="UpkeepAmounts">
+				<tbody>
+					<tr>
+						<td class="headerfield" colspan="4">Total Cost of Keeping Up the Home<br />
+							(Total Amounts Paid by Taxpayer and Others)</td>
+						<td class="spacerfield"></td>
+						<td class="headerfield" colspan="3">Amounts Taxpayer Paid</td>
+					</tr>
+					<tr>
+						<td class="headerfield2">Type of Expense</td>
+						<td class="headerfield2">Monthly<br />Amount</td>
+						<td class="headerfield2">No. of<br />Months</td>
+						<td class="headerfield2">Total Annual<br />Cost</td>
+						<td class="spacerfield"></td>
+						<td class="headerfield2">Monthly<br />Amount</td>
+						<td class="headerfield2">No. of<br />Months</td>
+						<td class="headerfield2">Total Annual<br />Cost</td>
+					</tr>
+					<tr>
+						<td class="inputfield" colspan="3">Property Taxes</td>
+						<td class="inputfield">
+							<input id="TotalPropertyTaxes" tabindex="3"
+								title="Enter total property taxes paid in tax year" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="spacerfield"></td>
+						<td colspan="2"></td>
+						<td class="inputfield">
+							<input id="TaxpayerPropertyTaxes" tabindex="4"
+								title="Enter property taxes paid by taxpayer in tax year" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+					</tr>
+					<tr>
+						<td class="inputfield" colspan="3">Mortgage Interest Expenses</td>
+						<td class="inputfield">
+							<input id="TotalMortgageInterest" tabindex="5"
+								title="Enter total mortgage interest paid in tax year" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="spacerfield"></td>
+						<td colspan="2"></td>
+						<td class="inputfield">
+							<input id="TaxpayerMortgageInterest" tabindex="6"
+								title="Enter mortgage interest paid by taxpayer in tax year" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+					</tr>
+					<tr>
+						<td class="inputfield">Property Insurance</td>
+						<td class="inputfield">
+							<input id="TotalMonthlyInsurance" tabindex="15"
+								title="Enter monthly property insurance payment" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="inputfield">
+							<input id="TotalNoMonthsInsurance" tabindex="16"
+								title="Enter number of months insurance was paid" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="calculated" id="TotalInsurance"></td>
+						<td class="spacerfield"></td>
+						<td class="inputfield">
+							<input id="TPMonthlyInsurance" tabindex="17"
+								title="Enter monthly property insurance payed by Taxpayer" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="inputfield">
+							<input id="TPNoMonthsInsurance" tabindex="18"
+								title="Enter number of months insurance was paid by Taxpayer" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="calculated" id="TPInsurance"></td>
+					</tr>
+
+					<tr>
+						<td class="inputfield" colspan="1">Fair Market Rental Value</td>
+						<td class="inputfield">
+							<input type="text" id="MonthlyFMRV" tabindex="0"
+								title="Enter Monthly Fair MarketRental Value" value="" onblur="checkNumeric(this.id)">
+						</td>
+						<td class="inputfield">
+							<input id="NoMonthsFMRV" tabindex="0" title="Enter number of months occupied" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="calculated" id="TotalFMRV"></td>
+						<td class="spacerfield"></td>
+						<td class="inputfield">
+							<input id="TPMonthlyFMRV" tabindex="0"
+								title="Enter Fair Market Value Rental payed by Taxpayer" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="inputfield">
+							<input id="TPNoMonthsFMRV" tabindex="0"
+								title="Enter number of months Fair Market Rental Value was paid by Taxpayer" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="calculated" id="TPFMRV"></td>
+					</tr>
+					<tr>
+						<td class="inputfield">Rent</td>
+						<td class="inputfield">
+							<input id="TotalMonthlyRent" tabindex="7" title="Enter monthly rent payment" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="inputfield">
+							<input id="TotalNoMonthsRent" tabindex="8" title="Enter number of months rent was paid"
+								value="" onblur="checkNumeric(this.id)">
+						</td>
+						<td class="calculated" id="TotalRent"></td>
+						<td class="spacerfield"></td>
+						<td class="inputfield">
+							<input id="TPMonthlyRent" tabindex="9" title="Enter monthly rent payed by Taxpayer" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="inputfield">
+							<input id="TPNoMonthsRent" tabindex="10"
+								title="Enter number of months rent was paid by Taxpayer" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="calculated" id="TPRent"></td>
+					</tr>
+					<tr>
+						<td class="inputfield">Utility charges</td>
+						<td class="inputfield">
+							<input id="TotalMonthlyUtilities" tabindex="11"
+								title="Enter average monthly utility payment" value="" onblur="checkNumeric(this.id)">
+						</td>
+						<td class="inputfield">
+							<input id="TotalNoMonthsUtilities" tabindex="12"
+								title="Enter number of months utilities were paid" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="calculated" id="TotalUtilities"></td>
+						<td class="spacerfield"></td>
+						<td class="inputfield">
+							<input id="TPMonthlyUtilities" tabindex="13"
+								title="Enter average monthly utilities payed by Taxpayer" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="inputfield">
+							<input id="TPNoMonthsUtilities" tabindex="14"
+								title="Enter number of months utilities were paid by Taxpayer" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="calculated" id="TPUtilities"></td>
+					</tr>
+					<tr>
+						<td class="inputfield">Food consumed on premises</td>
+						<td class="inputfield">
+							<input id="TotalMonthlyFood" tabindex="19"
+								title="Enter average monthly cost of food consumed on premises" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="inputfield">
+							<input id="TotalNoMonthsFood" tabindex="20"
+								title="Enter number of months food was consumed on premises" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="calculated" id="TotalFood"></td>
+						<td class="spacerfield"></td>
+						<td class="inputfield">
+							<input id="TPMonthlyFood" tabindex="21"
+								title="Enter average monthly cost of food payed by Taxpayer" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="inputfield">
+							<input id="TPNoMonthsFood" tabindex="22"
+								title="Enter number of months food was paid by Taxpayer" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="calculated" id="TPFood"></td>
+					</tr>
+					<tr>
+						<td class="inputfield">Other</td>
+						<td class="inputfield">
+							<input id="TotalMonthlyOther" tabindex="23" title="Enter average monthly other expenses"
+								value="" onblur="checkNumeric(this.id)">
+						</td>
+						<td class="inputfield">
+							<input id="TotalNoMonthsOther" tabindex="24"
+								title="Enter number of months other expenses were paid" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="calculated" id="TotalOther"></td>
+						<td class="spacerfield"></td>
+						<td class="inputfield">
+							<input id="TPMonthlyOther" tabindex="25"
+								title="Enter average monthly other expenses payed by Taxpayer" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="inputfield">
+							<input id="TPNoMonthsOther" tabindex="26"
+								title="Enter number of months rent was paid by Taxpayer" value=""
+								onblur="checkNumeric(this.id)">
+						</td>
+						<td class="calculated" id="TPOther"></td>
+					</tr>
+					<tr>
+						<td class="totalcost" colspan="3">Total</td>
+						<td class="calculated" id="TotalAnnualCost"></td>
+						<td class="spacerfield"></td>
+						<td class="totalcost" colspan="2">Total</td>
+						<td class="calculated" id="TPAnnualCost"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<br><br>
+		<button id="Calcbutton" tabindex="27" onclick="calcHomeUpkeepPercent()">Click here to Calculate</button>
+		<br> <br>
+
+		<div id="Results">
+			<table>
+				<tbody>
+					<tr>
+						<td class="headerfield" colspan="5">ANSWER</td>
+					</tr>
+					<tr>
+						<td class="headerfield3" colspan="4"><br />Total Cost of Upkeep</td>
+						<td class="calculated" id=TotalUpkeep></td>
+					</tr>
+					<tr>
+						<td colspan="5"><br />Does the Taxpayer meet the requirement of paying more<br />
+							than half the cost of keeping up the home?</td>
+					</tr>
+					<tr>
+						<td class="headerfield3" colspan="5"><br />Amount paid by others</td>
+					</tr>
+					<tr>
+						<td class="calculated" id="PaidbyOthers"></td>
+						<td class="equals">=</td>
+						<td class="calculated" id="OthersPercent"></td>
+						<td colspan="2"></td>
+					</tr>
+					<tr>
+						<td class="headerfield3" colspan="5"><br />Amount paid by Taxpayer</td>
+					</tr>
+					<tr>
+						<td class="calculated" id="PaidbyTP"></td>
+						<td class="equals">=</td>
+						<td class="calculated" id="TPPercent"></td>
+						<td class="equals">=</td>
+						<td class="resultsfield" id="Answer">?</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<br> <br>
+
+		<div class="flex-container">
+			<div class="flex-item">
+				<ol>
+					<li><b>Costs to include.</b> Include in the cost of keeping up a home: expenses
+						such as rent, mortgage interest, real estate taxes, insurance on the home,
+						repairs, utilities, and food eaten in the home. Taxpayer may choose to use Fair Market
+						Rental Value instead of mortgage interest, real estate taxes and insurance on the home. </li>
+					<br>
+					<li><b>TANF and other governmental payments</b> Under proposed Treasury regulations, if you received
+						Temporary Assistance to Needy
+						Families (TANF) payments or other similar payments and used the payment to support another
+						person, those payments are considered support you provided for that person, rather than
+						support provided by the government or other third party.<b>[2021 Pub 501 p15]</b> (This has been
+						effective since TY2017)</li>
+					<br>
+					<li><b>Costs not to include.</b> Do not include the cost of clothing, education,
+						medical treatment, vacations, life insurance, or transportation. Also, do not
+						include the rental value of a home if the Taxpayer owns the home; however, rental
+						expenses for the home site, etc. can be included. </li>
+				</ol>
+			</div>
+		</div>
+	</center>
+</body>
+</html>
