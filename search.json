@@ -11,7 +11,7 @@
     "href": "about.html#education",
     "title": "Xander Harris",
     "section": "Education",
-    "text": "Education\nOregon State University | Corvallis, OR\nB.S. in Computer Science | Sept 2024 - Dec 2025\nReed College | Portland, OR\nB.A. in Political Science | Sept 2011 - May 2016"
+    "text": "Education\nOregon State University | Corvallis, OR\nB.S. in Computer Science | Mar 2023 - Dec 2025\nReed College | Portland, OR\nB.A. in Political Science | Sept 2011 - May 2016"
   },
   {
     "objectID": "about.html#experience",
@@ -30,16 +30,44 @@
   {
     "objectID": "posts/Hello-World/index.html",
     "href": "posts/Hello-World/index.html",
-    "title": "Hello World",
+    "title": "Current State of the OR Tax Volunteer Tools",
     "section": "",
-    "text": "Here’s a test post to see what happens now.\nAnd I’ve now added some content to it here!"
+    "text": "OR Tax Volunteers is a volunteer run website that serves as a repository of tax information, tools, and training materials to support free of charge volunteer tax preparers in the state of Oregon across the IRS VITA and AARP Tax-Aide programs. The site is self-organized outside of the VITA and Tax-Aide programs and offers supplemental (usually Oregon specific) resources.\nWhen I began volunteering with MFS CASH Oregon in the fall of 2021, the Oregon specific tax training materials provided by MFS CASH Oregon pointed me to the OR Tax Volunteers website for deeper dives on topics and helpful calculator tools to use while I worked through tricky returns. At this point in 2025, more of the training material has migrated into a Moodle instance managed by MFS CASH Oregon. However, the OR Tax Volunteers website continues to serve an invaluable purpose as a hub for additional learning material, resources, links to official publications and general support for all volunteer tax preparers. And of course, the web-based tax tools and calculators.\nIn fall 2024, the previous volunteer who maintained the web-tools needed to reduce his volunteer contributions and emailed an ask out for another volunteer to take over maintenance. I responded and received a quick tour through the html files and embarked on making the necessary updates to ready the tools for the next tax season. At this point, I introduced git based version control to the project, but did not make any additional changes to the logic, look, or feel of the tools.\nI need to ask the other volunteers for more details on the history of these tools. As far as I can tell from the version history comments directly in the html files, the first set of these tools were produced in the fall of 2016 in preparation of Tax Year 2016 season the following spring."
   },
   {
-    "objectID": "posts/Hello-World/index.html#getting-started",
-    "href": "posts/Hello-World/index.html#getting-started",
-    "title": "Hello World",
+    "objectID": "posts/Hello-World/index.html#history-and-inheritance",
+    "href": "posts/Hello-World/index.html#history-and-inheritance",
+    "title": "Current State of the OR Tax Volunteer Tools",
     "section": "",
-    "text": "Here’s a test post to see what happens now.\nAnd I’ve now added some content to it here!"
+    "text": "OR Tax Volunteers is a volunteer run website that serves as a repository of tax information, tools, and training materials to support free of charge volunteer tax preparers in the state of Oregon across the IRS VITA and AARP Tax-Aide programs. The site is self-organized outside of the VITA and Tax-Aide programs and offers supplemental (usually Oregon specific) resources.\nWhen I began volunteering with MFS CASH Oregon in the fall of 2021, the Oregon specific tax training materials provided by MFS CASH Oregon pointed me to the OR Tax Volunteers website for deeper dives on topics and helpful calculator tools to use while I worked through tricky returns. At this point in 2025, more of the training material has migrated into a Moodle instance managed by MFS CASH Oregon. However, the OR Tax Volunteers website continues to serve an invaluable purpose as a hub for additional learning material, resources, links to official publications and general support for all volunteer tax preparers. And of course, the web-based tax tools and calculators.\nIn fall 2024, the previous volunteer who maintained the web-tools needed to reduce his volunteer contributions and emailed an ask out for another volunteer to take over maintenance. I responded and received a quick tour through the html files and embarked on making the necessary updates to ready the tools for the next tax season. At this point, I introduced git based version control to the project, but did not make any additional changes to the logic, look, or feel of the tools.\nI need to ask the other volunteers for more details on the history of these tools. As far as I can tell from the version history comments directly in the html files, the first set of these tools were produced in the fall of 2016 in preparation of Tax Year 2016 season the following spring."
+  },
+  {
+    "objectID": "posts/Hello-World/index.html#new-development",
+    "href": "posts/Hello-World/index.html#new-development",
+    "title": "Current State of the OR Tax Volunteer Tools",
+    "section": "New Development",
+    "text": "New Development\nOver this summer (2025), I partnered with two other volunteers who are passionate about maximizing taxpayer returns in a specific tax situation where a dependent may be claimed by multiple taxpayers. The considerations within such a scenario are numerous, and preparers are unlikely to realize the potential impact on refund amounts achievable with different choices. The volunteers had produced detailed, step-by-step training and guides to alert preparers to the nuances and guide them through the process of identifying the optimal configuration. They thought a structured tool would be useful for preparers and had produced a proof-of-concept in Excel.\nAnd so, together, we built a new tool/calculator: Dependent Sharing and Comparing Return Results. I took their proof of concept and transformed it into a simple webpage that quickly expanded with additional functionality to cover larger and larger portions of the surface area of the possible tax scenarios. We improved the tool in iterations: I’d add a bit of functionality, they would test and make suggestions and help expand the scope the tool could capture, and then we’d repeat. We ran through five major iterative cycles with jumps in functionality with at least as many smaller cycles of adjustment and refinement between.\nIn building this new tool, I took the opportunity to introduce some new technologies into the tech stack: Alpine.js for delarative interaction and Cyress for UI testing. I’ll have more to say about these choices in future posts and what I learned from the process."
+  },
+  {
+    "objectID": "posts/Hello-World/index.html#current-state",
+    "href": "posts/Hello-World/index.html#current-state",
+    "title": "Current State of the OR Tax Volunteer Tools",
+    "section": "Current State",
+    "text": "Current State\nI completed the yearly maintenance update on the ten tools last week. Eight of the tools remain largely as they were when I inherited them. They are all single HTML files with containing all the necessary JavaScript logic and CSS styling to bring the tools to life. Two of the tools use a more modern approach with Alpine.js, as detailed in the previous section. Yearly updates to the tools consists of updating the tax year value to the current year and providing new dollar amounts for standard deductions, mileage reimbursment rates and a few other specific values. They are ready for tax season!"
+  },
+  {
+    "objectID": "posts/Hello-World/index.html#areas-for-continued-improvement",
+    "href": "posts/Hello-World/index.html#areas-for-continued-improvement",
+    "title": "Current State of the OR Tax Volunteer Tools",
+    "section": "Areas for Continued Improvement",
+    "text": "Areas for Continued Improvement\nThere are a few opportunities to improve these tools going forward:\n\nThe user experience of many of the tools and calculators is challenging. There are ample areas to improve data entry, readibility, and to introduce in what contexts and how to use these tools. They shouldn’t just be for power users!\n\nThe first step down this path must be user interviews. I’m going to prioritize this any time there’s down time at our tax sites this year and go from there.\n\nWith the exception of the two tools I worked on this year, there is no testing framework for any of these tools. It’s challenging to know the full intentions of each tool and to know if changes to them will cause unintended bugs without testing. This is high on my list.\nThe style choices (particularly color) on these tools is challenging. At the very least, I’d like to make them slightly easier on the eyes."
+  },
+  {
+    "objectID": "posts/Hello-World/index.html#contributors-to-previous-versions-of-the-tools",
+    "href": "posts/Hello-World/index.html#contributors-to-previous-versions-of-the-tools",
+    "title": "Current State of the OR Tax Volunteer Tools",
+    "section": "Contributors to previous versions of the tools",
+    "text": "Contributors to previous versions of the tools\nThe tools, as they exist today, would not be possible without the past contributions from the following individuals:\n\nBarbara Smith-Thomas\nDavid Rainwater\nGeorge Johnson\nJim Blackburn\nJohn Coble\nLen Lewandowski\nLeonard Harfe\nLois Anderson\nPaul Dickey\nRod Garriott\nRuth Ter Bush\nStev Hochspeier\nV. Joseph Bowman, Jr.\n\nMany thanks!"
   },
   {
     "objectID": "work.html",
@@ -53,7 +81,7 @@
     "href": "work.html#or-tax-volunteer-online-calculators-and-tools",
     "title": "Work",
     "section": "OR Tax Volunteer Online Calculators and Tools",
-    "text": "OR Tax Volunteer Online Calculators and Tools\n\nI develop and maintain tax calculation tools for Oregon VITA volunteers, helping preparers navigate Oregon-specific deductions and credits. These tools support free tax preparation services for families earning under $67,000. (Volunteer)"
+    "text": "OR Tax Volunteer Online Calculators and Tools\n\nI develop and maintain tax calculation tools for Oregon VITA volunteers, helping preparers navigate Oregon-specific deductions and credits. These tools support free tax preparation services for families earning under $67,000. (Volunteer)\n\nTool descriptions\n\nDependent Sharing and Comparing Return Results\nA dependent can sometimes qualify as a dependent of multiple taxpayers filing a separate return. Claiming a dependent affects a taxpayer’s eligibility for a number of tax benefits: Head of Household Filing Status, Child Tax Credit (CTC), Earned Income Tax Credit (EITC), Child and Dependent Care Credit, and Oregon Kids Credit. But each dependent may only be claimed by one taxpayer. Therefore, maximizing the tax benefits across multiple returns involves making strategic choices about which dependent(s) are claimed by which taxpayer. This tool helps preparers understand which claim scenarios are likely to result in larger overall refunds and provides them with a worksheet to record their results as they search for the optimal assignment of dependents.\nDetermining Support\nA taxpayer may claim another person as a dependent on their tax return if that person meets the IRS definitions to qualify as a dependent. Part of the qualification tests involve the taxpayer providing support for that person. This tool walks tax preparers and taxpayers through the calculations to determine if the taxpayer provides sufficient support for the person to qualify as a dependent.\nEducation and Scholarship Calculator\nEducation credits are complicated. The Federal tax code currently offers two credits: the American Opportunity Credit and the Lifetime Learning Credit. The credit amounts depend on qualifying education expenses and student income (including restricted and unrestricted scholarship income). Finding the optimal tax benefit for the taxpayer involves totaling all education expenses and strategically allocating scholarship income to maximize tax credits while reducing taxable income. This tool assists preparers in walking through the necessary scenarios and identifying the optimal choices.\nCost of Keeping Up a Home\nTo claim the Head of Household (HOH) filing status, a taxpayer must (among other requirements) pay more than half of the cost of keeping up a home. This tool systematically walks taxpayers and preparers through the associated allowable costs to consider when determining the dollar value to keep up the taxpayer’s home.\nMedicaid Waiver Payments\nUnder the Social Security Act, states can pay caregivers for family members directly for care they provide in their homes. Taxpayers may elected to exclude these payments from their taxable income and/or earned income. There is often overlap with additional tax benefits (Child Tax Credit or Earned Income Tax Credit) which require earned income. Therefore, the optimal tax benefit for the taxpayer often depends on how the Medicaid Waiver Payments are handled on the return. This tool walks preparers through the different scenarios and provides a structure to systematically record the results of different taxable allocations.\nOregon Federal Pension Subtraction\nThe Oregon Tax code allows for a subtraction from a taxpayer’s state taxable income equal to the portion of federal pension payments that are based on federal employment before October 1, 1991. An interesting relic from tax litigation and political compromise from decades past! This tool assists tax preparers in calculating the percentage of federal pension payments to subtract based on the taxpayer’s federal employment service dates.\nOregon Retirement Tax Credit\nOregon offers taxpayers a credit to help reduce Oregon state tax on pension income for low income, senior, taxpayers. This tool helps preparers step through the qualification requirements and calculate the credit amount for the taxpayer.\nScratch Pad\nThe scratch pad is simply an web calculator that allows preparers to enter and sum a list of dollar values while recording notes related to each entry on the list. Mostly used to print out and include with the completed return to “show ones work” while totaling expenses.\nSimple Oregon Refund Calculator\nIt’s occasionally possible for taxpayers to receive tax refunds in the tax year for returns that were filed in previous years. In these cases, some parts of the refund amount may be taxable income, but it’s complicated. This tool helps tax preparers walk though the considertaions and determine the taxable amount.\nSpecial Oregon Medical Subtraction (SOMS)\nOregon offers a state-specific subtraction for senior residents to reduce their taxable income to offset out of pocket medical expenses. This worksheet guides taxpayers and preparers through identifying and totalling qualified medical expenses for the return."
   },
   {
     "objectID": "index.html",
@@ -67,20 +95,20 @@
     "href": "index.html#active-work",
     "title": "Hello!",
     "section": "Active Work",
-    "text": "Active Work\n\n\nOR Tax Volunteer Online Calculators and Tools\nI develop and maintain tax calculation tools for Oregon VITA volunteers, helping preparers navigate Oregon-specific deductions and credits. These tools support free tax preparation services for families earning under $67,000. (Volunteer)\nSee all works →"
+    "text": "Active Work\n\n\nOR Tax Volunteer Online Calculators and Tools\nI develop and maintain tax calculation tools for Oregon VITA volunteers, helping preparers navigate Oregon-specific deductions and credits. These tools support free tax preparation services for families earning under $67,000. (Volunteer)\nSee all work →"
   },
   {
     "objectID": "index.html#recent-writing",
     "href": "index.html#recent-writing",
     "title": "Hello!",
     "section": "Recent Writing",
-    "text": "Recent Writing\n\n\n\n\n\n\n\n\n\n\nHello World\n\n\n\n\n\n\n\n\nDec 8, 2025\n\n\nXander Harris\n\n\n\n\n\nNo matching items\n\nSee all posts →"
+    "text": "Recent Writing\n\n\n\n\n\n\n\n\n\n\nCurrent State of the OR Tax Volunteer Tools\n\n\n\n\n\n\n\n\nDec 16, 2025\n\n\nXander Harris\n\n\n\n\n\nNo matching items\n\nSee all posts →"
   },
   {
     "objectID": "blog.html",
     "href": "blog.html",
     "title": "Thoughts and murmurs",
     "section": "",
-    "text": "Hello World\n\n\n\nnews\n\n\n\n\n\n\n\n\n\nDec 8, 2025\n\n\nXander Harris\n\n\n\n\n\nNo matching items"
+    "text": "Current State of the OR Tax Volunteer Tools\n\n\n\nwork\n\n\n\n\n\n\n\n\n\nDec 16, 2025\n\n\nXander Harris\n\n\n\n\n\nNo matching items"
   }
 ]

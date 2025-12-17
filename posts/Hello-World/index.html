@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Xander Harris">
-<meta name="dcterms.date" content="2025-12-08">
+<meta name="dcterms.date" content="2025-12-16">
 
-<title>Hello World – Xander Harris</title>
+<title>Current State of the OR Tax Volunteer Tools – Xander Harris</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -313,7 +313,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#getting-started" id="toc-getting-started" class="nav-link active" data-scroll-target="#getting-started">Getting started</a></li>
+  <li><a href="#history-and-inheritance" id="toc-history-and-inheritance" class="nav-link active" data-scroll-target="#history-and-inheritance">History and Inheritance</a></li>
+  <li><a href="#new-development" id="toc-new-development" class="nav-link" data-scroll-target="#new-development">New Development</a></li>
+  <li><a href="#current-state" id="toc-current-state" class="nav-link" data-scroll-target="#current-state">Current State</a></li>
+  <li><a href="#areas-for-continued-improvement" id="toc-areas-for-continued-improvement" class="nav-link" data-scroll-target="#areas-for-continued-improvement">Areas for Continued Improvement</a></li>
+  <li><a href="#contributors-to-previous-versions-of-the-tools" id="toc-contributors-to-previous-versions-of-the-tools" class="nav-link" data-scroll-target="#contributors-to-previous-versions-of-the-tools">Contributors to previous versions of the tools</a></li>
   </ul>
 </nav>
     </div>
@@ -323,9 +327,9 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Hello World</h1>
+<h1 class="title">Current State of the OR Tax Volunteer Tools</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">news</div>
+    <div class="quarto-category">work</div>
   </div>
   </div>
 
@@ -343,7 +347,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">December 8, 2025</p>
+      <p class="date">December 16, 2025</p>
     </div>
   </div>
   
@@ -355,10 +359,54 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="getting-started" class="level2">
-<h2 class="anchored" data-anchor-id="getting-started">Getting started</h2>
-<p>Here’s a test post to see what happens now.</p>
-<p>And I’ve now added some content to it here!</p>
+<section id="history-and-inheritance" class="level2">
+<h2 class="anchored" data-anchor-id="history-and-inheritance">History and Inheritance</h2>
+<p><a href="https://ortaxvolunteers.org/">OR Tax Volunteers</a> is a volunteer run website that serves as a repository of tax information, tools, and training materials to support free of charge volunteer tax preparers in the state of Oregon across the IRS VITA and AARP Tax-Aide programs. The site is self-organized outside of the VITA and Tax-Aide programs and offers supplemental (usually Oregon specific) resources.</p>
+<p>When I began volunteering with <a href="https://cashoregon.org/">MFS CASH Oregon</a> in the fall of 2021, the Oregon specific tax training materials provided by MFS CASH Oregon pointed me to the OR Tax Volunteers website for deeper dives on topics and helpful calculator tools to use while I worked through tricky returns. At this point in 2025, more of the training material has migrated into a Moodle instance managed by MFS CASH Oregon. However, the OR Tax Volunteers website continues to serve an invaluable purpose as a hub for additional learning material, resources, links to official publications and general support for all volunteer tax preparers. And of course, the web-based tax tools and calculators.</p>
+<p>In fall 2024, the previous volunteer who maintained the web-tools needed to reduce his volunteer contributions and emailed an ask out for another volunteer to take over maintenance. I responded and received a quick tour through the html files and embarked on making the necessary updates to ready the tools for the next tax season. At this point, I introduced git based version control to the project, but did not make any additional changes to the logic, look, or feel of the tools.</p>
+<p>I need to ask the other volunteers for more details on the history of these tools. As far as I can tell from the version history comments directly in the html files, the first set of these tools were produced in the fall of 2016 in preparation of Tax Year 2016 season the following spring.</p>
+</section>
+<section id="new-development" class="level2">
+<h2 class="anchored" data-anchor-id="new-development">New Development</h2>
+<p>Over this summer (2025), I partnered with two other volunteers who are passionate about maximizing taxpayer returns in a specific tax situation where a dependent may be claimed by multiple taxpayers. The considerations within such a scenario are numerous, and preparers are unlikely to realize the potential impact on refund amounts achievable with different choices. The volunteers had produced detailed, step-by-step training and guides to alert preparers to the nuances and guide them through the process of identifying the optimal configuration. They thought a structured tool would be useful for preparers and had produced a proof-of-concept in Excel.</p>
+<p>And so, together, we built a new tool/calculator: <a href="../../assets/tax_tools/dependent-sharing.html">Dependent Sharing and Comparing Return Results</a>. I took their proof of concept and transformed it into a simple webpage that quickly expanded with additional functionality to cover larger and larger portions of the surface area of the possible tax scenarios. We improved the tool in iterations: I’d add a bit of functionality, they would test and make suggestions and help expand the scope the tool could capture, and then we’d repeat. We ran through five major iterative cycles with jumps in functionality with at least as many smaller cycles of adjustment and refinement between.</p>
+<p>In building this new tool, I took the opportunity to introduce some new technologies into the tech stack: Alpine.js for delarative interaction and Cyress for UI testing. I’ll have more to say about these choices in future posts and what I learned from the process.</p>
+</section>
+<section id="current-state" class="level2">
+<h2 class="anchored" data-anchor-id="current-state">Current State</h2>
+<p>I completed the yearly maintenance update on the ten tools last week. Eight of the tools remain largely as they were when I inherited them. They are all single HTML files with containing all the necessary JavaScript logic and CSS styling to bring the tools to life. Two of the tools use a more modern approach with Alpine.js, as detailed in the previous section. Yearly updates to the tools consists of updating the tax year value to the current year and providing new dollar amounts for standard deductions, mileage reimbursment rates and a few other specific values. They are ready for tax season!</p>
+</section>
+<section id="areas-for-continued-improvement" class="level2">
+<h2 class="anchored" data-anchor-id="areas-for-continued-improvement">Areas for Continued Improvement</h2>
+<p>There are a few opportunities to improve these tools going forward:</p>
+<ul>
+<li><p>The user experience of many of the tools and calculators is challenging. There are ample areas to improve data entry, readibility, and to introduce in what contexts and how to use these tools. They shouldn’t just be for power users!</p>
+<ul>
+<li>The first step down this path must be user interviews. I’m going to prioritize this any time there’s down time at our tax sites this year and go from there.</li>
+</ul></li>
+<li><p>With the exception of the two tools I worked on this year, there is no testing framework for any of these tools. It’s challenging to know the full intentions of each tool and to know if changes to them will cause unintended bugs without testing. This is high on my list.</p></li>
+<li><p>The style choices (particularly color) on these tools is challenging. At the very least, I’d like to make them slightly easier on the eyes.</p></li>
+</ul>
+</section>
+<section id="contributors-to-previous-versions-of-the-tools" class="level2">
+<h2 class="anchored" data-anchor-id="contributors-to-previous-versions-of-the-tools">Contributors to previous versions of the tools</h2>
+<p>The tools, as they exist today, would not be possible without the past contributions from the following individuals:</p>
+<ul>
+<li>Barbara Smith-Thomas</li>
+<li>David Rainwater</li>
+<li>George Johnson</li>
+<li>Jim Blackburn</li>
+<li>John Coble</li>
+<li>Len Lewandowski</li>
+<li>Leonard Harfe</li>
+<li>Lois Anderson</li>
+<li>Paul Dickey</li>
+<li>Rod Garriott</li>
+<li>Ruth Ter Bush</li>
+<li>Stev Hochspeier</li>
+<li>V. Joseph Bowman, Jr.</li>
+</ul>
+<p>Many thanks!</p>
 
 
 </section>

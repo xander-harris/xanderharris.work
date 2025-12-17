@@ -1,0 +1,3873 @@
+<!DOCTYPE html>
+<!-- ************************************************************************************************ -->
+<!-- ***************** DEPENDENT SHARING AND COMPARING RETURN RESULTS ******************************* -->
+<!-- ************************************************************************************************ -->
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Dependent Sharing and Comparing Return Results Calculator</title>
+
+	<meta name="author" content="Xander Harris">
+	<meta name="description" content="Dependent Sharing and Comparing Return Results Calculator">
+
+	<!-- Preload Alpine.js for faster loading -->
+	<link rel="preload" href="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" as="script">
+
+	<!-- Alpine.js CDN -->
+	<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+	<style type="text/css">
+		/* CSS Custom Properties for consistent theming */
+		:root {
+			/* Colors */
+			--color-primary: #3498db;
+			--color-primary-hover: #2980b9;
+			--color-secondary: #2c3e50;
+			--color-success: #155724;
+			--color-success-bg: #d4edda;
+			--color-warning: #856404;
+			--color-warning-bg: #fff3cd;
+			--color-warning-border: #ffeaa7;
+			--color-error: #dc3545;
+			--color-error-bg: #fdf2f2;
+			--color-error-border: #e74c3c;
+			--color-info: #1565c0;
+			--color-info-bg: #e3f2fd;
+			--color-info-border: #bbdefb;
+			--color-text-primary: #333;
+			--color-text-secondary: #666;
+			--color-text-muted: #999;
+			--color-text-light: #fff;
+			--color-border: #ddd;
+			--color-border-light: #ccc;
+			--color-bg-light: #f8f9fa;
+			--color-bg-white: #fff;
+			--color-bg-page: #f5f5f5;
+			--color-tooltip-bg: #495057;
+			--color-age-bg: #e9ecef;
+			--color-age-text: #495057;
+			--color-placeholder: #757575;
+			--color-tax-year-border: #dee2e6;
+
+			/* Component sizes */
+			--checkbox-size-small: 18px;
+			--checkbox-size-large: 20px;
+			--input-height: 30px;
+			--input-max-height: 120px;
+
+			/* Spacing */
+			--spacing-xs: 4px;
+			--spacing-sm: 8px;
+			--spacing-md: 16px;
+			--spacing-lg: 24px;
+			--spacing-xl: 32px;
+		}
+
+		/* Alpine.js x-cloak directive */
+		[x-cloak] {
+			display: none !important;
+		}
+
+		/* Modern CSS Reset and Base Styles */
+		* {
+			box-sizing: border-box;
+		}
+
+		html {
+			background: var(--color-bg-page);
+		}
+
+		body {
+			background: var(--color-bg-page);
+			font-family: Arial, sans-serif;
+			font-size: 14px;
+			line-height: 1.5;
+			color: var(--color-text-primary);
+			margin: 0;
+			padding: 20px 0;
+		}
+
+		/* Calculator Container */
+		.calculator-container {
+			max-width: 1200px;
+			margin: 0 auto;
+			background: var(--color-bg-white);
+			border: 1px solid var(--color-border);
+			border-radius: 8px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+			overflow: hidden;
+			padding: 25px;
+		}
+
+		/* Header Styles */
+		.tooltitle {
+			font-size: 1.8rem;
+			font-weight: bold;
+			color: var(--color-secondary);
+			text-align: center;
+			margin-bottom: 15px;
+			border-bottom: 2px solid var(--color-primary);
+			padding-bottom: 10px;
+		}
+
+		.versiondisplay {
+			font-weight: normal;
+			color: var(--color-text-secondary);
+			font-size: 0.85rem;
+			margin: 0 15px;
+		}
+
+		/* Reverse email text direction to prevent scraping */
+		.email {
+			unicode-bidi: bidi-override;
+			direction: rtl;
+		}
+
+		/* Button Styles */
+		button {
+			background: var(--color-primary);
+			color: var(--color-text-light);
+			border: none;
+			padding: 10px 20px;
+			border-radius: 4px;
+			font-weight: bold;
+			font-size: 0.9rem;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background: var(--color-primary-hover);
+		}
+
+		/* Table Styles */
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 15px 0;
+			border: 1px solid var(--color-border);
+		}
+
+		td {
+			padding: 10px;
+			border: 1px solid var(--color-border);
+			vertical-align: middle;
+		}
+
+		/* Ensure checkbox cells have proper centering */
+		.dependent-info-table td:nth-child(5),
+		.dependent-info-table td:nth-child(6),
+		.taxpayer-info-table td:nth-child(4),
+		.taxpayer-info-table td:nth-child(5) {
+			text-align: center;
+			vertical-align: middle;
+		}
+
+		/* Input Field Styles */
+		.inputfield {
+			background: var(--color-bg-light);
+			font-weight: bold;
+			color: var(--color-text-primary);
+			border: 1px solid var(--color-border);
+		}
+
+		.inputdata {
+			background: var(--color-bg-white);
+			border: 1px solid var(--color-border-light);
+			border-radius: 3px;
+			padding: 6px 10px;
+			width: 100%;
+			text-align: left;
+			font-size: 0.9rem;
+			position: relative;
+		}
+
+		.inputdata:focus {
+			outline: none;
+			border-color: var(--color-primary);
+			box-shadow: 0 0 3px rgba(52, 152, 219, 0.3);
+		}
+
+		.inputdata.error {
+			border-color: var(--color-error-border) !important;
+			background-color: var(--color-error-bg) !important;
+			position: relative;
+		}
+
+		.inputdata.error:focus {
+			border-color: var(--color-error-border) !important;
+			box-shadow: 0 0 3px rgba(231, 76, 60, 0.3) !important;
+		}
+
+
+		.inputdata.error::after {
+			content: attr(data-error-message);
+			position: absolute;
+			bottom: 125%;
+			left: 50%;
+			transform: translateX(-50%);
+			background-color: var(--color-tooltip-bg);
+			color: var(--color-text-light);
+			text-align: center;
+			border-radius: 6px;
+			padding: 10px;
+			font-size: 12px;
+			white-space: nowrap;
+			z-index: 1000;
+			opacity: 0;
+			visibility: hidden;
+			transition: opacity 0.3s, visibility 0.3s;
+			pointer-events: none;
+			max-width: 250px;
+			word-wrap: break-word;
+		}
+
+		.inputdata.error::before {
+			content: "";
+			position: absolute;
+			bottom: 100%;
+			left: 50%;
+			transform: translateX(-50%);
+			border-width: 5px;
+			border-style: solid;
+			border-color: var(--color-tooltip-bg) transparent transparent transparent;
+			opacity: 0;
+			visibility: hidden;
+			transition: opacity 0.3s, visibility 0.3s;
+			pointer-events: none;
+		}
+
+		.inputdata.error:hover::after,
+		.inputdata.error:hover::before {
+			opacity: 1;
+			visibility: visible;
+		}
+
+
+
+
+		/* Section Header Styles */
+		.section-header {
+			background: var(--color-secondary);
+			color: var(--color-text-light);
+			font-weight: bold;
+			text-align: center;
+			font-size: 1rem;
+		}
+
+		/* Split header styles for dependent names columns */
+		.dependent-names-header {
+			background: var(--color-secondary);
+			color: var(--color-text-light);
+			font-weight: bold;
+			text-align: center;
+			font-size: 1rem;
+		}
+
+		.section-header-sub {
+			background: var(--color-secondary);
+			color: var(--color-text-light);
+			font-weight: bold;
+			text-align: center;
+			font-size: 0.9rem;
+		}
+
+		/* Results Field Styles */
+		.resultsfield {
+			background: var(--color-success-bg);
+			font-weight: bold;
+			color: var(--color-success);
+			text-align: center;
+			font-size: 1rem;
+		}
+
+		/* Flex Container Styles */
+		.flex-container {
+			display: flex;
+			justify-content: center;
+			margin: 15px 0;
+		}
+
+		.flex-item {
+			max-width: 800px;
+			width: 100%;
+			margin: 10px;
+			text-align: left;
+		}
+
+		/* Contact Info Styles */
+		.contact-info {
+			background: var(--color-warning-bg);
+			border: 1px solid var(--color-warning-border);
+			padding: 15px;
+			margin: 15px 0;
+			border-radius: 4px;
+		}
+
+		.contact-info b {
+			color: var(--color-warning);
+		}
+
+		/* Instructions Box */
+		.instructions-box {
+			background: var(--color-info-bg);
+			border: 1px solid var(--color-info-border);
+			padding: 3px 10px;
+			margin: 3px 0 20px 0;
+			border-radius: 4px;
+		}
+
+		.instructions-box b {
+			color: var(--color-info);
+		}
+
+		.instructions-box ul {
+			margin: 10px 0;
+			padding-left: 20px;
+		}
+
+		.instructions-box li {
+			margin: 5px 0;
+			color: var(--color-info);
+		}
+
+		/* Instructions section header styling */
+		.instructions-primary-header {
+			margin: 15px 0 10px 0;
+			padding: 6px 10px;
+			background-color: var(--color-bg-light);
+			border-left: 2px solid var(--color-secondary);
+			border-top: 2px solid var(--color-secondary);
+			border-radius: 2px;
+			color: var(--color-text-primary);
+		}
+
+		.instructions-primary-header h3 {
+			margin: 0;
+			color: var(--color-text-primary);
+		}
+
+
+		.instructions-content .instructions-tool-header {
+			margin: 15px 0 8px 0;
+			padding: 8px 12px;
+			background-color: var(--color-secondary);
+			color: var(--color-text-light) !important;
+			border-radius: 4px;
+		}
+
+		.instructions-taxslayer-header {
+			margin: 15px 0 8px 0;
+			padding: 8px 10px;
+			background-color: #f0f0f0;
+			border: 1px solid #d0d0d0;
+			border-radius: 4px;
+			color: var(--color-text-primary);
+		}
+
+		.instructions-note {
+			margin: 10px 0;
+			padding-left: 25px;
+			color: var(--color-text-primary);
+			font-style: italic;
+		}
+
+		/* Reduce spacing in instructions content */
+		.instructions-content ol {
+			margin: 10px 0;
+		}
+
+		.instructions-content li {
+			margin: 4px 0;
+		}
+
+		.instructions-content ul {
+			margin: 6px 0;
+		}
+
+		/* Override blue color for all text in instructions content */
+		.instructions-content,
+		.instructions-content * {
+			color: var(--color-text-primary) !important;
+		}
+
+		/* Note Box */
+		.note-box {
+			background: var(--color-warning-bg);
+			border: 1px solid var(--color-warning-border);
+			padding: 15px;
+			margin: 15px 0;
+			border-radius: 4px;
+			text-align: center;
+		}
+
+		.note-box b {
+			color: var(--color-warning);
+		}
+
+		/* Checkbox Styles */
+		.checkbox-container {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.checkbox-container input[type="checkbox"] {
+			width: var(--checkbox-size-small);
+			height: var(--checkbox-size-small);
+			margin: 0;
+		}
+
+		/* Centered checkbox styling */
+		td input[type="checkbox"] {
+			width: var(--checkbox-size-large);
+			height: var(--checkbox-size-large);
+			margin: 0;
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		/* Age calculation styles */
+		.age-display {
+			background: var(--color-age-bg);
+			font-weight: bold;
+			color: var(--color-age-text);
+			text-align: center;
+		}
+
+		/* Print Styles */
+		@media print {
+			html {
+				background: white;
+			}
+
+			body {
+				background: white;
+				font-size: 10px;
+				line-height: 1.2;
+				margin: 0;
+				padding: 10px;
+			}
+
+			.calculator-container {
+				box-shadow: none;
+				border-radius: 0;
+				padding: 15px;
+				max-width: none;
+			}
+
+			.tooltitle {
+				font-size: 1.5rem;
+				margin-bottom: 10px;
+			}
+
+			.instructions-box {
+				padding: 10px;
+				margin: 10px 0;
+				font-size: 9px;
+			}
+
+			.instructions-box ul {
+				margin: 5px 0;
+				padding-left: 15px;
+			}
+
+			.instructions-box li {
+				margin: 3px 0;
+			}
+
+			table {
+				margin: 10px 0;
+				font-size: 9px;
+			}
+
+			td {
+				padding: 6px 8px;
+			}
+
+			.inputdata {
+				padding: 4px 6px;
+				font-size: 9px;
+			}
+
+			.section-header {
+				font-size: 10px;
+				padding: 8px;
+			}
+
+			.contact-info {
+				padding: 8px;
+				margin: 8px 0;
+				font-size: 9px;
+			}
+
+			button {
+				display: none;
+			}
+
+			.versiondisplay {
+				font-size: 8px;
+				margin: 0 10px;
+			}
+
+			.printalternative {
+				display: inline;
+			}
+
+			.printhide {
+				display: none;
+			}
+
+			/* Ensure tables don't break across pages */
+			table {
+				page-break-inside: avoid;
+			}
+
+			/* Reduce spacing between sections */
+			div {
+				margin: 5px 0;
+			}
+
+			/* Make sure the container fits on one page */
+			.calculator-container>* {
+				margin: 5px 0;
+			}
+		}
+
+		/* Responsive Design */
+		@media (max-width: 768px) {
+			.calculator-container {
+				margin: 10px;
+				padding: 20px;
+			}
+
+			.tooltitle {
+				font-size: 2rem;
+			}
+
+			table {
+				font-size: 14px;
+			}
+
+			td {
+				padding: 10px 8px;
+			}
+
+			.inputdata {
+				padding: 8px;
+			}
+
+			button {
+				padding: 10px 20px;
+				font-size: 0.9rem;
+				margin: 5px;
+			}
+		}
+
+
+
+		/* Remove taxpayer button styles */
+		.remove-taxpayer-btn {
+			position: absolute;
+			left: 70%;
+			top: 50%;
+			transform: translateY(-50%);
+			background: transparent;
+			font-size: 0.6rem;
+			padding: 1px 3px;
+			color: var(--color-error);
+			border: none;
+			border-radius: 2px;
+			cursor: pointer;
+			line-height: 1;
+		}
+
+		.remove-taxpayer-btn:hover {
+			background-color: var(--color-error-bg);
+		}
+
+		/* Remove scenario button styles */
+		.remove-scenario-btn {
+			background: transparent;
+			font-size: 0.6rem;
+			padding: 1px 3px;
+			color: var(--color-error);
+			border: none;
+			border-radius: 2px;
+			cursor: pointer;
+			line-height: 1;
+			margin-left: 3px;
+			vertical-align: middle;
+		}
+
+		.remove-scenario-btn:hover {
+			background-color: var(--color-error-bg);
+		}
+
+		/* Add button styles */
+		.add-btn {
+			font-size: 0.8rem;
+			padding: 5px 10px;
+		}
+
+		/* Button container styles */
+		.btn-container {
+			text-align: left;
+			margin: 10px 0;
+		}
+
+		/* Header button container */
+		.header-btn-container {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin: 15px 0;
+		}
+
+		/* Instructions header */
+		.instructions-header {
+			cursor: pointer;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 1px 0;
+			font-weight: bold;
+			transition: font-size 0.2s ease;
+		}
+
+		/* Larger instructions header when expanded */
+		.instructions-header.expanded {
+			font-size: 1.2rem;
+		}
+
+		.instructions-toggle {
+			font-size: 1.5rem;
+			font-weight: bold;
+			color: var(--color-info);
+		}
+
+		.instructions-content {
+			margin-top: 3px;
+		}
+
+
+
+		/* Footer styles */
+		.footer {
+			text-align: center;
+			margin-top: 20px;
+			padding-top: 15px;
+			border-top: 1px solid var(--color-border);
+			color: var(--color-text-secondary);
+			font-size: 0.85rem;
+		}
+
+		/* Fixed width columns */
+		.fixed-width-column {
+			width: 140px;
+			min-width: 140px;
+			max-width: 140px;
+			white-space: nowrap;
+		}
+
+		/* Taxpayer name cell styling */
+		.taxpayer-name-cell {
+			width: 160px;
+			min-width: 160px;
+			max-width: 160px;
+		}
+
+		.taxpayer-name-cell .dependent-names-input {
+			min-width: 100px;
+			width: 100%;
+		}
+
+		/* AGI column alignment with birth date column */
+		.taxpayer-info-table td:nth-child(3) {
+			/* AGI column */
+			width: 120px;
+			min-width: 120px;
+			max-width: 120px;
+		}
+
+		/* Dependent info table column improvements - responsive with percentages */
+		.dependent-info-table td:nth-child(1) {
+			/* Dependent column */
+			width: 140px;
+			min-width: 140px;
+			max-width: 140px;
+			white-space: nowrap;
+		}
+
+		.dependent-info-table td:nth-child(2) {
+			/* First Name column */
+			width: 160px;
+			min-width: 160px;
+			max-width: 160px;
+		}
+
+		.dependent-info-table td:nth-child(3) {
+			/* Birth Date column */
+			width: 120px;
+			min-width: 120px;
+			max-width: 120px;
+		}
+
+		.dependent-info-table td:nth-child(4) {
+			/* Age column */
+			min-width: 50px;
+			max-width: 80px;
+			width: 10%;
+		}
+
+		/* Potential OR Kids Credit cell styling */
+		.okc-qualification-cell {
+			vertical-align: middle;
+			padding: 8px 4px;
+			min-width: 120px;
+		}
+
+		.okc-qualification-cell div {
+			font-size: 0.9em;
+			line-height: 1.2;
+		}
+
+		/* Font size classes for OKC qualification */
+		.okc-font-large div {
+			font-size: 1rem !important;
+		}
+
+		/* Mixed OKC qualification styling (yellow) */
+		.okc-mixed {
+			background-color: var(--color-warning-bg);
+			color: var(--color-warning);
+			font-weight: bold;
+			text-align: center;
+			font-size: 1rem;
+		}
+
+		/* Dependent of header styling */
+		.dependent-of-header {
+			text-align: center;
+			vertical-align: middle;
+			padding: 8px 4px;
+			min-width: 120px;
+			/* Ensure "Dependent of" fits on one line */
+		}
+
+		.dependent-of-header div:first-child {
+			margin-bottom: 2px;
+		}
+
+		.dependent-of-header div:last-child {
+			font-weight: bold;
+		}
+
+		/* Unified tooltip styles */
+		.tooltip-base,
+		.tooltip-container,
+		.select-with-tooltip {
+			position: relative;
+			cursor: help;
+		}
+
+		.tooltip-base .tooltip-text,
+		.tooltip-container .tooltip-text,
+		.select-with-tooltip .tooltip-text {
+			visibility: hidden;
+			width: 250px;
+			background-color: var(--color-tooltip-bg);
+			color: var(--color-text-light);
+			text-align: center;
+			border-radius: 6px;
+			padding: 10px;
+			position: absolute;
+			z-index: 1;
+			top: 125%;
+			left: 50%;
+			margin-left: -125px;
+			opacity: 0;
+			transition: opacity 0.3s;
+			font-size: 12px;
+			line-height: 1.4;
+		}
+
+		.tooltip-base .tooltip-text::after,
+		.tooltip-container .tooltip-text::after,
+		.select-with-tooltip .tooltip-text::after {
+			content: "";
+			position: absolute;
+			bottom: 100%;
+			left: 50%;
+			margin-left: -5px;
+			border-width: 5px;
+			border-style: solid;
+			border-color: transparent transparent var(--color-tooltip-bg) transparent;
+		}
+
+		.tooltip-base:hover .tooltip-text,
+		.tooltip-container:hover .tooltip-text,
+		.select-with-tooltip:hover .tooltip-text {
+			visibility: visible;
+			opacity: 1;
+		}
+
+		/* Show tooltip on hover when container has error class */
+		.tooltip-container.has-error:hover .tooltip-text {
+			visibility: visible !important;
+			opacity: 1 !important;
+			display: block !important;
+		}
+
+		/* Tooltip question mark icon */
+		.tooltip-icon {
+			color: var(--color-primary);
+			font-weight: bold;
+			cursor: help;
+		}
+
+		/* Select placeholder styling */
+		select.inputdata {
+			color: var(--color-placeholder);
+		}
+
+		select.inputdata option {
+			color: var(--color-text-primary);
+		}
+
+		select.inputdata:focus,
+		select.inputdata.has-value {
+			color: var(--color-text-primary);
+		}
+
+
+		/* Disabled input styling */
+		.inputdata:disabled {
+			background-color: var(--color-bg-page);
+			color: var(--color-text-muted);
+			cursor: not-allowed;
+		}
+
+		/* Dependent names display styling for different states */
+		.dependent-names-display {
+			pointer-events: none;
+		}
+
+		/* Enable pointer events for custom scenario dependent selection */
+		.selected-dependents-display.dependent-names-display {
+			pointer-events: auto;
+			cursor: pointer;
+		}
+
+		.dependent-names-display.normal {
+			background-color: var(--color-bg-light);
+			color: var(--color-text-primary);
+		}
+
+		.dependent-names-display.no-dependents {
+			background-color: var(--color-bg-light);
+			color: var(--color-text-muted);
+		}
+
+		/* Other dependent names column styling */
+		.other-dependents-display {
+			background-color: var(--color-bg-light);
+			color: var(--color-text-primary);
+			font-weight: normal;
+			padding: 8px 12px;
+			border: 1px solid var(--color-border);
+			border-radius: 4px;
+			min-height: var(--input-height);
+			display: flex;
+			align-items: center;
+			white-space: normal;
+			word-wrap: break-word;
+			overflow-wrap: break-word;
+		}
+
+		/* Dependent names input styling for text wrapping */
+		.dependent-names-input {
+			white-space: nowrap;
+			/* Single line by default */
+			word-wrap: break-word;
+			overflow-wrap: break-word;
+			line-height: 1;
+			/* Even tighter line height */
+			min-height: var(--input-height);
+			/* Exact height to match inputs */
+			height: var(--input-height);
+			/* Fixed height for single line */
+			max-height: var(--input-max-height);
+			overflow: hidden;
+			/* Hide overflow for single line */
+			transition: height 0.2s ease;
+			word-break: break-word;
+			hyphens: auto;
+			outline: none;
+			cursor: text;
+			width: 100%;
+			box-sizing: border-box;
+			padding: 6px 10px;
+			/* Match inputdata padding exactly */
+			font-size: 0.9rem;
+			/* Match inputdata font size */
+			border: 1px solid var(--color-border-light);
+			/* Match inputdata border */
+			border-radius: 3px;
+			/* Match inputdata border radius */
+			background: var(--color-bg-white);
+			/* Match inputdata background */
+			vertical-align: top;
+			/* Align with other form elements */
+			display: flex;
+			align-items: center;
+			/* Center content vertically */
+		}
+
+		/* Text wrapping for dependent names in scenario display */
+		.dependent-names-display.dependent-names-input {
+			white-space: normal;
+			word-wrap: break-word;
+			overflow-wrap: break-word;
+			word-break: break-word;
+			line-height: 1.2;
+			height: auto;
+			min-height: var(--input-height);
+			overflow: visible;
+			display: block;
+			position: relative;
+			padding-right: 25px;
+			/* Make room for the arrow */
+		}
+
+		/* Expand to multi-line when content overflows */
+		.dependent-names-input:focus {
+			white-space: pre-wrap;
+			height: auto;
+			min-height: var(--input-height);
+			overflow-y: auto;
+		}
+
+		/* Fixed width for dependent names column */
+		.dependent-names-cell {
+			/* Removed percentage width to prevent table expansion issues */
+			max-width: 300px;
+			min-width: 200px;
+		}
+
+		/* Tax year selection styling */
+		.tax-year-selection {
+			margin-top: 12px;
+			margin-bottom: 8px;
+			text-align: center;
+			background: var(--color-bg-light);
+			padding: 10px;
+			border-radius: 4px;
+			border: 1px solid var(--color-tax-year-border);
+		}
+
+		.tax-year-label {
+			margin-right: 15px;
+			font-weight: bold;
+			color: var(--color-age-text);
+		}
+
+		.tax-year-select {
+			width: 80px;
+			margin-right: 20px;
+		}
+
+		.tax-year-income-display {
+			display: inline-block;
+			padding: 4px 10px;
+			margin-right: 20px;
+		}
+
+		.tax-year-income-display:last-child {
+			margin-right: 0;
+		}
+
+		/* Header section spacing */
+		.header-section {
+			margin-bottom: 20px;
+		}
+
+		/* Dependent remove button container */
+		.dependent-remove-container {
+			position: relative;
+		}
+
+		.scenario-title {
+			text-align: center;
+			color: var(--color-secondary);
+			margin-bottom: 20px;
+		}
+
+		.scenario-container {
+			margin-bottom: 30px;
+		}
+
+		/* Remove bottom margin from the last scenario container to maintain button spacing */
+		.scenario-container:last-of-type {
+			margin-bottom: 0;
+		}
+
+		.scenario-subtitle {
+			color: var(--color-secondary);
+			margin-bottom: 15px;
+		}
+
+		.scenario-header-container {
+			display: flex;
+			flex-direction: column;
+			gap: 5px;
+			width: 100%;
+		}
+
+		.scenario-subtitle .scenario-title-group {
+			display: flex;
+			align-items: center;
+			position: relative;
+			width: 100%;
+		}
+
+		.scenario-title-left {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+
+		.auto-reassign-badge {
+			background-color: var(--color-warning);
+			color: var(--color-text-primary);
+			font-size: 10px;
+			padding: 2px 6px;
+			border-radius: 10px;
+			margin-left: 8px;
+			font-weight: 500;
+			white-space: nowrap;
+			vertical-align: middle;
+		}
+
+		.assignment-status-badge {
+			background-color: var(--color-error);
+			color: white;
+			font-size: 10px;
+			padding: 2px 6px;
+			border-radius: 10px;
+			margin-left: 8px;
+			font-weight: 500;
+			white-space: nowrap;
+			vertical-align: middle;
+		}
+
+		.scenario-notes-container {
+			width: 100%;
+			margin-top: 8px;
+		}
+
+		.scenario-notes-input {
+			width: 100%;
+			padding: 6px 8px;
+			border: 1px solid var(--color-border);
+			border-radius: 3px;
+			font-size: 12px;
+			background-color: var(--color-bg-light);
+			color: var(--color-text);
+		}
+
+		.scenario-notes-input:focus {
+			outline: none;
+			border-color: var(--color-primary);
+			background-color: white;
+		}
+
+		.scenario-notes-input::placeholder {
+			color: var(--color-text-muted);
+			font-style: italic;
+		}
+
+		.scenario-subtitle .scenario-number {
+			display: inline;
+		}
+
+		/* Combined refund row */
+		.combined-refund-row {
+			background: var(--color-bg-light);
+			font-weight: bold;
+		}
+
+		/* Recommendation box */
+		.recommendation-box {
+			background: var(--color-warning-bg);
+			border: 1px solid var(--color-warning-border);
+			padding: 15px;
+			margin: 15px 0;
+			border-radius: 4px;
+		}
+
+		.recommendation-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 15px 0;
+			border: 1px solid var(--color-secondary);
+		}
+
+		/* Recommendation table column widths - 50/50 split */
+		.recommendation-table th,
+		.recommendation-table td {
+			width: 50%;
+			text-align: center;
+		}
+
+		.recommendation-scenario {
+			background-color: var(--color-warning-bg);
+			color: var(--color-warning);
+			font-weight: bold;
+			text-align: center;
+			font-size: 1rem;
+			padding: 10px;
+			border: 1px solid var(--color-warning-border);
+		}
+
+		/* Consolidated result styling */
+		.result-positive {
+			background-color: var(--color-success-bg);
+			color: var(--color-success);
+			font-weight: bold;
+			text-align: center;
+			font-size: 1rem;
+		}
+
+		.result-negative {
+			background-color: var(--color-error-bg);
+			color: var(--color-error);
+			font-weight: bold;
+			text-align: center;
+			font-size: 1rem;
+		}
+
+		/* Shareable dependents count styling */
+		.shareable-dependents-count {
+			text-align: center;
+			background-color: var(--color-warning-bg);
+			color: var(--color-warning);
+			font-weight: bold;
+			font-size: 1rem;
+			padding: 4px 10px;
+			border-radius: 4px;
+			border: 1px solid var(--color-warning-border);
+		}
+
+		/* Custom number input container */
+		.custom-number-input {
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 100%;
+		}
+
+		/* Dependent count input styling */
+		.dependent-count-input {
+			text-align: center;
+			background-color: var(--color-warning-bg);
+			color: var(--color-warning);
+			font-weight: bold;
+			font-size: 1rem;
+			padding: 4px 10px;
+			border-radius: 4px;
+			border: none;
+			width: 60px;
+			min-width: 60px;
+			display: block;
+			margin: 0 auto;
+			position: relative;
+		}
+
+		.dependent-count-input:focus {
+			outline: none;
+			box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+		}
+
+		.dependent-count-input.error {
+			border: 1px solid var(--color-error);
+			background-color: var(--color-error-bg);
+		}
+
+		/* Hide native number input arrows */
+		.dependent-count-input::-webkit-outer-spin-button,
+		.dependent-count-input::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		.dependent-count-input[type=number] {
+			-moz-appearance: textfield;
+			appearance: textfield;
+		}
+
+		/* Custom arrows styling */
+		.custom-arrows {
+			position: absolute;
+			right: 4px;
+			top: 50%;
+			transform: translateY(-50%);
+			display: flex;
+			flex-direction: column;
+			height: auto;
+			pointer-events: none;
+			gap: 1px;
+			justify-content: center;
+		}
+
+		.arrow-btn {
+			background: none;
+			border: none;
+			color: var(--color-warning);
+			font-size: 10px;
+			line-height: 1;
+			padding: 0;
+			cursor: pointer;
+			pointer-events: auto;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 12px;
+			height: 10px;
+		}
+
+		.arrow-btn:hover {
+			background-color: rgba(255, 255, 255, 0.2);
+			border-radius: 2px;
+		}
+
+		.arrow-btn:active {
+			background-color: rgba(255, 255, 255, 0.3);
+		}
+
+		.arrow-btn.disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+			color: var(--color-text-muted);
+		}
+
+		.arrow-btn.disabled:hover {
+			background-color: transparent;
+		}
+
+		/* Dependent selection styling */
+		.dependent-selection-container {
+			position: relative;
+		}
+
+		.selected-dependents-display {
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			position: relative;
+		}
+
+		.selected-dependents-display:hover {
+			border-color: var(--color-primary);
+		}
+
+		.selection-hint {
+			font-size: 12px;
+			color: var(--color-text-muted);
+			position: absolute;
+			top: 6px;
+			right: 8px;
+			line-height: 1;
+			opacity: 0.7;
+			pointer-events: none;
+		}
+
+		.dependent-selector-dropdown {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			right: 0;
+			background: var(--color-bg-white);
+			border: 1px solid var(--color-border);
+			border-radius: 3px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+			z-index: 1000;
+			max-height: 200px;
+			overflow-y: auto;
+		}
+
+		.selector-header {
+			padding: 5px 10px;
+			background: var(--color-bg-light);
+			font-weight: bold;
+			border-bottom: 1px solid var(--color-border);
+			font-size: 0.85rem;
+		}
+
+		.dependent-option {
+			padding: 5px 10px;
+			cursor: pointer;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			border-bottom: 1px solid var(--color-border-light);
+		}
+
+		.dependent-option:hover {
+			background: var(--color-bg-light);
+		}
+
+		.dependent-option:last-child {
+			border-bottom: none;
+		}
+
+		.dependent-option.selected {
+			background: var(--color-primary);
+			color: var(--color-text-light);
+		}
+
+		.selected-indicator {
+			color: var(--color-success);
+			font-weight: bold;
+		}
+
+		.no-dependents-available {
+			padding: 5px 10px;
+			color: var(--color-text-muted);
+			font-style: italic;
+			text-align: center;
+		}
+
+		/* Recommendation scenario styling */
+		.recommendation-scenario-text {
+			font-weight: bold;
+			text-align: center;
+		}
+
+		/* Force table to respect column widths */
+		.scenario-container table {
+			table-layout: fixed;
+		}
+
+		/* Scenario table column widths */
+		.scenario-container table th:nth-child(1),
+		.scenario-container table td:nth-child(1) {
+			width: 110px;
+			min-width: 110px;
+			max-width: 110px;
+			white-space: nowrap;
+		}
+
+		.scenario-container table th:nth-child(2),
+		.scenario-container table td:nth-child(2) {
+			width: 90px;
+			min-width: 90px;
+			max-width: 90px;
+			white-space: normal;
+			word-wrap: break-word;
+		}
+
+		.scenario-container table th:nth-child(3),
+		.scenario-container table td:nth-child(3) {
+			width: 90px;
+			min-width: 90px;
+			max-width: 90px;
+		}
+
+		.scenario-container table th:last-child,
+		.scenario-container table td:last-child {
+			min-width: 120px;
+		}
+
+		/* Responsive scenario table headers */
+		.scenario-container th {
+			white-space: normal;
+			word-wrap: break-word;
+			line-height: 1.2;
+			text-align: center;
+			vertical-align: middle;
+			min-width: 80px;
+			max-width: 120px;
+			padding: 8px 4px;
+		}
+
+		/* Specific column width adjustments */
+		.scenario-container th:nth-child(4) {
+			width: 260px;
+			/* Sharable Dependent Names column */
+			min-width: 260px;
+			max-width: 260px;
+		}
+
+
+		/* All refund columns (Federal, OR, WA, Total) */
+		.scenario-container th:nth-child(5),
+		.scenario-container th:nth-child(6),
+		.scenario-container th:nth-child(7),
+		.scenario-container th:nth-child(8) {
+			width: 90px;
+			min-width: 90px;
+			max-width: 90px;
+		}
+
+		/* Match column widths for table cells */
+		.scenario-container td:nth-child(4) {
+			/* Sharable Dependent Names column */
+			width: 260px;
+			min-width: 260px;
+			max-width: 260px;
+		}
+
+		.scenario-container td:nth-child(5) {
+			/* Other Dependent Names column */
+			width: 260px;
+			min-width: 260px;
+			max-width: 260px;
+		}
+
+		/* All refund columns (Federal, OR, WA, Total) */
+		.scenario-container td:nth-child(6),
+		.scenario-container td:nth-child(7),
+		.scenario-container td:nth-child(8),
+		.scenario-container td:nth-child(9) {
+			width: 90px;
+			min-width: 90px;
+			max-width: 90px;
+		}
+
+		/* Simplified select sizing - use smallest size that works everywhere */
+		.scenario-container select.inputdata {
+			min-width: 60px;
+			width: 100%;
+			font-size: 0.9rem;
+		}
+
+		/* Input styling for all refund columns */
+		.scenario-container td:nth-child(6) input.inputdata,
+		.scenario-container td:nth-child(7) input.inputdata,
+		.scenario-container td:nth-child(8) input.inputdata,
+		.scenario-container td:nth-child(9) input.inputdata {
+			width: 100%;
+			box-sizing: border-box;
+		}
+
+
+		/* Income display highlighting */
+		.tax-year-income-display {
+			background-color: var(--color-warning-bg);
+			color: var(--color-warning);
+			font-weight: bold;
+			padding: 4px 10px;
+			border-radius: 4px;
+			border: 1px solid var(--color-warning-border);
+		}
+	</style>
+</head>
+
+<!-- ************************************************************************************************ -->
+<!-- ********************************* START OF HTML ************************************************ -->
+<!-- ************************************************************************************************ -->
+
+<body>
+	<div x-data="dependentSharingCalculator()">
+		<div class="calculator-container">
+			<!-- Header Section -->
+			<div class="header-section" x-show="scenarios.length > 0" x-cloak>
+				<h1 class="tooltitle">Dependent Sharing and Comparing Return Results</h1>
+				<div class="header-btn-container">
+					<button @click="resetCalculator()" tabindex="1">Clear and Reset Calculator</button>
+					<button @click="window.print()" tabindex="2">Print Taxpayer Copy</button>
+				</div>
+				<!-- Tax Year Selection -->
+				<div class="tax-year-selection">
+					<span class="tax-year-label">Tax Year:</span>
+					<select x-model="taxYear" class="inputdata tax-year-select" tabindex="3"
+						@change="revalidateAllBirthDates()">
+						<template x-for="year in Object.keys(taxYearConfig).sort().reverse()" :key="year">
+							<option :value="year" x-text="year"></option>
+						</template>
+					</select>
+					<span class="tax-year-label">Max Income for Full OKC:</span>
+					<span class="resultsfield tax-year-income-display" x-text="maxIncomeForFullCredit"></span>
+					<span class="tax-year-label">Max Income for Partial OKC:</span>
+					<span class="resultsfield tax-year-income-display" x-text="maxIncomeForPartialCredit"></span>
+				</div>
+			</div>
+
+			<!-- Instructions Box -->
+			<div class="instructions-box" x-show="scenarios.length > 0" x-cloak>
+				<div @click="instructionsExpanded = !instructionsExpanded" class="instructions-header"
+					:class="{ 'expanded': instructionsExpanded }">
+					<b>Instructions: Using the Dependent Sharing Tool</b>
+					<span x-text="instructionsExpanded ? '−' : '+'" class="instructions-toggle"></span>
+				</div>
+				<div x-show="instructionsExpanded" x-cloak x-transition:enter="transition ease-out duration-200"
+					x-transition:enter-start="opacity-0 transform scale-95"
+					x-transition:enter-end="opacity-100 transform scale-100"
+					x-transition:leave="transition ease-in duration-150"
+					x-transition:leave-start="opacity-100 transform scale-100"
+					x-transition:leave-end="opacity-0 transform scale-95" class="instructions-content">
+					<div class="instructions-primary-header">
+						<h3>Getting Started</h3>
+					</div>
+					<ol>
+						<li>Confirm there is at least one "shareable dependent"</li>
+						<li>Confirm both taxpayers are interested in proceeding, are present and have all their tax
+							documents.</li>
+						<li>Review tax forms (W2's, etc.) to identify taxpayer who probably has a higher AGI. We'll call
+							them TP1.
+							<!-- <ul>
+								<li>(Refer to the full instruction sheet if there are special considerations such as, if only one TP qualifies for key credits such as OKC, CTC, EITC, WFHDCC.)</li>
+							</ul> -->
+							<!-- Per Mary, Nov 2025, wait for her to finish this ref sheet before including in calc-->
+						</li>
+					</ol>
+
+					<h4 class="instructions-tool-header">In Dependent Sharing Tool</h4>
+
+					<ol start="4">
+						<li>Open Dependent Sharing Tool, select Tax Year and complete sections on:
+							<ul>
+								<li>Taxpayer info, using estimated AGIs</li>
+								<li>Dependent info, including all dependents (shareable and not)</li>
+							</ul>
+						</li>
+					</ol>
+
+					<div class="instructions-note">
+						Keep Dependent Sharing Tool open. It will be used to record key info at every step in this
+						process.
+					</div>
+
+					<h4 class="instructions-taxslayer-header">In TaxSlayer</h4>
+					<ol start="5">
+						<li>Complete the two initial tax returns. Be sure all dependents are claimed (and each by only
+							one TP.) Unless there is a reason to do otherwise, do the following for the initial returns:
+							<ul>
+								<li>TP 1 should claim all shareable dependents for initial return.</li>
+								<li>All non-shareable dependents should be claimed by the taxpayer that can claim them.
+								</li>
+								<li>Complete all sections of return to ensure all credits are reflected – Federal plus
+									OR and/or WA.</li>
+							</ul>
+						</li>
+						<li>Have initial returns QR'ed. (QR can skip e-file pages for now, but rest must be reviewed for
+							accuracy.)
+							<ul>
+								<li>If completed tax returns reveal taxpayer can no longer claim a dependent and/or
+									wrong filing status, note changes needed and re-do taxes appropriately.</li>
+							</ul>
+						</li>
+						<li>Generate PDF of each taxpayer's full tax return for this scenario and keep open in a tab in
+							browser in case you need to refer to it later (e.g., if unexpected credits awarded/missing
+							in other scenarios.)</li>
+					</ol>
+
+					<h4 class="instructions-tool-header">In Dependent Sharing Tool</h4>
+					<ol start="8">
+						<li>Update the sections on:
+							<ul>
+								<li>Taxpayer info, using AGIs computed by TaxSlayer.</li>
+								<li>Dependent info, including any changes on who can claim each dependent.</li>
+							</ul>
+						</li>
+						<li>Complete scenario matching initial tax returns. (if TP1 claimed all shareable dependents,
+							use Scenario 1.)
+							<ul>
+								<li>Check all fields (filing status, dependents) for accuracy and correct if necessary.
+								</li>
+								<li>Fill in all refunds (amount owed)</li>
+							</ul>
+						</li>
+					</ol>
+
+					<div class="instructions-primary-header">
+						<h3>Start Moving Shareable Dependents</h3>
+					</div>
+					<ol start="10">
+						<li>Identify the other scenarios you want to evaluate. The tool will prepopulate most scenarios,
+							but you can customize these scenarios – and create additional scenarios if needed for
+							special considerations.</li>
+						<li>Select one shareable dependent to move between tax returns.
+							<ul>
+								<li>If no special considerations, move the youngest child from TP1 to TP2. (These
+									instructions assume TP1's AGI confirmed to be higher than TP2's. If TP2's AGI is
+									higher, move the oldest child.)</li>
+							</ul>
+						</li>
+						<li>Input filing status & dependents claimed in appropriate scenario (Scenario 2, if first
+							return was Scenario 1)</li>
+					</ol>
+
+					<h4 class="instructions-taxslayer-header">In TaxSlayer</h4>
+					<ol start="13">
+						<li>Modify the tax returns, "moving" the selected dependent from one taxpayer to the other.
+							<ul>
+								<li>Note any state-specific entries prior to changing filing status – because changing
+									filing status will delete the State return (e.g., OR kicker).</li>
+								<li>To temporarily "remove" a dependent from a return, open dependent record and select
+									the following:
+									<ul>
+										<li>Check if this qualifying child is NOT YOUR DEPENDENT</li>
+										<li>Check if you wish NOT to claim this dependent for Earned Income Credit
+											purposes.</li>
+									</ul>
+								</li>
+								<li>Re-do the state return(s) if deleted in TaxSlayer.</li>
+							</ul>
+						</li>
+					</ol>
+
+					<h4 class="instructions-tool-header">In Dependent Sharing Tool</h4>
+					<ol start="14">
+						<li>Record the new refunds (amount owed) in the Scenario started in step 10.</li>
+					</ol>
+
+					<div class="instructions-primary-header">
+						<h3>Complete All Needed Scenarios</h3>
+					</div>
+					<ol start="15">
+						<li>Continue "moving" dependents – revising tax returns in TaxSlayer, recording data in tool –
+							until all scenarios have been completed.
+							<ul>
+								<li>If more scenarios needed, click on "Add Custom Scenario." Document purpose of extra
+									scenario(s).</li>
+							</ul>
+						</li>
+						<li>"Recommendation" at the bottom of the tool shows which scenario provides the taxpayers with
+							the highest combined refund (lowest amount owed.)</li>
+						<li>Print Taxpayer Copy of tool results and confirm with QR (or site coordinator) that
+							everything looks right prior to reviewing results with the taxpayer.</li>
+						<li>Once a scenario is agreed upon with the taxpayers, make applicable notes regarding decision
+							on printout.</li>
+					</ol>
+
+					<h4 class="instructions-taxslayer-header">In TaxSlayer</h4>
+					<ol start="19">
+						<li>Finalize returns. "Remove" and/or "reenable" dependents for each taxpayer to match the
+							selected scenario. Reconfirm:
+							<ul>
+								<li>Correct filing status used in each return</li>
+								<li>All dependent info is correct and each dependent is claimed exactly once.</li>
+								<li>All expected credits are taken and no credits taken incorrectly</li>
+								<li>Refunds match what was initially put in the tool</li>
+							</ul>
+						</li>
+					</ol>
+				</div>
+			</div>
+
+
+
+			<!-- Taxpayer Info Section -->
+			<table class="taxpayer-info-table" x-show="scenarios.length > 0" x-cloak>
+				<tbody>
+					<tr class="section-header">
+						<td colspan="8">Taxpayer info</td>
+					</tr>
+					<tr>
+						<td class="inputfield fixed-width-column">Taxpayer</td>
+						<td class="inputfield">First Name</td>
+						<td class="inputfield">AGI</td>
+						<td class="inputfield">Filing an OR return?</td>
+						<td class="inputfield">Lived in WA for over 1/2 of year?</td>
+						<td class="inputfield">Potential OR Kids Credit?</td>
+					</tr>
+					<template x-for="(taxpayer, index) in taxpayers" :key="index">
+						<tr>
+							<td class="inputfield fixed-width-column">
+								<span x-text="'Taxpayer ' + (index + 1)"></span>
+							</td>
+							<td class="taxpayer-name-cell">
+								<input type="text" class="inputdata dependent-names-input" :tabindex="4 + (index * 4)"
+									placeholder="Enter first name" x-model="taxpayer.name"
+									@input="taxpayer.confirmedName = taxpayer.name">
+							</td>
+							<td>
+								<div class="tooltip-container">
+									<input :value="taxpayer.oregonIncome" class="inputdata" :tabindex="5 + (index * 4)"
+										placeholder="$0" :data-field="'taxpayers[' + index + '].oregonIncome'"
+										@input="validateNumeric($event.target.value, $event.target)"
+										@paste="handleCurrencyPaste($event)"
+										@blur="handleBlur($event.target.value, $event.target)">
+									<span class="tooltip-text" x-show="false"
+										x-text="'Please enter a valid number. You can start with a minus sign for amounts owed.'"></span>
+								</div>
+							</td>
+							<td>
+								<input type="checkbox" x-model="taxpayer.willFileOR" :tabindex="6 + (index * 4)">
+							</td>
+							<td>
+								<input type="checkbox" x-model="taxpayer.livedInWAOverHalfYear"
+									:tabindex="7 + (index * 4)">
+							</td>
+							<td :class="{ 'resultsfield': getOKCQualification(taxpayer.oregonIncome) !== '', 'result-negative': getOKCQualification(taxpayer.oregonIncome) === 'No' && taxpayer.oregonIncome !== null && taxpayer.oregonIncome !== undefined && taxpayer.oregonIncome !== '' }"
+								x-text="getOKCQualification(taxpayer.oregonIncome)"></td>
+						</tr>
+					</template>
+				</tbody>
+			</table>
+
+
+
+			<!-- Dependent Info Section -->
+			<table class="dependent-info-table" x-show="scenarios.length > 0" x-cloak>
+				<tbody>
+					<tr class="section-header">
+						<td :colspan="6 + taxpayers.length">Dependent Info</td>
+					</tr>
+					<tr>
+						<td class="inputfield fixed-width-column">Dependent</td>
+						<td class="inputfield">First Name</td>
+						<td class="inputfield">Birth Date</td>
+						<td class="inputfield">Age at end of tax year</td>
+						<template x-for="(taxpayer, tpIndex) in taxpayers" :key="'header-tp-' + tpIndex">
+							<td class="inputfield dependent-of-header">
+								<div>Dependent of</div>
+								<div
+									x-text="taxpayer.confirmedName && taxpayer.confirmedName.trim() ? taxpayer.confirmedName : 'Taxpayer ' + (tpIndex + 1)">
+								</div>
+							</td>
+						</template>
+						<td class="inputfield">Include for Dependent Sharing</td>
+						<td class="inputfield">Potential OR Kids Credit</td>
+					</tr>
+					<template x-for="(dependent, depIndex) in dependents" :key="'dep-' + depIndex">
+						<tr>
+							<td class="inputfield fixed-width-column dependent-remove-container">
+								<span x-text="'Dependent ' + (depIndex + 1)"></span>
+								<button x-show="depIndex >= 1" @click="removeDependent(depIndex)"
+									class="remove-taxpayer-btn" title="Remove dependent">
+									❌
+								</button>
+							</td>
+							<td class="taxpayer-name-cell">
+								<input type="text" class="inputdata dependent-names-input"
+									:tabindex="12 + (depIndex * (taxpayers.length + 3))" placeholder="Enter first name"
+									x-model="dependent.name" @focus="startEditingDependentName(depIndex)"
+									@input="isEditingDependentName = true; editingDependentIndex = depIndex; openDependentSelector = null;"
+									@blur="finishEditingDependentName()">
+							</td>
+							<td>
+								<div class="tooltip-container">
+									<input x-model="dependent.birthDate" class="inputdata"
+										:tabindex="13 + (depIndex * (taxpayers.length + 3))" placeholder="mm/dd/yyyy"
+										@input="clearError($event.target)" @paste="handleBirthDatePaste($event)"
+										@blur="handleBirthDateBlur($event.target.value, $event.target, depIndex)">
+									<span class="tooltip-text" x-show="false" x-text="''"></span>
+								</div>
+							</td>
+							<td class="age-display" x-text="dependent.age !== null ? dependent.age : ''"></td>
+							<template x-for="(taxpayer, tpIndex) in taxpayers"
+								:key="'checkbox-' + tpIndex + '-dep-' + depIndex">
+								<td>
+									<input type="checkbox" x-model="dependent.qualifiesFor[tpIndex]"
+										:tabindex="14 + (depIndex * (taxpayers.length + 3)) + tpIndex"
+										@change="generateScenarios(); reassignDependentsAfterQualificationChange()">
+								</td>
+							</template>
+							<td class="resultsfield"
+								:class="{ 'result-positive': getDependentSharingStatus(depIndex) === 'Yes', 'result-negative': getDependentSharingStatus(depIndex) === 'No' }"
+								x-text="getDependentSharingStatus(depIndex)"></td>
+							<td :class="{ 'resultsfield': hasDependentOKCContent(depIndex) && getOKCQualificationStyling(depIndex) === '', 'okc-qualification-cell': true, 'result-positive': getOKCQualificationStyling(depIndex) === 'result-positive', 'result-negative': getOKCQualificationStyling(depIndex) === 'result-negative', 'okc-mixed': getOKCQualificationStyling(depIndex) === 'okc-mixed' }"
+								:class="getOKCFontSizeClass(depIndex)">
+								<template x-if="dependents[depIndex].age !== null && dependents[depIndex].age >= 6">
+									<div x-text="'No'"></div>
+								</template>
+								<template
+									x-if="(dependents[depIndex].age === null || dependents[depIndex].age < 6) && dependents[depIndex].qualifiesFor.some(q => q)">
+									<template x-for="(taxpayer, tpIndex) in taxpayers" :key="'okc-tp-' + tpIndex">
+										<template
+											x-if="dependents[depIndex].qualifiesFor[tpIndex] && getOKCQualification(taxpayer.oregonIncome) !== ''">
+											<div
+												x-text="(taxpayer.confirmedName && taxpayer.confirmedName.trim() ? taxpayer.confirmedName : 'Taxpayer ' + (tpIndex + 1)) + ': ' + getOKCQualification(taxpayer.oregonIncome)">
+											</div>
+										</template>
+									</template>
+								</template>
+								<template
+									x-if="(dependents[depIndex].age === null || dependents[depIndex].age < 6) && !dependents[depIndex].qualifiesFor.some(q => q)">
+									<div x-text="'No'"></div>
+								</template>
+							</td>
+						</tr>
+					</template>
+				</tbody>
+			</table>
+
+			<!-- Add Dependent Button -->
+			<div class="btn-container" x-show="scenarios.length > 0" x-cloak>
+				<button
+					@click="dependents.push({ name: '', birthDate: '', age: null, qualifiesFor: Array(taxpayers.length).fill(false), includeForSharing: false }); generateScenarios()"
+					class="add-btn">
+					+ Add Dependent
+				</button>
+			</div>
+
+			<!-- Scenario Comparison Section -->
+			<div x-show="scenarios.length > 0" x-cloak>
+				<h2 class="scenario-title">Scenario Comparison - Dependent Sharing Analysis</h2>
+
+				<!-- Scenario Tables -->
+				<template x-for="(scenario, scenarioIndex) in scenarios" :key="scenarioIndex">
+					<div class="scenario-container">
+						<h3 class="scenario-subtitle">
+							Scenario <span x-text="scenarioIndex + 1"></span>
+							<button x-show="scenario.isCustom" @click="removeCustomScenario(scenarioIndex)"
+								class="remove-scenario-btn" title="Remove custom scenario">
+								❌
+							</button>
+							<span x-show="scenario.autoReassigned" class="auto-reassign-badge"
+								title="Dependents were automatically reassigned">
+								Modified
+							</span>
+							<span x-show="getTotalAssignedDependents(scenarioIndex) < getTotalAvailableDependents()"
+								class="assignment-status-badge"
+								:title="getTotalAssignedDependents(scenarioIndex) + '/' + getTotalAvailableDependents() + ' dependents assigned'">
+								<span x-text="getTotalAssignedDependents(scenarioIndex)"></span>/<span
+									x-text="getTotalAvailableDependents()"></span> Dependents
+							</span>
+							<div x-show="scenario.isCustom" class="scenario-notes-container">
+								<input x-model="scenario.notes" class="scenario-notes-input"
+									placeholder="Add a note about this scenario" :tabindex="90 + (scenarioIndex * 10)">
+							</div>
+						</h3>
+
+						<table>
+							<tbody>
+								<tr class="section-header">
+									<th rowspan="2">Taxpayer</th>
+									<th rowspan="2">Filing Status</th>
+									<th rowspan="2">Number of Sharable Dependents</th>
+									<th colspan="2" class="dependent-names-header">Dependent Names</th>
+									<th rowspan="2">Federal Refund/Due</th>
+									<th x-show="anyTaxpayerFilesOR" rowspan="2">OR Refund/Due</th>
+									<th x-show="anyTaxpayerLivedInWA" rowspan="2">WA Refund/Due</th>
+									<th rowspan="2">Total Refund/Due</th>
+								</tr>
+								<tr class="section-header-sub">
+									<th>Sharable</th>
+									<th>Other</th>
+								</tr>
+								<template x-for="tpIndex in [1, 2]"
+									:key="'scenario-' + scenarioIndex + '-tp-' + tpIndex">
+									<tr>
+										<td class="inputfield taxpayer-name-cell"
+											x-text="taxpayers[tpIndex - 1].confirmedName && taxpayers[tpIndex - 1].confirmedName.trim() ? taxpayers[tpIndex - 1].confirmedName : 'Taxpayer ' + tpIndex">
+										</td>
+										<td>
+											<div class="tooltip-container">
+												<select x-model="scenario['tp' + tpIndex].filingStatus"
+													class="inputdata"
+													:class="{ 'has-value': scenario['tp' + tpIndex].filingStatus !== '' }"
+													:tabindex="100 + (scenarioIndex * 20) + (tpIndex * 10) + 1">
+													<option value="">Select</option>
+													<option value="S">S</option>
+													<option value="HoH">HoH</option>
+													<option value="MFJ">MFJ</option>
+													<option value="QSS">QSS</option>
+													<option value="MFS">MFS</option>
+												</select>
+											</div>
+										</td>
+										<td class="shareable-dependents-count">
+											<template x-if="scenario.isCustom">
+												<span x-text="scenario['tp' + tpIndex].shareableKids"></span>
+											</template>
+											<template x-if="!scenario.isCustom">
+												<span x-text="scenario['tp' + tpIndex].shareableKids"></span>
+											</template>
+										</td>
+										<td class="dependent-names-cell">
+											<!-- Unified dependent selection for all scenarios -->
+											<div x-show="getAvailableDependentsForTaxpayer(tpIndex - 1, scenarioIndex, tpIndex).length > 0"
+												class="dependent-selection-container">
+												<div class="selected-dependents-display inputdata dependent-names-input dependent-names-display normal"
+													@click="showDependentSelector(scenarioIndex, tpIndex)">
+													<span
+														x-text="scenario['tp' + tpIndex].dependentNames || 'Select'"></span>
+													<span class="selection-hint">▼</span>
+												</div>
+												<template x-if="isDependentSelectorOpen(scenarioIndex, tpIndex)">
+													<div class="dependent-selector-dropdown">
+														<template
+															x-for="(dependent, displayIndex) in getAvailableDependentsForTaxpayer(tpIndex - 1, scenarioIndex, tpIndex)"
+															:key="'selector-dep-' + displayIndex">
+															<div class="dependent-option"
+																@click="selectDependent(scenarioIndex, tpIndex, dependent.originalIndex)"
+																:class="{ 'selected': isDependentSelected(scenarioIndex, tpIndex, dependent.originalIndex) }">
+																<span
+																	x-text="getDependentDropdownName(dependent.originalIndex, dependent)"></span>
+																<span
+																	x-show="isDependentSelected(scenarioIndex, tpIndex, dependent.originalIndex)"
+																	class="selected-indicator">✓</span>
+															</div>
+														</template>
+														<div x-show="getAvailableDependentsForTaxpayer(tpIndex - 1, scenarioIndex, tpIndex).length === 0"
+															class="no-dependents-available">
+															No dependents available for this taxpayer
+														</div>
+													</div>
+												</template>
+											</div>
+											<div
+												x-show="getAvailableDependentsForTaxpayer(tpIndex - 1, scenarioIndex, tpIndex).length === 0">
+												<div
+													class="inputdata dependent-names-input dependent-names-display no-dependents">
+													No dependents</div>
+											</div>
+										</td>
+										<td class="other-dependent-names-cell">
+											<!-- Other dependent selection for non-sharable dependents -->
+											<div x-show="getOtherDependentNames(tpIndex - 1).length > 0"
+												class="dependent-selection-container">
+												<div class="selected-dependents-display inputdata dependent-names-input dependent-names-display normal"
+													@click="showOtherDependentSelector(scenarioIndex, tpIndex)">
+													<span
+														x-text="scenario['tp' + tpIndex].otherDependentNames || 'Select'"></span>
+													<span class="selection-hint">▼</span>
+												</div>
+												<template x-if="isOtherDependentSelectorOpen(scenarioIndex, tpIndex)">
+													<div class="dependent-selector-dropdown">
+														<template
+															x-for="(dependent, displayIndex) in getOtherDependentNames(tpIndex - 1)"
+															:key="'other-selector-dep-' + displayIndex">
+															<div class="dependent-option"
+																@click="selectOtherDependent(scenarioIndex, tpIndex, dependent)"
+																:class="{ 'selected': isOtherDependentSelected(scenarioIndex, tpIndex, dependent) }">
+																<span x-text="dependent"></span>
+																<span
+																	x-show="isOtherDependentSelected(scenarioIndex, tpIndex, dependent)"
+																	class="selected-indicator">✓</span>
+															</div>
+														</template>
+													</div>
+												</template>
+											</div>
+											<div x-show="getOtherDependentNames(tpIndex - 1).length === 0">
+												<div
+													class="inputdata dependent-names-input dependent-names-display no-dependents">
+													No Dependents</div>
+											</div>
+										</td>
+										<td>
+											<div class="tooltip-container">
+												<input :value="scenario['tp' + tpIndex].fedRefund" class="inputdata"
+													placeholder="$0"
+													:data-field="'scenario' + scenarioIndex + '.tp' + tpIndex + '.fedRefund'"
+													@input="validateNumeric($event.target.value, $event.target)"
+													@paste="handleCurrencyPaste($event)"
+													@blur="handleBlur($event.target.value, $event.target)"
+													:tabindex="100 + (scenarioIndex * 20) + (tpIndex * 10) + 3">
+												<span class="tooltip-text" x-show="false"
+													x-text="'Please enter a valid number. You can start with a minus sign for amounts owed.'"></span>
+											</div>
+										</td>
+										<td x-show="anyTaxpayerFilesOR">
+											<div class="tooltip-container" x-show="taxpayers[tpIndex - 1].willFileOR">
+												<input :value="scenario['tp' + tpIndex].orRefund" class="inputdata"
+													placeholder="$0"
+													:data-field="'scenario' + scenarioIndex + '.tp' + tpIndex + '.orRefund'"
+													@input="validateNumeric($event.target.value, $event.target)"
+													@paste="handleCurrencyPaste($event)"
+													@blur="handleBlur($event.target.value, $event.target)"
+													:tabindex="100 + (scenarioIndex * 20) + (tpIndex * 10) + 4">
+												<span class="tooltip-text" x-show="false"
+													x-text="'Please enter a valid number. You can start with a minus sign for amounts owed.'"></span>
+											</div>
+										</td>
+										<td x-show="anyTaxpayerLivedInWA">
+											<div class="tooltip-container"
+												x-show="taxpayers[tpIndex - 1].livedInWAOverHalfYear">
+												<input :value="scenario['tp' + tpIndex].waRefund" class="inputdata"
+													placeholder="$0"
+													:data-field="'scenario' + scenarioIndex + '.tp' + tpIndex + '.waRefund'"
+													@input="validateNumeric($event.target.value, $event.target)"
+													@paste="handleCurrencyPaste($event)"
+													@blur="handleBlur($event.target.value, $event.target)"
+													:tabindex="100 + (scenarioIndex * 20) + (tpIndex * 10) + 5">
+												<span class="tooltip-text" x-show="false"
+													x-text="'Please enter a valid number. You can start with a minus sign for amounts owed.'"></span>
+											</div>
+										</td>
+										<td :class="{ 'result-positive': getTotalRefundValue(scenario['tp' + tpIndex], tpIndex) >= 0, 'result-negative': getTotalRefundValue(scenario['tp' + tpIndex], tpIndex) < 0 }"
+											x-text="calculateTotalRefund(scenario['tp' + tpIndex], tpIndex)"></td>
+									</tr>
+								</template>
+								<tr class="combined-refund-row">
+									<td class="inputfield">Combined Refund:</td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td></td>
+									<td :class="{ 'result-positive': getCombinedRefundValue(scenario, 'fed') >= 0, 'result-negative': getCombinedRefundValue(scenario, 'fed') < 0 }"
+										x-text="calculateCombinedRefund(scenario, 'fed')"></td>
+									<td :class="{ 'result-positive': getCombinedRefundValue(scenario, 'or') >= 0, 'result-negative': getCombinedRefundValue(scenario, 'or') < 0 }"
+										x-show="anyTaxpayerFilesOR" x-text="calculateCombinedRefund(scenario, 'or')">
+									</td>
+									<td :class="{ 'result-positive': getCombinedRefundValue(scenario, 'wa') >= 0, 'result-negative': getCombinedRefundValue(scenario, 'wa') < 0 }"
+										x-show="anyTaxpayerLivedInWA" x-text="calculateCombinedRefund(scenario, 'wa')">
+									</td>
+									<td :class="{ 'result-positive': getCombinedRefundValue(scenario, 'total') >= 0, 'result-negative': getCombinedRefundValue(scenario, 'total') < 0 }"
+										x-text="calculateCombinedRefund(scenario, 'total')"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</template>
+			</div>
+
+			<!-- Add Custom Scenario Button -->
+			<div class="btn-container" x-show="scenarios.length > 0" x-cloak>
+				<button @click="addCustomScenario()" class="add-btn">
+					+ Add Custom Scenario
+				</button>
+			</div>
+
+			<!-- Best Scenario Recommendation -->
+			<div class="recommendation-section" x-show="scenarios.length > 0" x-cloak>
+				<h2 class="scenario-title">Recommendation</h2>
+				<table class="recommendation-table">
+					<tbody>
+						<tr class="section-header">
+							<th>Recommended Scenario</th>
+							<th>Best Combined Refund/Due</th>
+						</tr>
+						<tr>
+							<td class="recommendation-scenario-text" x-text="getBestScenario()"></td>
+							<td :class="{ 'result-positive': getBestScenarioAmountValue() >= 0, 'result-negative': getBestScenarioAmountValue() < 0 }"
+								x-text="getBestScenarioAmount()"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Footer -->
+			<div class="footer" x-show="scenarios.length > 0" x-cloak>
+				<span class="versiondisplay">(Version TY2025.2 &nbsp &nbsp 11/02/2025)</span>
+				<br>
+				<!-- Display email below version number, email is reversed by CSS to hide from scrapers -->
+				<span class="versiondisplay">Send feedback to: <span
+						class="email">krow.sirrahrednax@rednax</span></span>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		function dependentSharingCalculator() {
+			return {
+				// Tax Year Configuration - Update this mapping each year (TODO)
+				taxYearConfig: {
+					'2023': { maxIncomeForPartialCredit: '$30,000', maxIncomeForFullCredit: '$25,000' },	// initial year
+					'2024': { maxIncomeForPartialCredit: '$30,750', maxIncomeForFullCredit: '$25,750' },
+					'2025': { maxIncomeForPartialCredit: '$31,550', maxIncomeForFullCredit: '$26,550' }
+				},
+
+				taxpayers: [
+					{ name: '', confirmedName: '', oregonIncome: null, oregonIncomeConfirmed: null, willFileOR: true, livedInWAOverHalfYear: false },
+					{ name: '', confirmedName: '', oregonIncome: null, oregonIncomeConfirmed: null, willFileOR: true, livedInWAOverHalfYear: false }
+				],
+				taxYear: '', // Will be updated to latest year on init
+				dependents: Array(1).fill().map(() => ({
+					name: '',
+					birthDate: '',
+					age: null,
+					qualifiesFor: [false, false], // Initialize for 2 taxpayers (unchecked by default)
+					includeForSharing: false
+				})),
+				scenarios: [],
+				instructionsExpanded: false,
+
+				// Computed properties to get max income for selected tax year
+				get maxIncomeForPartialCredit() {
+					return this.taxYearConfig[this.taxYear]?.maxIncomeForPartialCredit || 'Error';
+				},
+
+				get maxIncomeForFullCredit() {
+					return this.taxYearConfig[this.taxYear]?.maxIncomeForFullCredit || 'Error';
+				},
+
+				// Check if any taxpayer has OR checkbox checked
+				get anyTaxpayerFilesOR() {
+					return this.taxpayers.some(tp => tp.willFileOR);
+				},
+
+				// Check if any taxpayer has WA checkbox checked
+				get anyTaxpayerLivedInWA() {
+					return this.taxpayers.some(tp => tp.livedInWAOverHalfYear);
+				},
+
+				// Get Oregon Kids Credit qualification based on income
+				getOKCQualification(income) {
+					const numericIncome = this.getNumericValue(income);
+					if (numericIncome === 0) {
+						return '';
+					}
+
+					// Parse income limits for current tax year
+					const fullLimitStr = this.taxYearConfig[this.taxYear]?.maxIncomeForFullCredit;
+					const partialLimitStr = this.taxYearConfig[this.taxYear]?.maxIncomeForPartialCredit;
+
+					if (!fullLimitStr || !partialLimitStr) {
+						return 'Error';
+					}
+
+					// Convert string limits to numbers (remove $ and ,)
+					const fullLimit = parseInt(fullLimitStr.replace(/[$,]/g, ''));
+					const partialLimit = parseInt(partialLimitStr.replace(/[$,]/g, ''));
+
+					if (numericIncome <= fullLimit) {
+						return 'Full';
+					} else if (numericIncome <= partialLimit) {
+						return 'Partial';
+					} else {
+						return 'No';
+					}
+				},
+
+				// Initialize with the latest tax year
+				init() {
+					// Use setTimeout to defer initialization and allow Alpine to fully load
+					setTimeout(() => {
+						const availableYears = Object.keys(this.taxYearConfig).sort().reverse();
+
+						// Set default tax year to latest year, unless it's the current year
+						if (new Date().getFullYear().toString() === availableYears[0]) {
+							this.taxYear = (parseInt(availableYears[0]) - 1).toString();
+						} else {
+							this.taxYear = availableYears[0];
+						}
+
+						// Generate default scenarios
+						this.generateScenarios();
+
+						// Add click handler to close dependent selector when clicking outside
+						document.addEventListener('click', (event) => {
+							if (!event.target.closest('.dependent-selection-container')) {
+								this.openDependentSelector = null;
+								this.openOtherDependentSelector = null;
+							}
+						});
+					}, 100);
+				},
+
+				// Remove dependent (only for dependents 2+)
+				removeDependent(index) {
+					if (index >= 1) {
+						this.dependents.splice(index, 1);
+						this.generateScenarios();
+					}
+				},
+
+				// Factory functions for creating scenario objects
+				createTaxpayerObject() {
+					return {
+						shareableKids: 0,
+						dependentNames: '',
+						filingStatus: '',
+						fedRefund: null,
+						fedRefundConfirmed: null,
+						orRefund: null,
+						orRefundConfirmed: null,
+						waRefund: null,
+						waRefundConfirmed: null
+					};
+				},
+
+				createEmptyScenario() {
+					return {
+						tp1: this.createTaxpayerObject(),
+						tp2: this.createTaxpayerObject()
+					};
+				},
+
+				createCustomScenario() {
+					return {
+						...this.createEmptyScenario(),
+						isCustom: true
+					};
+				},
+
+				// Add custom scenario
+				addCustomScenario() {
+					// Create a new empty scenario with the same structure as generated scenarios
+					const newScenario = this.createCustomScenario();
+
+					// Add the new scenario to the scenarios array
+					this.scenarios.push(newScenario);
+				},
+
+				// Remove custom scenario
+				removeCustomScenario(scenarioIndex) {
+					// Only allow removal of custom scenarios
+					if (this.scenarios[scenarioIndex] && this.scenarios[scenarioIndex].isCustom) {
+						this.scenarios.splice(scenarioIndex, 1);
+					}
+				},
+
+				// Unified dependent name processing
+				getDependentDisplayName(depIndex, dependent = null) {
+					if (!dependent) {
+						dependent = this.dependents[depIndex];
+					}
+					return dependent.name.trim() || `Dependent ${depIndex + 1}`;
+				},
+
+				// Get dependent display name for scenario generation (use actual name if available, otherwise placeholder)
+				getDependentPlaceholderName(depIndex, dependent = null) {
+					if (!dependent) {
+						dependent = this.dependents[depIndex];
+					}
+					return dependent.name && dependent.name.trim() ? dependent.name.trim() : `Dependent ${depIndex + 1}`;
+				},
+
+				// Get dependent display name for dropdown options (always use placeholder)
+				getDependentDropdownName(depIndex, dependent = null) {
+					// During editing, always return placeholder names to prevent real-time updates
+					if (this.isEditingDependentName) {
+						return `Dependent ${depIndex + 1}`;
+					}
+
+					if (!dependent) {
+						dependent = this.dependents[depIndex];
+					}
+
+					return dependent.name && dependent.name.trim() ? dependent.name.trim() : `Dependent ${depIndex + 1}`;
+				},
+
+				// Unified dependent qualification utilities
+				isDependentQualifiedForTaxpayer(dependent, taxpayerIndex) {
+					return dependent.qualifiesFor[taxpayerIndex];
+				},
+
+				getQualifiedTaxpayerCount(dependent) {
+					return dependent.qualifiesFor.filter(q => q).length;
+				},
+
+				isDependentShareable(dependent) {
+					return this.getQualifiedTaxpayerCount(dependent) >= 2;
+				},
+
+				// Get dependent sharing status
+				getDependentSharingStatus(index) {
+					const dependent = this.dependents[index];
+					return this.isDependentShareable(dependent) ? 'Yes' : 'No';
+				},
+
+				// Get dependent OR Kids Credit qualification
+				getDependentOKCQualification(index) {
+					const dependent = this.dependents[index];
+
+					// Check if dependent is 6 years or older
+					if (dependent.age !== null && dependent.age >= 6) {
+						return 'No';
+					}
+
+					// Check if dependent qualifies for at least one taxpayer
+					return this.getQualifiedTaxpayerCount(dependent) >= 1 ? 'Yes' : 'No';
+				},
+
+				// Get OKC qualification display text for dependent
+				getOKCQualificationDisplay(depIndex) {
+					const dependent = this.dependents[depIndex];
+
+					// Check if dependent is 6 years or older - show "No"
+					if (dependent.age !== null && dependent.age >= 6) {
+						return 'No';
+					}
+
+					// Otherwise show the taxpayer qualifications
+					return this.taxpayers.map(taxpayer =>
+						(taxpayer.confirmedName && taxpayer.confirmedName.trim() ? taxpayer.confirmedName : 'Taxpayer ' + (this.taxpayers.indexOf(taxpayer) + 1)) +
+						': ' + this.getOKCQualification(taxpayer.oregonIncome)
+					).join('\n');
+				},
+
+				// Get OKC qualification styling class for dependent
+				getOKCQualificationStyling(depIndex) {
+					const dependent = this.dependents[depIndex];
+
+					// Check if dependent is 6 years or older - show "No" with red styling
+					if (dependent.age !== null && dependent.age >= 6) {
+						return 'result-negative'; // Red styling for age 6+
+					}
+
+					// Check if no taxpayers are checked for this dependent - show "No" with red styling
+					if (!dependent.qualifiesFor.some(q => q)) {
+						return 'result-negative'; // Red styling when no taxpayers checked
+					}
+
+					// Get qualifications only for taxpayers that are checked for this dependent
+					const qualifiedTaxpayerQualifications = [];
+					this.taxpayers.forEach((taxpayer, tpIndex) => {
+						if (dependent.qualifiesFor[tpIndex]) {
+							const qualification = this.getOKCQualification(taxpayer.oregonIncome);
+							if (qualification !== '') {
+								qualifiedTaxpayerQualifications.push(qualification);
+							}
+						}
+					});
+
+					// If no qualified taxpayers have valid qualifications, return no styling
+					if (qualifiedTaxpayerQualifications.length === 0) {
+						return '';
+					}
+
+					// Check if all qualified taxpayers have "Full" or "Partial" qualification
+					const allQualified = qualifiedTaxpayerQualifications.every(q => q === 'Full' || q === 'Partial');
+
+					// Check if all qualified taxpayers have "No" qualification
+					const allNotQualified = qualifiedTaxpayerQualifications.every(q => q === 'No');
+
+					// Check if there's a mix of qualified and not qualified
+					const hasQualified = qualifiedTaxpayerQualifications.some(q => q === 'Full' || q === 'Partial');
+					const hasNotQualified = qualifiedTaxpayerQualifications.some(q => q === 'No');
+
+					if (allQualified) {
+						return 'result-positive'; // Green
+					} else if (allNotQualified) {
+						return 'result-negative'; // Red
+					} else if (hasQualified && hasNotQualified) {
+						return 'okc-mixed'; // Yellow
+					} else {
+						return ''; // No styling
+					}
+				},
+
+				// Get OKC qualification font size class for dependent
+				getOKCFontSizeClass(depIndex) {
+					const dependent = this.dependents[depIndex];
+
+					// Check if dependent is 6 years or older - show "No" in 0.9rem
+					if (dependent.age !== null && dependent.age >= 6) {
+						return 'okc-font-large';
+					}
+
+					// Check if no taxpayers are checked for this dependent - show "No" in 0.9rem
+					if (!dependent.qualifiesFor.some(q => q)) {
+						return 'okc-font-large';
+					}
+
+					// For all other cases, use the default font size (0.9em from .okc-qualification-cell div)
+					return '';
+				},
+
+				// Check if dependent OKC cell has content to display
+				hasDependentOKCContent(depIndex) {
+					const dependent = this.dependents[depIndex];
+
+					// If dependent is 6 years or older, show "No"
+					if (dependent.age !== null && dependent.age >= 6) {
+						return true;
+					}
+
+					// If no taxpayers are checked for this dependent, show "No"
+					if (!dependent.qualifiesFor.some(q => q)) {
+						return true;
+					}
+
+					// Check if any qualified taxpayers have valid OKC qualifications
+					return this.taxpayers.some((taxpayer, tpIndex) =>
+						dependent.qualifiesFor[tpIndex] && this.getOKCQualification(taxpayer.oregonIncome) !== ''
+					);
+				},
+
+				normalizeCurrencyInput(value) {
+					return (value || '').replace(/[$,\s]/g, '');
+				},
+
+				getNumericValue(value) {
+					const normalized = this.normalizeCurrencyInput(value);
+					const numValue = parseFloat(normalized);
+					return isNaN(numValue) ? 0 : numValue;
+				},
+
+				formatCurrencyDisplay(value) {
+					if (!value || value === '' || value === '-') return value;
+
+					const numValue = this.getNumericValue(value);
+					if (numValue === 0) return value;
+
+					const formatted = numValue.toLocaleString('en-US');
+					return numValue < 0 ? `-$${formatted.slice(1)}` : `$${formatted}`;
+				},
+
+				handlePaste(event, processor) {
+					const input = event.target;
+					if (!input) return;
+					event.preventDefault();
+
+					const text = (event.clipboardData || window.clipboardData).getData('text');
+					if (!text) return;
+
+					const processed = processor(text);
+					input.value = processed;
+					input.dispatchEvent(new Event('input', { bubbles: true }));
+				},
+
+				processCurrencyPaste(text) {
+					// Check if the pasted text is already properly formatted currency
+					const isAlreadyFormatted = /^-?\$?[\d,]+(\.\d{2})?$/.test(text.trim());
+					return isAlreadyFormatted ? text.trim() : this.normalizeCurrencyInput(text);
+				},
+
+				handleCurrencyPaste(event) {
+					this.handlePaste(event, this.processCurrencyPaste.bind(this));
+				},
+
+				validateNumeric(value, inputElement) {
+					if (!value || value === '-' || value === '$' || value === '-$') {
+						this.clearError(inputElement);
+						return;
+					}
+
+					// Check if input contains only valid characters (allow -$ combination)
+					const validCharsPattern = /^-?\$?[\d,]*\.?\d*$/;
+					if (!validCharsPattern.test(value)) {
+						this.setError(inputElement, 'Please enter a valid number. You may use $ and commas (e.g., $25,000).');
+						return;
+					}
+
+					// Validate the numeric value
+					const normalized = this.normalizeCurrencyInput(value);
+					if (normalized && isNaN(parseFloat(normalized))) {
+						this.setError(inputElement, 'Please enter a valid number. You may use $ and commas (e.g., $25,000).');
+						return;
+					}
+
+					this.clearError(inputElement);
+				},
+
+				setError(inputElement, message) {
+					if (inputElement) {
+						inputElement.classList.add('error');
+						inputElement.setAttribute('data-error-message', message);
+
+						// Add error class to the tooltip container
+						const container = inputElement.parentElement;
+						container.classList.add('has-error');
+
+						// Update the tooltip-text span content
+						const tooltipText = container.querySelector('.tooltip-text');
+						if (tooltipText) {
+							tooltipText.textContent = message;
+						}
+					}
+				},
+
+				clearError(inputElement) {
+					if (inputElement) {
+						inputElement.classList.remove('error');
+						inputElement.removeAttribute('data-error-message');
+
+						// Remove error class from the tooltip container
+						inputElement.parentElement.classList.remove('has-error');
+					}
+				},
+
+				normalizeDateInput(value, mode = 'input') {
+					if (!value) return '';
+
+					// On blur, convert any non-digit separator runs to slashes first (e.g., dashes, spaces, dots)
+					const source = mode === 'blur' ? value.trim().replace(/\D+/g, '/') : value;
+
+					// Remove all non-digit characters except slashes
+					const cleaned = source.replace(/[^\d\/]/g, '');
+
+					// If no slashes, try to infer from digits-only inputs (4, 6, 8)
+					if (!cleaned.includes('/')) {
+						const inferred = this.inferFromDigits(cleaned, mode);
+						return inferred ?? value;
+					}
+
+					const parts = cleaned.split('/').filter(Boolean);
+					if (parts.length !== 3) return value;
+					let [month, day, year] = parts;
+
+					if (mode === 'blur') {
+						if (year.length === 2) year = '20' + year;
+						month = month.padStart(2, '0');
+						day = day.padStart(2, '0');
+					}
+					return `${month}/${day}/${year}`;
+				},
+
+				inferFromDigits(digits, mode) {
+					if (!digits) return null;
+					switch (digits.length) {
+						case 4: { // M D YY
+							const m = digits.slice(0, 1);
+							const d = digits.slice(1, 2);
+							const y = digits.slice(2, 4);
+							return mode === 'blur' ? `0${m}/0${d}/20${y}` : `${m}/${d}/${y}`;
+						}
+						case 6: { // MM DD YY
+							const m = digits.slice(0, 2);
+							const d = digits.slice(2, 4);
+							const y = digits.slice(4, 6);
+							return mode === 'blur' ? `${m}/${d}/20${y}` : `${m}/${d}/${y}`;
+						}
+						case 8: { // MM DD YYYY
+							const m = digits.slice(0, 2);
+							const d = digits.slice(2, 4);
+							const y = digits.slice(4, 8);
+							return `${m}/${d}/${y}`;
+						}
+						default:
+							return null;
+					}
+				},
+
+				validateBirthDate(value, inputElement, mode = 'input') {
+					if (!value) {
+						this.clearError(inputElement);
+						return;
+					}
+
+					const normalizedValue = this.normalizeDateInput(value, mode);
+
+					if (mode === 'blur' && normalizedValue !== value) {
+						inputElement.value = normalizedValue;
+						inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+					}
+
+					// Build ISO date to avoid locale ambiguity
+					const [mm, dd, yyyy] = normalizedValue.split('/');
+					const birthDate = new Date(`${yyyy}-${mm}-${dd}`);
+					if (isNaN(birthDate.getTime())) {
+						this.setError(inputElement, 'Please enter a valid date in mm/dd/yyyy format.');
+						return;
+					}
+
+					const taxYearEnd = new Date(parseInt(this.taxYear), 11, 31);
+					if (birthDate > taxYearEnd) {
+						this.setError(inputElement, 'Please review: Entered birth date is after selected tax year.');
+						return;
+					}
+
+					this.clearError(inputElement);
+				},
+
+				processBirthDatePaste(text) {
+					const normalized = this.parsePastedDate(text);
+					return normalized || text; // Fallback to raw text if parsing fails
+				},
+
+				handleBirthDatePaste(event) {
+					this.handlePaste(event, this.processBirthDatePaste.bind(this));
+				},
+
+				parsePastedDate(text) {
+					const t = (text || '').trim();
+					if (!t) return null;
+
+					// Strict ISO-like at start/end: YYYY-MM-DD (or with single-char separators), allow 1-2 digit month/day
+					const isoStrict = t.match(/^\s*(\d{4})[-\/. ](\d{1,2})[-\/. ](\d{1,2})\s*$/);
+					if (isoStrict) {
+						const [, y, m, d] = isoStrict;
+						const mm = m.padStart(2, '0');
+						const dd = d.padStart(2, '0');
+						return `${mm}/${dd}/${y}`;
+					}
+
+					// ISO-like with time present anywhere
+					const isoMatch = t.match(/(\d{4})[-\/. ](\d{1,2})[-\/. ](\d{1,2})/);
+					if (isoMatch) {
+						const [, y, m, d] = isoMatch;
+						const mm = m.padStart(2, '0');
+						const dd = d.padStart(2, '0');
+						return `${mm}/${dd}/${y}`;
+					}
+
+					// Month name formats: Jan 5, 2008 or January 5 2008
+					const monthNames = {
+						jan: '01', feb: '02', mar: '03', apr: '04', may: '05', jun: '06',
+						jul: '07', aug: '08', sep: '09', sept: '09', oct: '10', nov: '11', dec: '12'
+					};
+					const nameMatch = t.toLowerCase().match(/(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\s+(\d{1,2})[,\s]+(\d{2,4})/i);
+					if (nameMatch) {
+						const [, mon, day, year] = nameMatch;
+						const mm = monthNames[mon.slice(0, 3)];
+						const dd = day.padStart(2, '0');
+						const yyyy = year.length === 2 ? `20${year}` : year;
+						return `${mm}/${dd}/${yyyy}`;
+					}
+
+					// Mixed separators or digits-only: reuse existing normalizer in blur mode
+					const normalized = this.normalizeDateInput(t.replace(/\s+/g, ' '), 'blur');
+					return normalized && normalized !== t ? normalized : null;
+				},
+
+				handleBirthDateBlur(value, inputElement, depIndex) {
+					// If value is only whitespace, clear it and skip validation
+					if (typeof value === 'string' && value.trim() === '') {
+						inputElement.value = '';
+						inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+						this.clearError(inputElement);
+						this.calculateAge(depIndex);
+						return;
+					}
+					// On blur, expand two-digit year, pad month/day, and update field
+					this.validateBirthDate(value, inputElement, 'blur');
+
+					// Then calculate age (this will also handle invalid dates gracefully)
+					this.calculateAge(depIndex);
+				},
+
+				revalidateAllBirthDates() {
+					// Re-validate all birth date inputs when tax year changes
+					const birthDateInputs = document.querySelectorAll('input[x-model*="birthDate"]');
+					birthDateInputs.forEach((input, index) => {
+						if (input.value && input.value.trim() !== '') {
+							this.validateBirthDate(input.value, input);
+							// Also recalculate age for this dependent
+							this.calculateAge(index);
+						}
+					});
+				},
+
+				handleBlur(value, inputElement) {
+					if (value === '' || value === null || value === undefined) {
+						this.clearError(inputElement);
+						// Update the model value to null/empty when field is cleared
+						const fieldPath = inputElement.getAttribute('data-field');
+						if (fieldPath) {
+							this.setFieldValue(fieldPath, null);
+						}
+						return;
+					}
+
+					// Handle just a minus sign - don't clear the field, just leave it as is
+					if (value === '-') {
+						this.clearError(inputElement);
+						return;
+					}
+
+					// Normalize currency input (remove $ and commas)
+					const normalized = this.normalizeCurrencyInput(value);
+					const numValue = parseFloat(normalized);
+
+					if (!isNaN(numValue)) {
+						// Round to nearest whole number when leaving the field
+						const wholeNumber = Math.round(numValue);
+						// Update the field value using the data-field attribute
+						const fieldPath = inputElement.getAttribute('data-field');
+						if (fieldPath) {
+							// Update the model value with formatted display value
+							const formattedValue = this.formatCurrencyDisplay(wholeNumber.toString());
+							this.setFieldValue(fieldPath, formattedValue);
+
+							// Update the input field's display value
+							inputElement.value = formattedValue;
+
+							// If this is an oregonIncome field, also update the confirmed value
+							if (fieldPath.includes('oregonIncome')) {
+								const match = fieldPath.match(/^taxpayers\[(\d+)\]\.oregonIncome$/);
+								if (match) {
+									const index = parseInt(match[1]);
+									this.taxpayers[index].oregonIncomeConfirmed = formattedValue;
+								}
+							}
+
+							// If this is a refund field, also update the confirmed value
+							if (fieldPath.includes('fedRefund') || fieldPath.includes('orRefund') || fieldPath.includes('waRefund')) {
+								const match = fieldPath.match(/^scenario(\d+)\.tp(\d+)\.(\w+)$/);
+								if (match) {
+									const [_, scenarioIndex, tpIndex, prop] = match;
+									const confirmedProp = prop + 'Confirmed';
+									this.scenarios[parseInt(scenarioIndex)]['tp' + tpIndex][confirmedProp] = formattedValue;
+								}
+							}
+						}
+						// Clear any error when successfully processing
+						this.clearError(inputElement);
+					} else {
+						// Set error if invalid number and clear the model value
+						this.setError(inputElement, 'Please enter a valid number. You can start with a minus sign for amounts owed.');
+
+						// Clear the model value when input is invalid
+						const fieldPath = inputElement.getAttribute('data-field');
+						if (fieldPath) {
+							this.setFieldValue(fieldPath, null);
+
+							// If this is an oregonIncome field, also clear the confirmed value
+							if (fieldPath.includes('oregonIncome')) {
+								const match = fieldPath.match(/^taxpayers\[(\d+)\]\.oregonIncome$/);
+								if (match) {
+									const index = parseInt(match[1]);
+									this.taxpayers[index].oregonIncomeConfirmed = null;
+								}
+							}
+
+							// If this is a refund field, also clear the confirmed value
+							if (fieldPath.includes('fedRefund') || fieldPath.includes('orRefund') || fieldPath.includes('waRefund')) {
+								const match = fieldPath.match(/^scenario(\d+)\.tp(\d+)\.(\w+)$/);
+								if (match) {
+									const [_, scenarioIndex, tpIndex, prop] = match;
+									const confirmedProp = prop + 'Confirmed';
+									this.scenarios[parseInt(scenarioIndex)]['tp' + tpIndex][confirmedProp] = null;
+								}
+							}
+						}
+					}
+				},
+
+				// Get maximum number of dependents available for a taxpayer (truly sharable)
+				getMaxDependentsForTaxpayer(taxpayerIndex) {
+					// Count dependents that qualify for BOTH taxpayers (truly sharable)
+					const otherTaxpayerIndex = taxpayerIndex === 0 ? 1 : 0;
+					return this.dependents.filter(d => d.qualifiesFor[taxpayerIndex] && d.qualifiesFor[otherTaxpayerIndex]).length;
+				},
+
+
+
+				// Dependent selection state
+				openDependentSelector: null,
+				openOtherDependentSelector: null, // Track which other dependent selector is open
+				dropdownDependentSnapshot: null, // Snapshot of dependent names when dropdown opens
+				isEditingDependentName: false, // Track if any dependent name is being edited
+				editingDependentIndex: null, // Track which dependent index is being edited
+				validatedScenarios: new Set(), // Track which scenarios have been validated in current generation cycle
+				cachedAvailableDependents: {}, // Cache available dependents to prevent changes during editing
+
+
+				// Start editing dependent name
+				startEditingDependentName(depIndex) {
+					// Cache available dependents for all scenarios before editing starts
+					this.cachedAvailableDependents = {};
+					for (let scenarioIndex = 0; scenarioIndex < this.scenarios.length; scenarioIndex++) {
+						for (let tpIndex = 1; tpIndex <= 2; tpIndex++) {
+							const cacheKey = `${tpIndex - 1}-${scenarioIndex}-${tpIndex}`;
+							this.cachedAvailableDependents[cacheKey] = this.getAvailableDependentsForTaxpayer(tpIndex - 1, scenarioIndex, tpIndex);
+						}
+					}
+
+					this.isEditingDependentName = true;
+					this.editingDependentIndex = depIndex;
+				},
+
+				// Finish editing dependent name
+				finishEditingDependentName() {
+					// Update names in custom scenarios first
+					this.updateDependentNamesInCustomScenarios();
+					// Then regenerate generated scenarios to handle new combinations
+					this.regenerateGeneratedScenarios();
+
+					// Clear the cache
+					this.cachedAvailableDependents = {};
+
+					this.isEditingDependentName = false;
+					this.editingDependentIndex = null;
+				},
+
+				// Show dependent selector dropdown
+				showDependentSelector(scenarioIndex, tpIndex) {
+					const selectorKey = `${scenarioIndex}-${tpIndex}`;
+					if (this.openDependentSelector === selectorKey) {
+						this.openDependentSelector = null; // Close if already open
+						this.dropdownDependentSnapshot = null;
+					} else {
+						this.openDependentSelector = selectorKey; // Open this selector
+						// Take a snapshot of dependent names when opening
+						this.dropdownDependentSnapshot = this.dependents.map(dep => ({ ...dep, name: dep.name }));
+					}
+				},
+
+				// Check if dependent selector is open for specific scenario/taxpayer
+				isDependentSelectorOpen(scenarioIndex, tpIndex) {
+					return this.openDependentSelector === `${scenarioIndex}-${tpIndex}`;
+				},
+
+				// Get available dependents for a taxpayer
+				getAvailableDependentsForTaxpayer(taxpayerIndex, scenarioIndex, tpIndex) {
+					// Use cached result if we're currently editing a dependent name
+					const cacheKey = `${taxpayerIndex}-${scenarioIndex}-${tpIndex}`;
+					if (this.isEditingDependentName && this.cachedAvailableDependents[cacheKey]) {
+						return this.cachedAvailableDependents[cacheKey];
+					}
+
+					// Use snapshot if dropdown is open for this specific selector
+					const selectorKey = `${scenarioIndex}-${tpIndex}`;
+					const useSnapshot = this.openDependentSelector === selectorKey && this.dropdownDependentSnapshot;
+					const dependentsToUse = useSnapshot ? this.dropdownDependentSnapshot : this.dependents;
+
+					// Get dependents that qualify for BOTH taxpayers (truly sharable) and are not already selected by the other taxpayer
+					const availableDependents = [];
+
+					dependentsToUse.forEach((dependent, depIndex) => {
+						// Check if dependent qualifies for this taxpayer
+						if (!dependent.qualifiesFor[taxpayerIndex]) {
+							return;
+						}
+
+						// For sharable dependents, they must qualify for BOTH taxpayers
+						const otherTaxpayerIndex = taxpayerIndex === 0 ? 1 : 0;
+						if (!dependent.qualifiesFor[otherTaxpayerIndex]) {
+							return; // Not sharable if doesn't qualify for both taxpayers
+						}
+
+						// Check if dependent is already selected by the other taxpayer in this scenario
+						const otherTpIndex = tpIndex === 1 ? 2 : 1;
+						const otherTpKey = `tp${otherTpIndex}`;
+						const scenario = this.scenarios[scenarioIndex];
+
+						if (scenario && scenario[otherTpKey] && scenario[otherTpKey].dependentNames) {
+							const selectedNames = scenario[otherTpKey].dependentNames.split(', ').map(name => name.trim());
+							const placeholderName = this.getDependentPlaceholderName(depIndex, dependent);
+							const actualName = dependent.name && dependent.name.trim() ? dependent.name.trim() : null;
+
+							// Check if either placeholder or actual name is already selected by other taxpayer
+							if (selectedNames.includes(placeholderName) || (actualName && selectedNames.includes(actualName))) {
+								return; // Already selected by other taxpayer
+							}
+						}
+
+						// Add to available list with original index
+						availableDependents.push({
+							...dependent,
+							originalIndex: depIndex
+						});
+					});
+
+					return availableDependents;
+				},
+
+				// Check if a dependent is selected for a specific scenario/taxpayer
+				isDependentSelected(scenarioIndex, tpIndex, depIndex) {
+					const scenario = this.scenarios[scenarioIndex];
+					const tpKey = `tp${tpIndex}`;
+
+					if (!scenario || !scenario[tpKey] || !scenario[tpKey].dependentNames) {
+						return false;
+					}
+
+					const selectedNames = scenario[tpKey].dependentNames.split(', ').map(name => name.trim());
+					const dependent = this.dependents[depIndex];
+					const placeholderName = this.getDependentPlaceholderName(depIndex, dependent);
+					const actualName = dependent.name && dependent.name.trim() ? dependent.name.trim() : null;
+
+					// Check if either the placeholder name or actual name is selected
+					const isSelected = selectedNames.includes(placeholderName) || (actualName && selectedNames.includes(actualName));
+
+					return isSelected;
+				},
+
+				// Get other dependent names (dependents that qualify for only this taxpayer)
+				getOtherDependentNames(taxpayerIndex) {
+					const otherDependentNames = [];
+
+					this.dependents.forEach((dependent, depIndex) => {
+						// Check if this dependent qualifies for only this taxpayer
+						let qualifiesForOnlyThisTaxpayer = true;
+
+						// Check if dependent qualifies for this taxpayer
+						if (!dependent.qualifiesFor[taxpayerIndex]) {
+							qualifiesForOnlyThisTaxpayer = false;
+						}
+
+						// Check if dependent also qualifies for the other taxpayer
+						const otherTaxpayerIndex = taxpayerIndex === 0 ? 1 : 0;
+						if (dependent.qualifiesFor[otherTaxpayerIndex]) {
+							qualifiesForOnlyThisTaxpayer = false;
+						}
+
+						// If dependent qualifies for only this taxpayer, add to the list
+						if (qualifiesForOnlyThisTaxpayer) {
+							const dependentName = this.getDependentPlaceholderName(depIndex, dependent);
+							otherDependentNames.push(dependentName);
+						}
+					});
+
+					return otherDependentNames;
+				},
+
+				// Select/deselect a dependent
+				selectDependent(scenarioIndex, tpIndex, depIndex) {
+					const scenario = this.scenarios[scenarioIndex];
+					const tpKey = `tp${tpIndex}`;
+					const dependent = this.dependents[depIndex];
+
+					if (!scenario || !scenario[tpKey]) {
+						return;
+					}
+
+					const currentNames = scenario[tpKey].dependentNames ? scenario[tpKey].dependentNames.split(', ').map(name => name.trim()) : [];
+
+					// Check if this dependent is already selected (by either placeholder or actual name)
+					const placeholderName = this.getDependentPlaceholderName(depIndex, dependent);
+					const actualName = dependent.name && dependent.name.trim() ? dependent.name.trim() : null;
+
+
+					// Find the existing name for this dependent in the scenario
+					let existingName = null;
+					if (currentNames.includes(placeholderName)) {
+						existingName = placeholderName;
+					} else if (actualName && currentNames.includes(actualName)) {
+						existingName = actualName;
+					}
+
+					if (existingName) {
+						// Remove dependent using the existing name
+						const newNames = currentNames.filter(name => name !== existingName);
+						scenario[tpKey].dependentNames = newNames.join(', ');
+						// Update the count based on the number of selected dependents
+						scenario[tpKey].shareableKids = newNames.length;
+					} else {
+						// Add dependent - always use actual name if available, otherwise use placeholder
+						const nameToAdd = actualName || placeholderName;
+						currentNames.push(nameToAdd);
+						scenario[tpKey].dependentNames = currentNames.join(', ');
+						// Update the count based on the number of selected dependents
+						scenario[tpKey].shareableKids = currentNames.length;
+					}
+
+					// Check if there are no more available dependents to select
+					const availableDependents = this.getAvailableDependentsForTaxpayer(tpIndex - 1, scenarioIndex, tpIndex);
+					const unselectedDependents = availableDependents.filter(dep => {
+						return !this.isDependentSelected(scenarioIndex, tpIndex, dep.originalIndex);
+					});
+
+					// If no unselected dependents remain, close the dropdown
+					if (unselectedDependents.length === 0) {
+						this.openDependentSelector = null;
+					}
+
+					// Clear the auto-reassigned flag when user manually changes the scenario
+					if (scenario.isCustom) {
+						this.clearAutoReassignedFlag(scenario);
+					}
+				},
+
+				// Show other dependent selector dropdown
+				showOtherDependentSelector(scenarioIndex, tpIndex) {
+					const selectorKey = `other-${scenarioIndex}-${tpIndex}`;
+					if (this.openOtherDependentSelector === selectorKey) {
+						this.openOtherDependentSelector = null; // Close if already open
+					} else {
+						this.openOtherDependentSelector = selectorKey; // Open this selector
+					}
+				},
+
+				// Check if other dependent selector is open for specific scenario/taxpayer
+				isOtherDependentSelectorOpen(scenarioIndex, tpIndex) {
+					return this.openOtherDependentSelector === `other-${scenarioIndex}-${tpIndex}`;
+				},
+
+				// Select/deselect an other dependent
+				selectOtherDependent(scenarioIndex, tpIndex, dependentName) {
+					const scenario = this.scenarios[scenarioIndex];
+					const tpKey = `tp${tpIndex}`;
+
+					if (!scenario || !scenario[tpKey]) {
+						return;
+					}
+
+					// Initialize otherDependentNames if it doesn't exist
+					if (!scenario[tpKey].otherDependentNames) {
+						scenario[tpKey].otherDependentNames = '';
+					}
+
+					const currentNames = scenario[tpKey].otherDependentNames ? scenario[tpKey].otherDependentNames.split(', ').map(name => name.trim()) : [];
+
+					if (currentNames.includes(dependentName)) {
+						// Remove dependent
+						const newNames = currentNames.filter(name => name !== dependentName);
+						scenario[tpKey].otherDependentNames = newNames.join(', ');
+					} else {
+						// Add dependent
+						currentNames.push(dependentName);
+						scenario[tpKey].otherDependentNames = currentNames.join(', ');
+					}
+
+					// Close dropdown if no more dependents available
+					const availableDependents = this.getOtherDependentNames(tpIndex - 1);
+					const unselectedDependents = availableDependents.filter(dep => {
+						return !this.isOtherDependentSelected(scenarioIndex, tpIndex, dep);
+					});
+
+					if (unselectedDependents.length === 0) {
+						this.openOtherDependentSelector = null;
+					}
+				},
+
+				// Check if other dependent is selected
+				isOtherDependentSelected(scenarioIndex, tpIndex, dependentName) {
+					const scenario = this.scenarios[scenarioIndex];
+					const tpKey = `tp${tpIndex}`;
+
+					if (!scenario || !scenario[tpKey] || !scenario[tpKey].otherDependentNames) {
+						return false;
+					}
+
+					const currentNames = scenario[tpKey].otherDependentNames.split(', ').map(name => name.trim());
+					return currentNames.includes(dependentName);
+				},
+
+				// Auto-select other dependents when they become qualified for only one taxpayer
+				autoSelectOtherDependents() {
+					this.scenarios.forEach(scenario => {
+						// Skip custom scenarios - users should manually specify dependents
+						if (scenario.isCustom) {
+							return;
+						}
+
+						['tp1', 'tp2'].forEach(tpKey => {
+							const tpIndex = parseInt(tpKey.substring(2));
+							const taxpayerIndex = tpIndex - 1;
+							const otherTpKey = tpKey === 'tp1' ? 'tp2' : 'tp1';
+
+							// Initialize otherDependentNames if it doesn't exist
+							if (!scenario[tpKey].otherDependentNames) {
+								scenario[tpKey].otherDependentNames = '';
+							}
+
+							// Get currently selected sharable dependents for both taxpayers
+							const currentSharable = scenario[tpKey].dependentNames ?
+								scenario[tpKey].dependentNames.split(', ').map(name => name.trim()) : [];
+							const otherTpSharable = scenario[otherTpKey].dependentNames ?
+								scenario[otherTpKey].dependentNames.split(', ').map(name => name.trim()) : [];
+
+							// Get other dependents that are not already sharable
+							const otherDependentNames = this.getOtherDependentNames(taxpayerIndex);
+							const validOtherDependents = otherDependentNames.filter(name =>
+								!currentSharable.includes(name) &&
+								!otherTpSharable.includes(name)
+							);
+
+							// Set the other dependents (clearing any existing incorrect selections)
+							scenario[tpKey].otherDependentNames = validOtherDependents.join(', ');
+						});
+					});
+				},
+
+				getMaxDependentsForTaxpayer(taxpayerIndex) {
+					// Count dependents that qualify for this taxpayer
+					return this.dependents.filter(dependent => this.isDependentQualifiedForTaxpayer(dependent, taxpayerIndex)).length;
+				},
+
+				// Get total number of dependents assigned across both taxpayers in a scenario
+				getTotalAssignedDependents(scenarioIndex) {
+					const scenario = this.scenarios[scenarioIndex];
+					if (!scenario) return 0;
+
+					let totalAssigned = 0;
+					['tp1', 'tp2'].forEach(tpKey => {
+						// Count shareable dependents (dependentNames)
+						if (scenario[tpKey] && scenario[tpKey].dependentNames) {
+							const names = scenario[tpKey].dependentNames.split(', ').map(name => name.trim()).filter(name => name);
+							totalAssigned += names.length;
+						}
+
+						// Count non-shareable dependents (otherDependentNames)
+						if (scenario[tpKey] && scenario[tpKey].otherDependentNames) {
+							const otherNames = scenario[tpKey].otherDependentNames.split(', ').map(name => name.trim()).filter(name => name);
+							totalAssigned += otherNames.length;
+						}
+					});
+
+					return totalAssigned;
+				},
+
+				// Get total number of available dependents from the dependent info table
+				getTotalAvailableDependents() {
+					return this.dependents.length;
+				},
+
+				// Reassign dependents when their qualifications change
+				reassignDependentsAfterQualificationChange() {
+					this.scenarios.forEach((scenario, scenarioIndex) => {
+						let wasReassigned = false;
+
+						['tp1', 'tp2'].forEach(tpKey => {
+							if (scenario[tpKey] && scenario[tpKey].dependentNames) {
+								const currentNames = scenario[tpKey].dependentNames.split(', ').map(name => name.trim());
+								const tpIndex = parseInt(tpKey.substring(2));
+								const taxpayerIndex = tpIndex - 1;
+
+								// Check each dependent to see if it still qualifies for this taxpayer
+								const validNames = [];
+								const reassignedNames = [];
+
+								currentNames.forEach(name => {
+									// Find the dependent by name
+									const depIndex = this.dependents.findIndex(dep => {
+										const depName = dep.name.trim() || `Dependent ${this.dependents.indexOf(dep) + 1}`;
+										return depName === name;
+									});
+
+									if (depIndex !== -1) {
+										const dependent = this.dependents[depIndex];
+										if (dependent.qualifiesFor[taxpayerIndex]) {
+											// Dependent still qualifies for this taxpayer
+											validNames.push(name);
+										} else {
+											// Dependent no longer qualifies for this taxpayer
+											reassignedNames.push({ name, depIndex });
+											wasReassigned = true;
+										}
+									} else {
+										// Keep the name if we can't find the dependent
+										validNames.push(name);
+									}
+								});
+
+								// Update this taxpayer's dependent names
+								scenario[tpKey].dependentNames = validNames.join(', ');
+								scenario[tpKey].shareableKids = validNames.length;
+
+								// Try to reassign dependents to other taxpayers
+								reassignedNames.forEach(({ name, depIndex }) => {
+									const dependent = this.dependents[depIndex];
+									// Find which taxpayers this dependent still qualifies for
+									const eligibleTaxpayers = dependent.qualifiesFor.map((qualifies, index) => ({ qualifies, index })).filter(tp => tp.qualifies);
+
+									// Try to assign to the first eligible taxpayer that doesn't already have this dependent
+									for (const { index } of eligibleTaxpayers) {
+										const otherTpKey = `tp${index + 1}`;
+										if (scenario[otherTpKey] && scenario[otherTpKey].dependentNames) {
+											const otherNames = scenario[otherTpKey].dependentNames.split(', ').map(n => n.trim());
+											if (!otherNames.includes(name)) {
+												// Add to this taxpayer
+												otherNames.push(name);
+												scenario[otherTpKey].dependentNames = otherNames.join(', ');
+												scenario[otherTpKey].shareableKids = otherNames.length;
+												break;
+											}
+										}
+									}
+								});
+							}
+						});
+
+						// Set the auto-reassigned flag if any dependents were reassigned
+						if (wasReassigned) {
+							this.markAsAutoReassigned(scenario);
+						}
+					});
+
+					// Auto-select other dependents after qualification changes
+					this.autoSelectOtherDependents();
+				},
+
+
+				setFieldValue(field, value) {
+					// Handle complex field paths like 'taxpayers[0].oregonIncome' or 'scenario0.tp1.fedRefund'
+					if (field.includes('[')) {
+						// Handle array notation like 'taxpayers[0].oregonIncome'
+						const match = field.match(/^(\w+)\[(\d+)\]\.(\w+)$/);
+						if (match) {
+							const [_, arrayName, index, prop] = match;
+							this[arrayName][parseInt(index)][prop] = value;
+						}
+					} else if (field.includes('scenario')) {
+						// Handle scenario notation like 'scenario0.tp1.fedRefund'
+						const match = field.match(/^scenario(\d+)\.tp(\d+)\.(\w+)$/);
+						if (match) {
+							const [_, scenarioIndex, tpIndex, prop] = match;
+							this.scenarios[parseInt(scenarioIndex)]['tp' + tpIndex][prop] = value;
+						}
+					} else {
+						// Handle simple field notation like 'fieldName'
+						this[field] = value;
+					}
+				},
+
+				calculateAge(index) {
+					const dependent = this.dependents[index];
+					if (!dependent.birthDate) {
+						dependent.age = null;
+						this.generateScenarios();
+						return;
+					}
+
+					const birthDate = new Date(dependent.birthDate);
+					if (isNaN(birthDate.getTime())) {
+						dependent.age = null;
+						this.generateScenarios();
+						return;
+					}
+
+					const taxYearEnd = new Date(parseInt(this.taxYear), 11, 31);
+					const age = taxYearEnd.getFullYear() - birthDate.getFullYear();
+					const monthDiff = taxYearEnd.getMonth() - birthDate.getMonth();
+
+					if (monthDiff < 0 || (monthDiff === 0 && taxYearEnd.getDate() < birthDate.getDate())) {
+						dependent.age = age - 1;
+					} else {
+						dependent.age = age;
+					}
+
+					// Regenerate scenarios when age changes
+					this.generateScenarios();
+				},
+
+				getNotShareableStatus(index, taxpayerNum) {
+					const dependent = this.dependents[index];
+					if (!dependent.name) return '';
+
+					const qualifies = dependent.qualifiesFor[taxpayerNum - 1];
+					const otherQualifies = taxpayerNum === 1 ? dependent.qualifiesFor[1] : dependent.qualifiesFor[0];
+
+					if (qualifies && !otherQualifies) {
+						return 'X';
+					}
+					return '';
+				},
+
+				getShareableName(index) {
+					const dependent = this.dependents[index];
+					if (!dependent.name) return '';
+
+					// Check if dependent is 6 years or older
+					if (dependent.age !== null && dependent.age >= 6) {
+						return '';
+					}
+
+					const qualifies1 = dependent.qualifiesFor[0];
+					const qualifies2 = dependent.qualifiesFor[1];
+
+					if (qualifies1 && qualifies2 && dependent.includeForSharing) {
+						return dependent.name;
+					}
+					return '';
+				},
+
+				getSummary() {
+					const activeDependents = this.dependents.filter(d => d.name);
+					const notShareable = activeDependents.filter(d => {
+						const qualifiedCount = d.qualifiesFor.filter(q => q).length;
+						return qualifiedCount === 1;
+					});
+					const shareable = activeDependents.filter(d =>
+						d.qualifiesFor.filter(q => q).length >= 2 &&
+						(d.age === null || d.age < 6) &&
+						d.includeForSharing
+					);
+
+					let summary = `Total Dependents: ${activeDependents.length}\n`;
+					summary += `Not Shareable: ${notShareable.length}\n`;
+					summary += `Shareable: ${shareable.length}\n\n`;
+
+					if (shareable.length > 0) {
+						summary += 'Shareable Dependents:\n';
+						shareable.forEach((d, i) => {
+							summary += `${i + 1}. ${d.name} (Age: ${d.age})\n`;
+						});
+						summary += '\nConsider testing different dependent sharing scenarios in TaxSlayer to optimize Oregon Kids Credit.';
+					}
+
+					// Generate scenarios based on shareable dependents
+					this.generateScenarios();
+
+					return summary;
+				},
+
+				generateScenarios() {
+					// Clear validation tracking for new generation cycle
+					this.validatedScenarios.clear();
+
+					const customScenarios = this.preserveCustomScenarios();
+					const existingRefundData = this.preserveExistingRefundData();
+					const activeDependents = this.getActiveDependents();
+
+					if (activeDependents.length === 0) {
+						this.scenarios = [this.createEmptyScenario()];
+					} else {
+						const categorizedDependents = this.categorizeDependents(activeDependents);
+						this.scenarios = this.generateValidScenarios(categorizedDependents.shareable, categorizedDependents.nonShareable);
+
+						if (this.scenarios.length === 0) {
+							this.scenarios = [this.createEmptyScenario()];
+						}
+					}
+
+					this.restoreCustomScenarios(customScenarios);
+					this.restoreExistingRefundData(existingRefundData);
+				},
+
+				// Generate only the non-custom scenarios (preserve custom scenarios)
+				regenerateGeneratedScenarios() {
+					const customScenarios = this.preserveCustomScenarios();
+					const existingRefundData = this.preserveExistingRefundData();
+					const activeDependents = this.getActiveDependents();
+
+					if (activeDependents.length === 0) {
+						this.scenarios = [this.createEmptyScenario()];
+					} else {
+						const categorizedDependents = this.categorizeDependents(activeDependents);
+						this.scenarios = this.generateValidScenarios(categorizedDependents.shareable, categorizedDependents.nonShareable);
+
+						if (this.scenarios.length === 0) {
+							this.scenarios = [this.createEmptyScenario()];
+						}
+					}
+
+					this.restoreCustomScenarios(customScenarios);
+					this.restoreExistingRefundData(existingRefundData);
+				},
+
+				preserveCustomScenarios() {
+					return this.scenarios.filter(scenario => scenario.isCustom);
+				},
+
+				preserveExistingRefundData() {
+					// Preserve refund data from all existing scenarios (both custom and auto-generated)
+					const refundData = [];
+					this.scenarios.forEach((scenario, index) => {
+						const scenarioData = {
+							index: index,
+							tp1: {
+								fedRefund: scenario.tp1.fedRefund,
+								fedRefundConfirmed: scenario.tp1.fedRefundConfirmed,
+								orRefund: scenario.tp1.orRefund,
+								orRefundConfirmed: scenario.tp1.orRefundConfirmed,
+								waRefund: scenario.tp1.waRefund,
+								waRefundConfirmed: scenario.tp1.waRefundConfirmed,
+								filingStatus: scenario.tp1.filingStatus,
+								otherDependentNames: scenario.tp1.otherDependentNames
+							},
+							tp2: {
+								fedRefund: scenario.tp2.fedRefund,
+								fedRefundConfirmed: scenario.tp2.fedRefundConfirmed,
+								orRefund: scenario.tp2.orRefund,
+								orRefundConfirmed: scenario.tp2.orRefundConfirmed,
+								waRefund: scenario.tp2.waRefund,
+								waRefundConfirmed: scenario.tp2.waRefundConfirmed,
+								filingStatus: scenario.tp2.filingStatus,
+								otherDependentNames: scenario.tp2.otherDependentNames
+							}
+						};
+						refundData.push(scenarioData);
+					});
+					return refundData;
+				},
+
+				restoreExistingRefundData(existingRefundData) {
+					// Restore refund data to scenarios at the same index positions
+					existingRefundData.forEach((scenarioData, index) => {
+						if (index < this.scenarios.length) {
+							const scenario = this.scenarios[index];
+
+							// Restore TP1 data
+							if (scenarioData.tp1.fedRefund !== null) scenario.tp1.fedRefund = scenarioData.tp1.fedRefund;
+							if (scenarioData.tp1.fedRefundConfirmed !== null) scenario.tp1.fedRefundConfirmed = scenarioData.tp1.fedRefundConfirmed;
+							if (scenarioData.tp1.orRefund !== null) scenario.tp1.orRefund = scenarioData.tp1.orRefund;
+							if (scenarioData.tp1.orRefundConfirmed !== null) scenario.tp1.orRefundConfirmed = scenarioData.tp1.orRefundConfirmed;
+							if (scenarioData.tp1.waRefund !== null) scenario.tp1.waRefund = scenarioData.tp1.waRefund;
+							if (scenarioData.tp1.waRefundConfirmed !== null) scenario.tp1.waRefundConfirmed = scenarioData.tp1.waRefundConfirmed;
+							if (scenarioData.tp1.filingStatus !== '') scenario.tp1.filingStatus = scenarioData.tp1.filingStatus;
+							if (scenarioData.tp1.otherDependentNames !== undefined) scenario.tp1.otherDependentNames = scenarioData.tp1.otherDependentNames;
+
+							// Restore TP2 data
+							if (scenarioData.tp2.fedRefund !== null) scenario.tp2.fedRefund = scenarioData.tp2.fedRefund;
+							if (scenarioData.tp2.fedRefundConfirmed !== null) scenario.tp2.fedRefundConfirmed = scenarioData.tp2.fedRefundConfirmed;
+							if (scenarioData.tp2.orRefund !== null) scenario.tp2.orRefund = scenarioData.tp2.orRefund;
+							if (scenarioData.tp2.orRefundConfirmed !== null) scenario.tp2.orRefundConfirmed = scenarioData.tp2.orRefundConfirmed;
+							if (scenarioData.tp2.waRefund !== null) scenario.tp2.waRefund = scenarioData.tp2.waRefund;
+							if (scenarioData.tp2.waRefundConfirmed !== null) scenario.tp2.waRefundConfirmed = scenarioData.tp2.waRefundConfirmed;
+							if (scenarioData.tp2.filingStatus !== '') scenario.tp2.filingStatus = scenarioData.tp2.filingStatus;
+							if (scenarioData.tp2.otherDependentNames !== undefined) scenario.tp2.otherDependentNames = scenarioData.tp2.otherDependentNames;
+						}
+					});
+				},
+
+				getActiveDependents() {
+					return this.dependents.filter(d => this.getQualifiedTaxpayerCount(d) >= 1);
+				},
+
+				categorizeDependents(activeDependents) {
+					const shareable = [];
+					const nonShareable = [];
+
+					activeDependents.forEach((dependent, index) => {
+						const actualDependentNumber = this.dependents.findIndex(d => d === dependent) + 1;
+						const enrichedDependent = { ...dependent, originalIndex: index, dependentNumber: actualDependentNumber };
+
+						if (this.isDependentShareable(dependent)) {
+							shareable.push(enrichedDependent);
+						} else {
+							nonShareable.push(enrichedDependent);
+						}
+					});
+
+					return { shareable, nonShareable };
+				},
+
+				restoreCustomScenarios(customScenarios) {
+					// Restore custom scenarios and validate their dependent assignments
+					customScenarios.forEach(scenario => {
+						// Validate and update dependent assignments for TP1
+						this.validateAndUpdateDependentAssignments(scenario, 1);
+						// Validate and update dependent assignments for TP2
+						this.validateAndUpdateDependentAssignments(scenario, 2);
+					});
+					this.scenarios.push(...customScenarios);
+				},
+
+				// Validate and update dependent assignments for a taxpayer in a scenario
+				validateAndUpdateDependentAssignments(scenario, tpIndex) {
+					const tpKey = `tp${tpIndex}`;
+					if (!scenario[tpKey] || !scenario[tpKey].dependentNames) {
+						return;
+					}
+
+					const currentNames = scenario[tpKey].dependentNames.split(', ').map(name => name.trim()).filter(name => name);
+					const validNames = [];
+
+					currentNames.forEach(dependentName => {
+						const dependentIndex = this.dependents.findIndex((dep, depIndex) => {
+							const actualName = dep.name && dep.name.trim() ? dep.name.trim() : null;
+							const placeholderName = `Dependent ${depIndex + 1}`;
+							return actualName === dependentName || placeholderName === dependentName;
+						});
+
+						if (dependentIndex !== -1) {
+							const dependent = this.dependents[dependentIndex];
+							if (dependent.qualifiesFor[tpIndex - 1]) {
+								const currentDisplayName = this.getDependentDisplayName(dependentIndex, dependent);
+								validNames.push(currentDisplayName);
+							}
+						}
+					});
+
+					// For custom scenarios, be more conservative - only update if we found all dependents
+					if (scenario.isCustom) {
+						if (validNames.length === currentNames.length && validNames.length > 0) {
+							scenario[tpKey].dependentNames = validNames.join(', ');
+							scenario[tpKey].shareableKids = validNames.length;
+						}
+						// If not all dependents found, keep the original names to preserve custom selections
+					} else {
+						// For generated scenarios, always update
+						scenario[tpKey].dependentNames = validNames.join(', ');
+						scenario[tpKey].shareableKids = validNames.length;
+					}
+				},
+
+				// Update dependent names in custom scenarios only
+				updateDependentNamesInCustomScenarios() {
+					this.scenarios.forEach((scenario, scenarioIndex) => {
+						if (scenario.isCustom) {
+							// Update TP1 dependent names
+							if (scenario.tp1 && scenario.tp1.dependentNames) {
+								const updatedNames = this.updateDependentNamesInStringForCustomScenario(scenario.tp1.dependentNames);
+								scenario.tp1.dependentNames = updatedNames;
+								scenario.tp1.shareableKids = updatedNames.split(', ').filter(name => name.trim()).length;
+							}
+
+							// Update TP2 dependent names
+							if (scenario.tp2 && scenario.tp2.dependentNames) {
+								const updatedNames = this.updateDependentNamesInStringForCustomScenario(scenario.tp2.dependentNames);
+								scenario.tp2.dependentNames = updatedNames;
+								scenario.tp2.shareableKids = updatedNames.split(', ').filter(name => name.trim()).length;
+							}
+						}
+					});
+				},
+
+				// Update dependent names in all existing scenarios (both custom and generated)
+				updateDependentNamesInAllScenarios() {
+					this.scenarios.forEach((scenario, scenarioIndex) => {
+						// Update TP1 dependent names
+						if (scenario.tp1 && scenario.tp1.dependentNames) {
+							const updatedNames = this.updateDependentNamesInString(scenario.tp1.dependentNames);
+							scenario.tp1.dependentNames = updatedNames;
+							scenario.tp1.shareableKids = updatedNames.split(', ').filter(name => name.trim()).length;
+						}
+
+						// Update TP2 dependent names
+						if (scenario.tp2 && scenario.tp2.dependentNames) {
+							const updatedNames = this.updateDependentNamesInString(scenario.tp2.dependentNames);
+							scenario.tp2.dependentNames = updatedNames;
+							scenario.tp2.shareableKids = updatedNames.split(', ').filter(name => name.trim()).length;
+						}
+					});
+				},
+
+				// Update dependent names in existing scenarios without regenerating them (legacy function)
+				updateDependentNamesInScenarios() {
+					// Update all scenarios (both custom and generated)
+					this.scenarios.forEach((scenario, scenarioIndex) => {
+						// Update TP1 dependent names
+						if (scenario.tp1 && scenario.tp1.dependentNames) {
+							const updatedNames = this.updateDependentNamesInString(scenario.tp1.dependentNames);
+							scenario.tp1.dependentNames = updatedNames;
+							scenario.tp1.shareableKids = updatedNames.split(', ').filter(name => name.trim()).length;
+						}
+
+						// Update TP2 dependent names
+						if (scenario.tp2 && scenario.tp2.dependentNames) {
+							const updatedNames = this.updateDependentNamesInString(scenario.tp2.dependentNames);
+							scenario.tp2.dependentNames = updatedNames;
+							scenario.tp2.shareableKids = updatedNames.split(', ').filter(name => name.trim()).length;
+						}
+					});
+				},
+
+				// Helper function to update dependent names in a comma-separated string for custom scenarios
+				updateDependentNamesInStringForCustomScenario(namesString) {
+					if (!namesString) return '';
+
+					const names = namesString.split(', ').map(name => name.trim()).filter(name => name);
+					const updatedNames = [];
+
+					names.forEach(name => {
+						// Check if this is a placeholder name like "Dependent 1"
+						const placeholderMatch = name.match(/^Dependent (\d+)$/);
+						if (placeholderMatch) {
+							const depIndex = parseInt(placeholderMatch[1]) - 1;
+							if (depIndex >= 0 && depIndex < this.dependents.length) {
+								const dependent = this.dependents[depIndex];
+								const actualName = dependent.name && dependent.name.trim() ? dependent.name.trim() : name;
+								updatedNames.push(actualName);
+							} else {
+								updatedNames.push(name);
+							}
+						} else {
+							// For custom scenarios, if we have an actual name, we need to update it to the current name
+							let dependentIndex = -1;
+							let currentName = name;
+
+							// First, try to find a dependent whose current name matches
+							dependentIndex = this.dependents.findIndex((dep, depIndex) => {
+								const actualName = dep.name && dep.name.trim() ? dep.name.trim() : null;
+								return actualName === name;
+							});
+
+							if (dependentIndex !== -1) {
+								// Found a dependent with this exact name, use its current name
+								const dependent = this.dependents[dependentIndex];
+								currentName = dependent.name && dependent.name.trim() ? dependent.name.trim() : `Dependent ${dependentIndex + 1}`;
+							} else {
+								// If no exact match, use the dependent that was being edited
+								if (this.editingDependentIndex !== null && this.editingDependentIndex < this.dependents.length) {
+									const dependent = this.dependents[this.editingDependentIndex];
+									currentName = dependent.name && dependent.name.trim() ? dependent.name.trim() : `Dependent ${this.editingDependentIndex + 1}`;
+								} else {
+									currentName = name;
+								}
+							}
+
+							updatedNames.push(currentName);
+						}
+					});
+
+					return updatedNames.join(', ');
+				},
+
+				// Helper function to update dependent names in a comma-separated string
+				updateDependentNamesInString(namesString) {
+					if (!namesString) return '';
+
+					const names = namesString.split(', ').map(name => name.trim()).filter(name => name);
+					const updatedNames = [];
+
+					names.forEach(name => {
+						// Check if this is a placeholder name like "Dependent 1"
+						const placeholderMatch = name.match(/^Dependent (\d+)$/);
+						if (placeholderMatch) {
+							const depIndex = parseInt(placeholderMatch[1]) - 1;
+							if (depIndex >= 0 && depIndex < this.dependents.length) {
+								const dependent = this.dependents[depIndex];
+								const actualName = dependent.name && dependent.name.trim() ? dependent.name.trim() : name;
+								updatedNames.push(actualName);
+							} else {
+								updatedNames.push(name);
+							}
+						} else {
+							// This is an actual name - keep it as is for generated scenarios
+							updatedNames.push(name);
+						}
+					});
+
+					return updatedNames.join(', ');
+				},
+
+				// State management utilities
+				markAsAutoReassigned(scenario) {
+					scenario.autoReassigned = true;
+				},
+
+				clearAutoReassignedFlag(scenario) {
+					scenario.autoReassigned = false;
+				},
+
+				generateValidScenarios(shareableDependents, nonShareableDependents) {
+					const scenarios = [];
+
+					// Handle non-shareable dependents first - they can only go to one taxpayer
+					const nonShareableAssignments = this.generateNonShareableAssignments(nonShareableDependents);
+
+					// Handle shareable dependents - they can be distributed between taxpayers
+					const shareableAssignments = this.generateShareableAssignments(shareableDependents);
+
+					// If no shareable dependents, just use non-shareable assignments
+					if (shareableDependents.length === 0) {
+						scenarios.push(...nonShareableAssignments);
+					}
+					// If no non-shareable dependents, just use shareable assignments
+					else if (nonShareableDependents.length === 0) {
+						scenarios.push(...shareableAssignments);
+					}
+					// If both types exist, combine them
+					else {
+						for (const nonShareableAssignment of nonShareableAssignments) {
+							for (const shareableAssignment of shareableAssignments) {
+								// Merge the assignments
+								const mergedAssignment = this.mergeAssignments(nonShareableAssignment, shareableAssignment);
+								if (mergedAssignment) {
+									scenarios.push(mergedAssignment);
+								}
+							}
+						}
+					}
+
+					return scenarios;
+				},
+
+				generateNonShareableAssignments(nonShareableDependents) {
+					if (nonShareableDependents.length === 0) {
+						return [this.createEmptyScenario()];
+					}
+
+					// Each non-shareable dependent can only go to one taxpayer
+					// We need to assign each dependent to the taxpayer they qualify for
+					const assignments = [];
+
+					// Create a base assignment
+					const baseAssignment = this.createEmptyScenario();
+
+					// Sort non-shareable dependents by dependent number
+					const sortedNonShareableDependents = [...nonShareableDependents].sort((a, b) => a.dependentNumber - b.dependentNumber);
+
+					// Assign each non-shareable dependent to their qualified taxpayer
+					sortedNonShareableDependents.forEach(dependent => {
+						const qualifiedTaxpayerIndex = dependent.qualifiesFor.findIndex(q => q);
+						if (qualifiedTaxpayerIndex !== -1) {
+							const tpKey = `tp${qualifiedTaxpayerIndex + 1}`;
+							// Don't increment shareableKids for non-shareable dependents
+							// They will appear in the "Other" column, not the "Sharable" column
+							const dependentName = this.getDependentPlaceholderName(dependent.originalIndex, dependent);
+							// Note: Non-shareable dependents are handled by the getOtherDependentNames function
+							// and don't need to be stored in dependentNames for the sharable column
+						}
+					});
+
+					assignments.push(baseAssignment);
+					return assignments;
+				},
+
+				generateShareableAssignments(shareableDependents) {
+					if (shareableDependents.length === 0) {
+						return [this.createEmptyScenario()];
+					}
+
+					// Sort shareable dependents by dependent number
+					const sortedShareableDependents = [...shareableDependents].sort((a, b) => a.dependentNumber - b.dependentNumber);
+
+					const assignments = [];
+					const totalShareable = sortedShareableDependents.length;
+
+					// Generate all possible distributions of shareable dependents
+					for (let i = totalShareable; i >= 0; i--) {
+						const assignment = this.createEmptyScenario();
+						assignment.tp1.shareableKids = i;
+						assignment.tp2.shareableKids = totalShareable - i;
+
+						// Assign names to TP1
+						if (i > 0) {
+							const tp1Dependents = sortedShareableDependents.slice(0, i);
+							assignment.tp1.dependentNames = tp1Dependents.map(dep =>
+								this.getDependentPlaceholderName(dep.originalIndex, dep)
+							).join(', ');
+						}
+
+						// Assign names to TP2
+						if (totalShareable - i > 0) {
+							const tp2Dependents = sortedShareableDependents.slice(i);
+							assignment.tp2.dependentNames = tp2Dependents.map(dep =>
+								this.getDependentPlaceholderName(dep.originalIndex, dep)
+							).join(', ');
+						}
+
+						assignments.push(assignment);
+					}
+
+					return assignments;
+				},
+
+				mergeAssignments(nonShareableAssignment, shareableAssignment) {
+					// Create a deep copy of the shareable assignment
+					const merged = JSON.parse(JSON.stringify(shareableAssignment));
+
+					// Merge non-shareable dependents into the assignment
+					['tp1', 'tp2'].forEach(tpKey => {
+						merged[tpKey].shareableKids += nonShareableAssignment[tpKey].shareableKids;
+
+						// Merge dependent names
+						if (nonShareableAssignment[tpKey].dependentNames && shareableAssignment[tpKey].dependentNames) {
+							merged[tpKey].dependentNames = shareableAssignment[tpKey].dependentNames + ', ' + nonShareableAssignment[tpKey].dependentNames;
+						} else if (nonShareableAssignment[tpKey].dependentNames) {
+							merged[tpKey].dependentNames = nonShareableAssignment[tpKey].dependentNames;
+						}
+					});
+
+					return merged;
+				},
+
+				// Unified refund calculation system
+				calculateRefund(taxpayer, type, tpIndex) {
+					const filesOR = tpIndex > 0 && tpIndex <= this.taxpayers.length ? this.taxpayers[tpIndex - 1].willFileOR : true;
+					const livedInWA = tpIndex > 0 && tpIndex <= this.taxpayers.length ? this.taxpayers[tpIndex - 1].livedInWAOverHalfYear : false;
+
+					let total = 0;
+
+					// Add federal refund if valid
+					const fedRefund = taxpayer.fedRefundConfirmed !== null ? taxpayer.fedRefundConfirmed : taxpayer.fedRefund;
+					if (fedRefund !== null) {
+						total += this.getNumericValue(fedRefund);
+					}
+
+					// Add OR refund if applicable
+					const orRefund = taxpayer.orRefundConfirmed !== null ? taxpayer.orRefundConfirmed : taxpayer.orRefund;
+					if (filesOR && orRefund !== null) {
+						total += this.getNumericValue(orRefund);
+					}
+
+					// Add WA refund if applicable
+					const waRefund = taxpayer.waRefundConfirmed !== null ? taxpayer.waRefundConfirmed : taxpayer.waRefund;
+					if (livedInWA && waRefund !== null) {
+						total += this.getNumericValue(waRefund);
+					}
+
+					// If no valid data at all, return $0
+					if (total === 0 &&
+						(taxpayer.fedRefund === null || isNaN(taxpayer.fedRefund)) &&
+						(taxpayer.orRefund === null || isNaN(taxpayer.orRefund)) &&
+						(taxpayer.waRefund === null || isNaN(taxpayer.waRefund))) {
+						return '$0';
+					}
+
+					return this.formatRefund(total);
+				},
+
+				formatRefund(amount) {
+					const roundedTotal = Math.round(amount);
+					return this.formatCurrencyDisplay(roundedTotal.toString());
+				},
+
+				parseRefund(refundString) {
+					if (refundString === '' || refundString === '$0') return 0;
+					return this.getNumericValue(refundString);
+				},
+
+				calculateTotalRefund(taxpayer, tpIndex) {
+					return this.calculateRefund(taxpayer, 'total', tpIndex);
+				},
+
+				getTotalRefundValue(taxpayer, tpIndex) {
+					const result = this.calculateTotalRefund(taxpayer, tpIndex);
+					return this.parseRefund(result);
+				},
+
+				calculateCombinedRefund(scenario, type) {
+					const tp1Fed = this.getNumericValue(scenario.tp1.fedRefundConfirmed !== null ? scenario.tp1.fedRefundConfirmed : (scenario.tp1.fedRefund || 0));
+					const tp1OR = this.getNumericValue(scenario.tp1.orRefundConfirmed !== null ? scenario.tp1.orRefundConfirmed : (scenario.tp1.orRefund || 0));
+					const tp1WA = this.getNumericValue(scenario.tp1.waRefundConfirmed !== null ? scenario.tp1.waRefundConfirmed : (scenario.tp1.waRefund || 0));
+					const tp2Fed = this.getNumericValue(scenario.tp2.fedRefundConfirmed !== null ? scenario.tp2.fedRefundConfirmed : (scenario.tp2.fedRefund || 0));
+					const tp2OR = this.getNumericValue(scenario.tp2.orRefundConfirmed !== null ? scenario.tp2.orRefundConfirmed : (scenario.tp2.orRefund || 0));
+					const tp2WA = this.getNumericValue(scenario.tp2.waRefundConfirmed !== null ? scenario.tp2.waRefundConfirmed : (scenario.tp2.waRefund || 0));
+
+					// Check if taxpayers file OR returns and lived in WA
+					const tp1FilesOR = this.taxpayers[0].willFileOR;
+					const tp2FilesOR = this.taxpayers[1].willFileOR;
+					const tp1LivedInWA = this.taxpayers[0].livedInWAOverHalfYear;
+					const tp2LivedInWA = this.taxpayers[1].livedInWAOverHalfYear;
+
+					if (isNaN(tp1Fed) || isNaN(tp2Fed)) {
+						return '$0';
+					}
+
+					let combined;
+					if (type === 'fed') {
+						combined = tp1Fed + tp2Fed;
+					} else if (type === 'or') {
+						// Only include OR refunds if taxpayers file OR returns
+						const tp1ORValid = tp1FilesOR && !isNaN(tp1OR);
+						const tp2ORValid = tp2FilesOR && !isNaN(tp2OR);
+						combined = (tp1ORValid ? tp1OR : 0) + (tp2ORValid ? tp2OR : 0);
+					} else if (type === 'wa') {
+						// Only include WA refunds if taxpayers lived in WA
+						const tp1WAValid = tp1LivedInWA && !isNaN(tp1WA);
+						const tp2WAValid = tp2LivedInWA && !isNaN(tp2WA);
+						combined = (tp1WAValid ? tp1WA : 0) + (tp2WAValid ? tp2WA : 0);
+					} else { // total
+						// For total, include all valid refunds
+						const tp1ORValid = tp1FilesOR && !isNaN(tp1OR);
+						const tp2ORValid = tp2FilesOR && !isNaN(tp2OR);
+						const tp1WAValid = tp1LivedInWA && !isNaN(tp1WA);
+						const tp2WAValid = tp2LivedInWA && !isNaN(tp2WA);
+						combined = (tp1Fed + (tp1ORValid ? tp1OR : 0) + (tp1WAValid ? tp1WA : 0)) +
+							(tp2Fed + (tp2ORValid ? tp2OR : 0) + (tp2WAValid ? tp2WA : 0));
+					}
+
+					return this.formatRefund(combined);
+				},
+
+				getCombinedRefundValue(scenario, type) {
+					const result = this.calculateCombinedRefund(scenario, type);
+					return this.parseRefund(result);
+				},
+
+				getBestScenario() {
+					if (this.scenarios.length === 0) return 'No scenarios available';
+
+					const scenariosWithTotals = this.scenarios.map((scenario, index) => {
+						const total = this.calculateCombinedRefund(scenario, 'total');
+						return { scenario: index + 1, total: total };
+					}).filter(item => item.total !== '');
+
+					if (scenariosWithTotals.length === 0) return 'No data entered';
+
+					// Find the scenario with the highest total refund
+					const best = scenariosWithTotals.reduce((max, current) => {
+						const currentTotal = parseFloat(current.total.replace('$', '').replace('-', '-'));
+						const maxTotal = parseFloat(max.total.replace('$', '').replace('-', '-'));
+						return currentTotal > maxTotal ? current : max;
+					});
+
+					return `Scenario ${best.scenario}`;
+				},
+
+				getBestScenarioAmount() {
+					const bestScenario = this.getBestScenario();
+					if (bestScenario === 'No scenarios available' || bestScenario === 'No data entered') return '';
+
+					const scenarioIndex = parseInt(bestScenario.replace('Scenario ', '')) - 1;
+					return this.calculateCombinedRefund(this.scenarios[scenarioIndex], 'total');
+				},
+
+				getBestScenarioAmountValue() {
+					const bestScenario = this.getBestScenario();
+					if (bestScenario === 'No scenarios available' || bestScenario === 'No data entered') return 0;
+
+					const scenarioIndex = parseInt(bestScenario.replace('Scenario ', '')) - 1;
+					const amount = this.calculateCombinedRefund(this.scenarios[scenarioIndex], 'total');
+
+					return this.parseRefund(amount);
+				},
+
+				resetCalculator() {
+					// Simple approach: reload the page to get a completely fresh state
+					// This mimics exactly what happens when the file is loaded for the first time
+					window.location.reload();
+				},
+			}
+		}
+	</script>
+</body>
+
+</html>
