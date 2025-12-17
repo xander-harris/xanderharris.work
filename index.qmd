@@ -19,7 +19,7 @@ I'm Xander Harris, a software product manager in Portland, Oregon. I like unders
 ### OR Tax Volunteer Online Calculators and Tools
 I develop and maintain tax calculation tools for [Oregon VITA volunteers](https://ortaxvolunteers.org), helping preparers navigate Oregon-specific deductions and credits. These tools support free tax preparation services for families earning under $67,000. **(Volunteer)**
 
-[See all works →](work.qmd)
+[See all work →](work.qmd)
 
 ## Recent Writing
 

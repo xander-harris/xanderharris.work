@@ -1,7 +1,7 @@
 ---
 title: "Current State of the OR Tax Volunteer Tools"
 author: "Xander Harris"
-date: "2025-12-15"
+date: "2025-12-16"
 categories: [work]
 ---
 
@@ -10,21 +10,19 @@ categories: [work]
 
 When I began volunteering with [MFS CASH Oregon](https://cashoregon.org/) in the fall of 2021, the Oregon specific tax training materials provided by MFS CASH Oregon pointed me to the OR Tax Volunteers website for deeper dives on topics and helpful calculator tools to use while I worked through tricky returns. At this point in 2025, more of the training material has migrated into a Moodle instance managed by MFS CASH Oregon. However, the OR Tax Volunteers website continues to serve an invaluable purpose as a hub for additional learning material, resources, links to official publications and general support for all volunteer tax preparers. And of course, the web-based tax tools and calculators.
 
-In fall 2024, the previous volunteer who maintained the web-tools needed to reduce his volunteer contributions and an ask was emailed out for another volunteer to take over maintenance. I responded and received a quick tour through the html files and embarked on making the necessary updates to ready the tools for the next tax season. At this point, I introduced git based version control to the project, but did not make any additional changes to the logic, look, or feel of the tools.
+In fall 2024, the previous volunteer who maintained the web-tools needed to reduce his volunteer contributions and emailed an ask out for another volunteer to take over maintenance. I responded and received a quick tour through the html files and embarked on making the necessary updates to ready the tools for the next tax season. At this point, I introduced git based version control to the project, but did not make any additional changes to the logic, look, or feel of the tools.
 
 I need to ask the other volunteers for more details on the history of these tools. As far as I can tell from the version history comments directly in the html files, the first set of these tools were produced in the fall of 2016 in preparation of Tax Year 2016 season the following spring. 
 
 ## New Development
-Over this summer (2025), I partnered with two other volunteers who are passionate about maximizing taxpayer returns in a specific tax situation where a dependent may be claimed by multiple taxpayers. The considerations within such a scenario are numerous and preparers are unlikely to realize the potential impact on refund amounts available with different choices. The volunteers had produced detailed, step-by-step training and guides to alert preparers to the nuances and guide them through the process of identifying the optimal configuration. 
+Over this summer (2025), I partnered with two other volunteers who are passionate about maximizing taxpayer returns in a specific tax situation where a dependent may be claimed by multiple taxpayers. The considerations within such a scenario are numerous, and preparers are unlikely to realize the potential impact on refund amounts achievable with different choices. The volunteers had produced detailed, step-by-step training and guides to alert preparers to the nuances and guide them through the process of identifying the optimal configuration. They thought a structured tool would be useful for preparers and had produced a proof-of-concept in Excel. 
 
-They thought 
+And so, together, we built a new tool/calculator: [Dependent Sharing and Comparing Return Results](../../assets/tax_tools/dependent-sharing.html). I took their proof of concept and transformed it into a simple webpage that quickly expanded with additional functionality to cover larger and larger portions of the surface area of the possible tax scenarios. We improved the tool in iterations: I'd add a bit of functionality, they would test and make suggestions and help expand the scope the tool could capture, and then we'd repeat. We ran through five major iterative cycles with jumps in functionality with at least as many smaller cycles of adjustment and refinement between.
 
-And so, we built a new tool/calculator: [Dependent Sharing and Comparing Return Results](assets/tax_tools/dependent-sharing.html).
-
-The structure 
+In building this new tool, I took the opportunity to introduce some new technologies into the tech stack: Alpine.js for delarative interaction and Cyress for UI testing. I'll have more to say about these choices in future posts and what I learned from the process.
 
 ## Current State
-I completed the yearly maintenance update on the ten tools last week. Eight of the tools remain largely as they were when I inherited them. They are all single HTML files with containing all the necessary JavaScript logic and CSS styling to bring the tools to life. Two of the tools have been updated to a more modern style using Alpine.js, as detailed in the previous section. Yearly updates to the tools consists of updating the tax year value to the current year and providing new dollar amounts for standard deductions, mileage reimbursment rates and a few other specific values. They are ready for tax season!
+I completed the yearly maintenance update on the ten tools last week. Eight of the tools remain largely as they were when I inherited them. They are all single HTML files with containing all the necessary JavaScript logic and CSS styling to bring the tools to life. Two of the tools use a more modern approach with Alpine.js, as detailed in the previous section. Yearly updates to the tools consists of updating the tax year value to the current year and providing new dollar amounts for standard deductions, mileage reimbursment rates and a few other specific values. They are ready for tax season!
 
 ## Areas for Continued Improvement
 There are a few opportunities to improve these tools going forward:
