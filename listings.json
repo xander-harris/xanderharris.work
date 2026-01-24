@@ -2,13 +2,15 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/Hello-World/index.html"
+      "/posts/heat_pump_defrost/index.html",
+      "/posts/current_state_tax_tools/index.html"
     ]
   },
   {
     "listing": "/blog.html",
     "items": [
-      "/posts/Hello-World/index.html"
+      "/posts/heat_pump_defrost/index.html",
+      "/posts/current_state_tax_tools/index.html"
     ]
   }
 ]

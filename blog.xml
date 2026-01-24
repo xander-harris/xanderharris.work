@@ -9,12 +9,775 @@
 <link>https://xanderharris.github.io/blog.html</link>
 <atom:link href="https://xanderharris.github.io/blog.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.8.26</generator>
-<lastBuildDate>Tue, 16 Dec 2025 00:00:00 GMT</lastBuildDate>
+<generator>quarto-1.8.27</generator>
+<lastBuildDate>Thu, 22 Jan 2026 00:00:00 GMT</lastBuildDate>
+<item>
+  <title>DIY Thermostat Diagnostics</title>
+  <dc:creator>Xander Harris</dc:creator>
+  <link>https://xanderharris.github.io/posts/heat_pump_defrost/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="the-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem">The Problem</h2>
+<p>We bought our house in 2020 with an aging gas furnace and AC unit from a previous owner’s 2001 remodel. Over the next few years I limped the furnace along by replacing the inducer motor, ignition spark plugs, flame sensor, and doing some creative zip-tie work on the circuit board. By May 2025, it was time to replace everything with a heat pump system before something catastrophically failed and we were left without heat or cooling during an extreme weather event.</p>
+<p>The install went smoothly. A Lennox heat pump outside, an air handler in the kitchen closet, and their S40 thermostat to tie it all together. May is a mild month in Portland where heating and cooling demands are usually minimal. As such, we didn’t need much heat and cooling was great all summer long.</p>
+<p>Then October arrived. The heat pump started running defrost cycles every 30 minutes. When a heat pump heats a house in cold weather, the outdoor coils get cold enough to accumulate frost. The system periodically reverses itself, essentially running as an AC, to melt that frost off. This is normal. Every 30 minutes is not, especially in a mostly mild Portland climate.</p>
+<p>The installation company sent a tech out on October 30th. He adjusted the defrost termination temperature to 90 degrees. This setting controls how hot the external heat pump coil must get to complete a defrost cycle. This did nothing to the frequency of defrost cycles, but did increase their duration. Another tech came November 10th and added refrigerant. That helped briefly, reducing the duration of each defrost cycle, but ultimately did nothing to reduce the frequency of the 30-minute defrost cycles. A spate of warm, rainy weather and the holidays in December deprioritized this issue, but by the end of December the problem was ongoing and at the forefront of our minds.</p>
+<p>To try to get more of a sense of control of the situation (and to better describe it to technicians), I started keeping a handwritten log of when the defrost kicked on and off. I was also curious about the deeper behavior of the system and the state of the many sensors and input parameters feeding into the firmware running on the heat pump control boards and the thermostat. I wanted to be able to explore the relationships between the data: how hard was the system working to raise the internal temperature to the set point? How long did it take to recover from our nightly setback? Did any of this correlate with the defrost frequency? And I wanted hard data to show the technicians: “here’s how we had the system configured, here’s what we were asking it to do, here’s when it defrosted and for how long.”</p>
+<p>However, my handwritten log wasn’t perfect. I’d miss cycles overnight, and getting the actual sensor values such as coil temperature and heating rate meant navigating through a hidden menu behind a couple of confirmation dialogs marked for “authorized technicians only”. As a result, I did this only occasionally, and annoyingly, sometimes in the middle of the night. I needed a better way to capture what the system was doing around the clock.</p>
+</section>
+<section id="the-legwork" class="level2">
+<h2 class="anchored" data-anchor-id="the-legwork">The Legwork</h2>
+<p>The Lennox S40 thermostat can connect to my home Wi-Fi network. Lennox provides a mobile app that talks to their cloud servers, which in turn communicate with the thermostat, enabling remote control of the thermostat system from anywhere with an internet connection. The app lets you adjust temperature and view basic status. However, the app is a closed system and the makers choose to significantly limit the settings and data exposed through the native app. None of the detailed settings, parameters, and sensor diagnostic readings are exposed through the app.</p>
+<p>But, I knew the data existed; I could see it on the thermostat itself. And I knew, because of the mobile app, that the thermostat had ways of sharing some live system data over the wifi network. I just needed to figure out if I could communicate with the thermostat directly and if I could retrieve the data I was interested in.</p>
+<p>Googling “lennox s40 thermostat api” led me immediately to PeteRager’s lennoxs30 library on GitHub. Others in the home automation community had already done the work of reverse-engineering the local API. The library is designed for Home Assistant integration, but the underlying code for communicating with the thermostat was exactly what I needed.</p>
+</section>
+<section id="exploration" class="level2">
+<h2 class="anchored" data-anchor-id="exploration">Exploration</h2>
+<p>I spent an evening in a Jupyter notebook figuring out how to talk to my thermostat. The lennoxs30 library provides an s30api_async class that handles the connection. Once connected, you receive a list of systems (in my case, just one HVAC system). Each system contains equipment objects and zone objects. The equipment objects represent the physical hardware: the heat pump and the air handler. Each piece of equipment exposes a list of diagnostic parameters.</p>
+<p>The diagnostic parameters have names, and those names matched what I’d seen in the thermostat’s hidden diagnostics menu. I already knew which values I cared about from weeks of manually checking: coil temperature, ambient temperature, heating rate, defrost status. Finding them programmatically was a matter of printing out the available diagnostics and matching names to what I recognized.</p>
+<p>From the heat pump, I pulled the ambient temperature, coil temperature, defrost status, reversing valve state (heat vs cool mode), and the frost accumulation timer. From the air handler, I grabbed the blower CFM, heating rate, and whether the auxiliary heat strips were running. The zone object gave me the current interior temperature and the heating setpoint.</p>
+<p>The next morning, I noticed a problem: the values in my log weren’t changing. The script ran, data came back, but the coil temperature stayed the same minute after minute. After some digging, I found I needed to call set_diagnostic_level(2) each time the script runs to get fresh sensor readings. Without it, the thermostat returns stale cached values. Adding that call fixed the issue.</p>
+</section>
+<section id="the-script" class="level2">
+<h2 class="anchored" data-anchor-id="the-script">The Script</h2>
+<p>The final script is straightforward. It connects to the thermostat, sets the diagnostic level, pumps messages until the zones load, then grabs the values I care about and appends them to a CSV file.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> asyncio</span>
+<span id="cb1-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> lennoxs30api <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> s30api_async</span>
+<span id="cb1-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> datetime <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> datetime</span>
+<span id="cb1-4"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> pathlib <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> Path</span>
+<span id="cb1-5"></span>
+<span id="cb1-6">IP_ADDRESS <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{IP_ADDRESS}</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb1-7">LOG_FILE <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> Path(<span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">__file__</span>).parent <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"thermostat_log.csv"</span></span>
+<span id="cb1-8"></span>
+<span id="cb1-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Heat pump diagnostic IDs</span></span>
+<span id="cb1-10">HP_DEFROST_STATUS <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span></span>
+<span id="cb1-11">HP_HEATING_RATE <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span></span>
+<span id="cb1-12">HP_REVERSING_VALVE <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span></span>
+<span id="cb1-13">HP_AMBIENT_TEMP <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span></span>
+<span id="cb1-14">HP_COIL_TEMP <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span></span>
+<span id="cb1-15">HP_TARGET_FROST_ACCUM_MIN <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">11</span></span>
+<span id="cb1-16">HP_FROST_ACCUM_MIN <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span></span>
+<span id="cb1-17"></span>
+<span id="cb1-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Air handler diagnostic IDs</span></span>
+<span id="cb1-19">AH_DEFROST_STATUS <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span></span>
+<span id="cb1-20">AH_HEATING_RATE <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span></span>
+<span id="cb1-21">AH_ELEC_HEAT_SECTIONS <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">13</span></span>
+<span id="cb1-22">AH_BLOWER_CFM <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span></span>
+<span id="cb1-23"></span>
+<span id="cb1-24">HEADER <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (</span>
+<span id="cb1-25">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"timestamp,interior_temp,hsp,csp,defrost_status,heating_rate,"</span></span>
+<span id="cb1-26">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"reversing_valve,ambient_temp,coil_temp,target_frost_accum_min,"</span></span>
+<span id="cb1-27">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"frost_accum_min,ah_defrost_status,ah_heating_rate,"</span></span>
+<span id="cb1-28">    <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ah_elec_heat_sections,ah_blower_cfm</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span></span>
+<span id="cb1-29">)</span>
+<span id="cb1-30"></span>
+<span id="cb1-31"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">async</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">def</span> get_status():</span>
+<span id="cb1-32">    api <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> s30api_async(</span>
+<span id="cb1-33">        username<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, password<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, app_id<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"test_app"</span>, ip_address<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>IP_ADDRESS</span>
+<span id="cb1-34">    )</span>
+<span id="cb1-35">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">await</span> api.serverConnect()</span>
+<span id="cb1-36">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">try</span>:</span>
+<span id="cb1-37">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> system <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> api.system_list:</span>
+<span id="cb1-38">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">await</span> api.subscribe(system)</span>
+<span id="cb1-39">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">await</span> system.set_diagnostic_level(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)</span>
+<span id="cb1-40"></span>
+<span id="cb1-41">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> _ <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">60</span>):</span>
+<span id="cb1-42">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">await</span> api.messagePump()</span>
+<span id="cb1-43">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> system.zone_list:</span>
+<span id="cb1-44">                <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">break</span></span>
+<span id="cb1-45"></span>
+<span id="cb1-46">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">not</span> system.zone_list:</span>
+<span id="cb1-47">            <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">raise</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">TimeoutError</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Zones never loaded after 60 pumps"</span>)</span>
+<span id="cb1-48"></span>
+<span id="cb1-49">        zone <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> system.zone_list[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>]</span>
+<span id="cb1-50">        hp_diags <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> system.equipment[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>].diagnostics</span>
+<span id="cb1-51">        ah_diags <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> system.equipment[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>].diagnostics</span>
+<span id="cb1-52"></span>
+<span id="cb1-53">        timestamp <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> datetime.now().strftime(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'%Y-%m-</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%d</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> %H:%M:%S'</span>)</span>
+<span id="cb1-54">        hp_diags_to_log <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [</span>
+<span id="cb1-55">            HP_DEFROST_STATUS, HP_HEATING_RATE, HP_REVERSING_VALVE,</span>
+<span id="cb1-56">            HP_AMBIENT_TEMP, HP_COIL_TEMP,</span>
+<span id="cb1-57">            HP_TARGET_FROST_ACCUM_MIN, HP_FROST_ACCUM_MIN</span>
+<span id="cb1-58">        ]</span>
+<span id="cb1-59">        ah_diags_to_log <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [</span>
+<span id="cb1-60">            AH_DEFROST_STATUS, AH_HEATING_RATE,</span>
+<span id="cb1-61">            AH_ELEC_HEAT_SECTIONS, AH_BLOWER_CFM</span>
+<span id="cb1-62">        ]</span>
+<span id="cb1-63"></span>
+<span id="cb1-64">        values <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> [timestamp, zone.temperature, zone.hsp, zone.csp]</span>
+<span id="cb1-65">        values <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+=</span> [hp_diags[did].value <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> did <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> hp_diags_to_log]</span>
+<span id="cb1-66">        values <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+=</span> [ah_diags[did].value <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> did <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> ah_diags_to_log]</span>
+<span id="cb1-67"></span>
+<span id="cb1-68">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">with</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(LOG_FILE, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"a"</span>) <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> f:</span>
+<span id="cb1-69">            f.write(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">","</span>.join(<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">str</span>(v) <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> v <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> values) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span>
+<span id="cb1-70">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">finally</span>:</span>
+<span id="cb1-71">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">await</span> api.shutdown()</span>
+<span id="cb1-72"></span>
+<span id="cb1-73"></span>
+<span id="cb1-74"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="va" style="color: #111111;
+background-color: null;
+font-style: inherit;">__name__</span> <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"__main__"</span>:</span>
+<span id="cb1-75">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">not</span> LOG_FILE.exists():</span>
+<span id="cb1-76">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">with</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(LOG_FILE, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"a"</span>) <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> f:</span>
+<span id="cb1-77">            f.write(HEADER)</span>
+<span id="cb1-78">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">try</span>:</span>
+<span id="cb1-79">        asyncio.run(get_status())</span>
+<span id="cb1-80">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">except</span> <span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">Exception</span> <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> e:</span>
+<span id="cb1-81">        <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">with</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">open</span>(LOG_FILE, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"a"</span>) <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> f:</span>
+<span id="cb1-82">            f.write(<span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">f"</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>datetime<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">.</span>now()<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">: Error: </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">{</span>e<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">}</span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">\n</span><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"</span>)</span></code></pre></div></div>
+<p>I run this via cron every minute. Each run appends one row to the CSV. The setup is low-tech: a laptop that stays awake (thanks to <code>caffeinate</code> on macOS) with a single crontab entry:</p>
+<pre><code>* * * * * /path/to/venv/bin/python /path/to/thermologger.py</code></pre>
+<p>I don’t intend to run this logger for an extended period of time. Hopefully we get a resolution from the HVAC company who installed the system soon. If this was a longer term log, I’d move it to the Raspberry Pi that’s gathering dust in the closet or use this as an excuse to actually jump into the homelab rabbit hole. As it exists now, it was easier to just run it off the laptop.</p>
+<p>The full code is available on <a href="https://github.com/xander-harris/thermologger/">Github</a>.</p>
+</section>
+<section id="gotchas" class="level2">
+<h2 class="anchored" data-anchor-id="gotchas">Gotchas</h2>
+<p>Beyond the diagnostic level issue mentioned earlier, I ran into one other quirk. The library uses a <code>messagePump()</code> function to process responses from the thermostat. The zone data I needed (interior temperature, setpoints) doesn’t populate immediately after connecting; it takes multiple pump cycles for the thermostat to send everything. Through trial and error, I found the zones reliably loaded after about 56 pumps regardless of how much wall-clock time I added between them. I settled on a loop that runs up to 60 pumps and breaks early once the zone list populates.</p>
+<p>For reliability, I wrapped the main work in a try/finally block so that <code>api.shutdown()</code> always runs, even if something fails mid-script. The outer try/except catches any remaining errors and logs them with a timestamp. Running as a cron job every minute means a single failure just leaves a gap in the log rather than crashing a long-running process. Over five days of minute-by-minute logging, I’ve had exactly three failures — all recovered on the next run.</p>
+</section>
+<section id="graphs" class="level2">
+<h2 class="anchored" data-anchor-id="graphs">Graphs</h2>
+<p>With data in hand, I wrote a quick matplotlib script to visualize what the system was doing:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> pandas <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> pd</span>
+<span id="cb3-2"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> matplotlib.pyplot <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">as</span> plt</span>
+<span id="cb3-3"><span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">from</span> matplotlib.dates <span class="im" style="color: #00769E;
+background-color: null;
+font-style: inherit;">import</span> HourLocator, DateFormatter</span>
+<span id="cb3-4"></span>
+<span id="cb3-5">df <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> pd.read_csv(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'./thermostat_log.csv'</span>, parse_dates<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'timestamp'</span>])</span>
+<span id="cb3-6">df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'is_defrost'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> (df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'defrost_status'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Active'</span>) <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&amp;</span></span>
+<span id="cb3-7">                   (df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'reversing_valve'</span>] <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Cool Mode'</span>)</span>
+<span id="cb3-8"></span>
+<span id="cb3-9">fig, ax <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span> plt.subplots(figsize<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>))</span>
+<span id="cb3-10"></span>
+<span id="cb3-11">ax.plot(df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'timestamp'</span>], df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'coil_temp'</span>], label<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Coil Temp'</span>, linewidth<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span>)</span>
+<span id="cb3-12">ax.plot(df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'timestamp'</span>], df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'ambient_temp'</span>], label<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Ambient Temp'</span>, linewidth<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span>, </span>
+<span id="cb3-13">        alpha<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.7</span>)</span>
+<span id="cb3-14">ax.plot(df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'timestamp'</span>], df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'interior_temp'</span>], label<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Interior Temp'</span>, linewidth<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span>,</span>
+<span id="cb3-15">        alpha<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.7</span>)</span>
+<span id="cb3-16">ax.plot(df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'timestamp'</span>], df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'hsp'</span>], label<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Heat Setpoint'</span>, linewidth<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span>,</span>
+<span id="cb3-17">        linestyle<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'--'</span>, alpha<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.7</span>)</span>
+<span id="cb3-18"></span>
+<span id="cb3-19"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">for</span> i, t <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">in</span> <span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">enumerate</span>(df[df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'is_defrost'</span>]][<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'timestamp'</span>]):</span>
+<span id="cb3-20">    ax.axvspan(t, t <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> pd.Timedelta(minutes<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>), alpha<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.3</span>, color<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'red'</span>,</span>
+<span id="cb3-21">    label<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Defrost'</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> i <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">else</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">''</span>)</span>
+<span id="cb3-22"></span>
+<span id="cb3-23">ax.hlines(y<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span>, xmin<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'timestamp'</span>].<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">min</span>(), xmax<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'timestamp'</span>].<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">max</span>(),</span>
+<span id="cb3-24">         color<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'black'</span>, linewidth<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, linestyle<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'--'</span>, label<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'32°F'</span>)</span>
+<span id="cb3-25"></span>
+<span id="cb3-26">ax.set_ylim(bottom<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">min</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">30</span>, df[<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'coil_temp'</span>].<span class="bu" style="color: null;
+background-color: null;
+font-style: inherit;">min</span>() <span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>))</span>
+<span id="cb3-27">ax.set_xlabel(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Time'</span>)</span>
+<span id="cb3-28">ax.set_ylabel(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Temperature (°F)'</span>)</span>
+<span id="cb3-29">ax.set_title(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Thermostat Data with Defrost Cycles'</span>)</span>
+<span id="cb3-30">ax.legend(loc<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'upper left'</span>, bbox_to_anchor<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.02</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>))</span>
+<span id="cb3-31">ax.grid(axis<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'y'</span>, linestyle<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'--'</span>, alpha<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>)</span>
+<span id="cb3-32"></span>
+<span id="cb3-33">ax.xaxis.set_major_locator(HourLocator(interval<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>))</span>
+<span id="cb3-34">ax.xaxis.set_major_formatter(DateFormatter(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'%m-</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%d</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;"> %H:%M'</span>))</span>
+<span id="cb3-35"></span>
+<span id="cb3-36">ax.tick_params(axis<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'x'</span>, labelsize<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, length<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>, width<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)</span>
+<span id="cb3-37">plt.xticks(rotation<span class="op" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">45</span>)</span>
+<span id="cb3-38"></span>
+<span id="cb3-39">plt.tight_layout()</span>
+<span id="cb3-40">plt.show()</span></code></pre></div></div>
+<p>The graph plots four temperature lines: the coil temperature (blue), ambient outdoor temperature (orange), interior temperature (green), and the heating setpoint (dashed). A horizontal black line marks 32°F for reference. Red vertical bands highlight each defrost cycle.</p>
+<p>The defrost pattern is immediately visible: a forest of red lines spaced exactly 30 minutes apart, regardless of conditions. The coil temperature dips into the teens during heating, spikes during defrost as the system briefly runs in cooling mode, then drops again. The interior temperature shows our overnight setback and morning recovery. The ambient temperature hovers in the high 30s to low 40s — cold enough for the heat pump to work, but not cold enough to justify defrosting every half hour, especially during the dry weather we’ve had.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="./full_data_graph.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Thermostat data with defrost cycles"><img src="https://xanderharris.github.io/posts/heat_pump_defrost/full_data_graph.png" class="img-fluid figure-img" alt="Thermostat data with defrost cycles"></a></p>
+<figcaption>Thermostat data with defrost cycles</figcaption>
+</figure>
+</div>
+<p>The large blank space overnight on the 19th into the morning of the 20th represents a night where we turned the system off entirely because the frequent defrost cycles were repeatedly waking us up while we slept. Outside of the sleep disruption, particularly galling are the mid-day periods on the 18th and 19th where the interior temperature is maintaining the set point and the ambiant temperature is above 40°F, but defrost cycles persist every 30 minutes.</p>
+<p>In an attempt to reduce the variables for the HVAC techs to troubleshoot, I reset the thermostat to factory defaults on the afternoon of the 20th. Below is a graph of nearly two days of data after the thermostat reset.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="./post_restart_graph.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Detailed view of two days of data after resetting the thermostat to factory defaults"><img src="https://xanderharris.github.io/posts/heat_pump_defrost/post_restart_graph.png" class="img-fluid figure-img" alt="Detailed view of two days of data after resetting the thermostat to factory defaults"></a></p>
+<figcaption>Detailed view of two days of data after resetting the thermostat to factory defaults</figcaption>
+</figure>
+</div>
+<p>After reset, the system quickly raised the house temperature back to the setpoint and then held it there with very few defrost cycles. The thermostat followed the programmed schedule and dropped the setpoint from the daily 67 to the overnight 62 at 21:00 and the heat pump did not need to run until shortly after midnight when the internal temperature had reached 62. At that point, the pattern of 30 minute defrost cycles returned and continued. In an effort to see if a smaller overnight setback would help, I set the thermostat to 65 overnight on the 21st into the 22nd. However, that made no difference.</p>
+<p>Having these visuals made the problem concrete in a way that “it defrosts a lot” never could.</p>
+</section>
+<section id="whats-next" class="level2">
+<h2 class="anchored" data-anchor-id="whats-next">What’s Next</h2>
+<p>A technician came out on January 22nd. He worked through his checklist: thermostat settings, filter condition, refrigerant levels. Then he ran the unit at 100% in test mode. We watched the coil temperature reading drop to 12°F almost immediately, even though the ambient air was in the low 40s. We checked the outdoor coils — no frost. A few minutes later, the coil temperature reading had risen to 18°F, then 33°F, while still running full heat. That’s backwards. The coil should get colder under load, not warmer.</p>
+<p>After 30 minutes of running at full capacity with no visible frost accumulation, the unit defrosted anyway. The tech’s conclusion: something is wrong with the coil temperature sensor or the control board interpreting its readings. The system is defrosting based on bad data.</p>
+<p>His next step is to call Lennox technical support. He mentioned his last call involved a 90-minute hold. I’m waiting to hear back.</p>
+<p>Ironically, I never shared the logged data or graphs with this latest technician. He seemed more than willing to believe the behavior I was describing and then was able to witness it himself and those observations point towards faulty temperature data. As I mentioned above, I think this is a hardware issue and don’t want to confuse the situation if someone looks at my work and thinks I broke something by “hacking” my thermostat.</p>
+<p>I’ll write a follow-up post once we have a resolution. In the meantime, I’ll keep the script collecting data. I probably won’t do anything with it now that everyone is convinced of the problem.</p>
+
+
+</section>
+
+ ]]></description>
+  <category>explore</category>
+  <guid>https://xanderharris.github.io/posts/heat_pump_defrost/</guid>
+  <pubDate>Thu, 22 Jan 2026 00:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Current State of the OR Tax Volunteer Tools</title>
   <dc:creator>Xander Harris</dc:creator>
-  <link>https://xanderharris.github.io/posts/Hello-World/</link>
+  <link>https://xanderharris.github.io/posts/current_state_tax_tools/</link>
   <description><![CDATA[ 
 
 
@@ -75,7 +838,7 @@
 
  ]]></description>
   <category>work</category>
-  <guid>https://xanderharris.github.io/posts/Hello-World/</guid>
+  <guid>https://xanderharris.github.io/posts/current_state_tax_tools/</guid>
   <pubDate>Tue, 16 Dec 2025 00:00:00 GMT</pubDate>
 </item>
 </channel>

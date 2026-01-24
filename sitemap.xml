@@ -2,22 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://xanderharris.github.io/about.html</loc>
-    <lastmod>2025-12-17T02:05:00.768Z</lastmod>
+    <lastmod>2026-01-24T00:05:23.037Z</lastmod>
   </url>
   <url>
-    <loc>https://xanderharris.github.io/posts/Hello-World/index.html</loc>
-    <lastmod>2025-12-17T02:05:00.772Z</lastmod>
-  </url>
-  <url>
-    <loc>https://xanderharris.github.io/work.html</loc>
-    <lastmod>2025-12-17T02:05:00.772Z</lastmod>
+    <loc>https://xanderharris.github.io/posts/heat_pump_defrost/index.html</loc>
+    <lastmod>2026-01-24T00:05:23.042Z</lastmod>
   </url>
   <url>
     <loc>https://xanderharris.github.io/index.html</loc>
-    <lastmod>2025-12-17T02:05:00.772Z</lastmod>
+    <lastmod>2026-01-24T00:05:23.041Z</lastmod>
+  </url>
+  <url>
+    <loc>https://xanderharris.github.io/work.html</loc>
+    <lastmod>2026-01-24T00:05:23.043Z</lastmod>
+  </url>
+  <url>
+    <loc>https://xanderharris.github.io/posts/current_state_tax_tools/index.html</loc>
+    <lastmod>2026-01-24T00:05:23.041Z</lastmod>
   </url>
   <url>
     <loc>https://xanderharris.github.io/blog.html</loc>
-    <lastmod>2025-12-17T02:05:00.772Z</lastmod>
+    <lastmod>2026-01-24T00:05:23.041Z</lastmod>
   </url>
 </urlset>
