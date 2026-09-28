@@ -1917,7 +1917,7 @@
 												x-show="getAvailableDependentsForTaxpayer(tpIndex - 1, scenarioIndex, tpIndex).length === 0">
 												<div
 													class="inputdata dependent-names-input dependent-names-display no-dependents">
-													No dependents</div>
+													No Dependents</div>
 											</div>
 										</td>
 										<td class="other-dependent-names-cell">
@@ -2636,6 +2636,9 @@
 						const fieldPath = inputElement.getAttribute('data-field');
 						if (fieldPath) {
 							this.setFieldValue(fieldPath, null);
+							if (fieldPath.includes('oregonIncome')) {
+								this.generateScenarios();
+							}
 						}
 						return;
 					}
@@ -2669,6 +2672,7 @@
 								if (match) {
 									const index = parseInt(match[1]);
 									this.taxpayers[index].oregonIncomeConfirmed = formattedValue;
+									this.generateScenarios();
 								}
 							}
 
@@ -3665,30 +3669,48 @@
 						return [this.createEmptyScenario()];
 					}
 
-					// Sort shareable dependents by dependent number
-					const sortedShareableDependents = [...shareableDependents].sort((a, b) => a.dependentNumber - b.dependentNumber);
+					// 1. Determine lower vs higher AGI taxpayer (default to TP1 if invalid or tied)
+					const tp1AGI = this.taxpayers && this.taxpayers[0] ? this.getNumericValue(this.taxpayers[0].oregonIncome) : null;
+					const tp2AGI = this.taxpayers && this.taxpayers[1] ? this.getNumericValue(this.taxpayers[1].oregonIncome) : null;
+					const isTp2Lower = (tp1AGI !== null && tp2AGI !== null && tp2AGI < tp1AGI);
+
+					// 2. Sort shareable dependents oldest-first (earliest birthDate comes first)
+					const sortedShareableDependents = [...shareableDependents].sort((a, b) => {
+						if (a.birthDate && b.birthDate) {
+							const dateA = new Date(a.birthDate);
+							const dateB = new Date(b.birthDate);
+							if (!isNaN(dateA.getTime()) && !isNaN(dateB.getTime()) && dateA.getTime() !== dateB.getTime()) {
+								return dateA.getTime() - dateB.getTime();
+							}
+						}
+						if (a.birthDate && !b.birthDate) return -1;
+						if (!a.birthDate && b.birthDate) return 1;
+						return (a.dependentNumber || 0) - (b.dependentNumber || 0);
+					});
 
 					const assignments = [];
 					const totalShareable = sortedShareableDependents.length;
 
-					// Generate all possible distributions of shareable dependents
-					for (let i = totalShareable; i >= 0; i--) {
+					// 3. Generate scenarios: lower-AGI starts with all dependents, then moves oldest dependents to higher-AGI one by one
+					for (let moveCount = 0; moveCount <= totalShareable; moveCount++) {
 						const assignment = this.createEmptyScenario();
-						assignment.tp1.shareableKids = i;
-						assignment.tp2.shareableKids = totalShareable - i;
 
-						// Assign names to TP1
-						if (i > 0) {
-							const tp1Dependents = sortedShareableDependents.slice(0, i);
-							assignment.tp1.dependentNames = tp1Dependents.map(dep =>
+						const higherAGIDeps = sortedShareableDependents.slice(0, moveCount);
+						const lowerAGIDeps = sortedShareableDependents.slice(moveCount);
+
+						const tp1Deps = isTp2Lower ? higherAGIDeps : lowerAGIDeps;
+						const tp2Deps = isTp2Lower ? lowerAGIDeps : higherAGIDeps;
+
+						assignment.tp1.shareableKids = tp1Deps.length;
+						if (tp1Deps.length > 0) {
+							assignment.tp1.dependentNames = tp1Deps.map(dep =>
 								this.getDependentPlaceholderName(dep.originalIndex, dep)
 							).join(', ');
 						}
 
-						// Assign names to TP2
-						if (totalShareable - i > 0) {
-							const tp2Dependents = sortedShareableDependents.slice(i);
-							assignment.tp2.dependentNames = tp2Dependents.map(dep =>
+						assignment.tp2.shareableKids = tp2Deps.length;
+						if (tp2Deps.length > 0) {
+							assignment.tp2.dependentNames = tp2Deps.map(dep =>
 								this.getDependentPlaceholderName(dep.originalIndex, dep)
 							).join(', ');
 						}
