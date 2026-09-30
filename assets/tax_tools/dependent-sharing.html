@@ -12,10 +12,10 @@
 	<meta name="description" content="Dependent Sharing and Comparing Return Results Calculator">
 
 	<!-- Preload Alpine.js for faster loading -->
-	<link rel="preload" href="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" as="script">
+	<link rel="preload" href="https://unpkg.com/alpinejs@3.14.8/dist/cdn.min.js" as="script">
 
 	<!-- Alpine.js CDN -->
-	<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+	<script defer src="https://unpkg.com/alpinejs@3.14.8/dist/cdn.min.js"></script>
 
 	<style type="text/css">
 		/* CSS Custom Properties for consistent theming */
@@ -199,49 +199,6 @@
 			box-shadow: 0 0 3px rgba(231, 76, 60, 0.3) !important;
 		}
 
-
-		.inputdata.error::after {
-			content: attr(data-error-message);
-			position: absolute;
-			bottom: 125%;
-			left: 50%;
-			transform: translateX(-50%);
-			background-color: var(--color-tooltip-bg);
-			color: var(--color-text-light);
-			text-align: center;
-			border-radius: 6px;
-			padding: 10px;
-			font-size: 12px;
-			white-space: nowrap;
-			z-index: 1000;
-			opacity: 0;
-			visibility: hidden;
-			transition: opacity 0.3s, visibility 0.3s;
-			pointer-events: none;
-			max-width: 250px;
-			word-wrap: break-word;
-		}
-
-		.inputdata.error::before {
-			content: "";
-			position: absolute;
-			bottom: 100%;
-			left: 50%;
-			transform: translateX(-50%);
-			border-width: 5px;
-			border-style: solid;
-			border-color: var(--color-tooltip-bg) transparent transparent transparent;
-			opacity: 0;
-			visibility: hidden;
-			transition: opacity 0.3s, visibility 0.3s;
-			pointer-events: none;
-		}
-
-		.inputdata.error:hover::after,
-		.inputdata.error:hover::before {
-			opacity: 1;
-			visibility: visible;
-		}
 
 
 
@@ -1353,33 +1310,54 @@
 		}
 
 		/* Scenario table column widths */
+		.scenario-container table th.col-tp-name,
+		.scenario-container table td.col-tp-name,
 		.scenario-container table th:nth-child(1),
 		.scenario-container table td:nth-child(1) {
-			width: 110px;
-			min-width: 110px;
-			max-width: 110px;
+			width: 135px;
+			min-width: 135px;
+			max-width: 135px;
 			white-space: nowrap;
 		}
 
+		.scenario-container table th.col-filing-status,
+		.scenario-container table td.col-filing-status,
 		.scenario-container table th:nth-child(2),
 		.scenario-container table td:nth-child(2) {
-			width: 90px;
-			min-width: 90px;
-			max-width: 90px;
+			width: 105px;
+			min-width: 105px;
+			max-width: 105px;
 			white-space: normal;
 			word-wrap: break-word;
 		}
 
+		.scenario-container table th.col-dep-count,
+		.scenario-container table td.col-dep-count,
 		.scenario-container table th:nth-child(3),
 		.scenario-container table td:nth-child(3) {
-			width: 90px;
-			min-width: 90px;
-			max-width: 90px;
+			width: 110px;
+			min-width: 110px;
+			max-width: 110px;
+			hyphens: none;
+			word-break: normal;
 		}
 
-		.scenario-container table th:last-child,
-		.scenario-container table td:last-child {
-			min-width: 120px;
+		.scenario-container th.dependent-names-header {
+			width: 440px;
+			min-width: 440px;
+			max-width: 440px;
+		}
+
+		.scenario-container table tr.section-header-sub th,
+		.scenario-container th.col-shareable-names,
+		.scenario-container td.col-shareable-names,
+		.scenario-container th.col-other-names,
+		.scenario-container td.col-other-names,
+		.scenario-container td.dependent-names-cell,
+		.scenario-container td.other-dependent-names-cell {
+			width: 260px;
+			min-width: 260px;
+			max-width: 260px;
 		}
 
 		/* Responsive scenario table headers */
@@ -1394,48 +1372,21 @@
 			padding: 8px 4px;
 		}
 
-		/* Specific column width adjustments */
-		.scenario-container th:nth-child(4) {
-			width: 260px;
-			/* Sharable Dependent Names column */
-			min-width: 260px;
-			max-width: 260px;
-		}
-
-
 		/* All refund columns (Federal, OR, WA, Total) */
-		.scenario-container th:nth-child(5),
-		.scenario-container th:nth-child(6),
-		.scenario-container th:nth-child(7),
-		.scenario-container th:nth-child(8) {
-			width: 90px;
-			min-width: 90px;
-			max-width: 90px;
+		.scenario-container th.col-refund,
+		.scenario-container td.col-refund {
+			width: 100px;
+			min-width: 100px;
+			max-width: 100px;
 		}
 
-		/* Match column widths for table cells */
-		.scenario-container td:nth-child(4) {
-			/* Sharable Dependent Names column */
-			width: 260px;
-			min-width: 260px;
-			max-width: 260px;
-		}
-
-		.scenario-container td:nth-child(5) {
-			/* Other Dependent Names column */
-			width: 260px;
-			min-width: 260px;
-			max-width: 260px;
-		}
-
-		/* All refund columns (Federal, OR, WA, Total) */
-		.scenario-container td:nth-child(6),
-		.scenario-container td:nth-child(7),
-		.scenario-container td:nth-child(8),
-		.scenario-container td:nth-child(9) {
-			width: 90px;
-			min-width: 90px;
-			max-width: 90px;
+		.scenario-container table th:last-child,
+		.scenario-container table td:last-child,
+		.scenario-container table th.col-total-refund,
+		.scenario-container table td.col-total-refund {
+			width: 120px;
+			min-width: 120px;
+			max-width: 120px;
 		}
 
 		/* Simplified select sizing - use smallest size that works everywhere */
@@ -1446,6 +1397,7 @@
 		}
 
 		/* Input styling for all refund columns */
+		.scenario-container td.col-refund input.inputdata,
 		.scenario-container td:nth-child(6) input.inputdata,
 		.scenario-container td:nth-child(7) input.inputdata,
 		.scenario-container td:nth-child(8) input.inputdata,
@@ -1674,6 +1626,7 @@
 						<td class="inputfield">AGI</td>
 						<td class="inputfield">Filing an OR return?</td>
 						<td class="inputfield">Lived in WA for over 1/2 of year?</td>
+						<td class="inputfield">Prefer younger dependents?</td>
 						<td class="inputfield">Potential OR Kids Credit?</td>
 					</tr>
 					<template x-for="(taxpayer, index) in taxpayers" :key="index">
@@ -1682,13 +1635,12 @@
 								<span x-text="'Taxpayer ' + (index + 1)"></span>
 							</td>
 							<td class="taxpayer-name-cell">
-								<input type="text" class="inputdata dependent-names-input" :tabindex="4 + (index * 4)"
-									placeholder="Enter first name" x-model="taxpayer.name"
-									@input="taxpayer.confirmedName = taxpayer.name">
+								<input type="text" class="inputdata dependent-names-input" :tabindex="4 + (index * 5)"
+									placeholder="Enter first name" x-model="taxpayer.name">
 							</td>
 							<td>
 								<div class="tooltip-container">
-									<input :value="taxpayer.oregonIncome" class="inputdata" :tabindex="5 + (index * 4)"
+									<input :value="taxpayer.oregonIncome" class="inputdata" :tabindex="5 + (index * 5)"
 										placeholder="$0" :data-field="'taxpayers[' + index + '].oregonIncome'"
 										@input="validateNumeric($event.target.value, $event.target)"
 										@paste="handleCurrencyPaste($event)"
@@ -1698,11 +1650,17 @@
 								</div>
 							</td>
 							<td>
-								<input type="checkbox" x-model="taxpayer.willFileOR" :tabindex="6 + (index * 4)">
+								<input type="checkbox" x-model="taxpayer.willFileOR" @change="generateScenarios()"
+									:tabindex="6 + (index * 5)">
 							</td>
 							<td>
 								<input type="checkbox" x-model="taxpayer.livedInWAOverHalfYear"
-									:tabindex="7 + (index * 4)">
+									:tabindex="7 + (index * 5)">
+							</td>
+							<td>
+								<input type="checkbox" x-model="taxpayer.preferYounger"
+									:tabindex="8 + (index * 5)"
+									@change="setPreferYounger(index)">
 							</td>
 							<td :class="{ 'resultsfield': getOKCQualification(taxpayer.oregonIncome) !== '', 'result-negative': getOKCQualification(taxpayer.oregonIncome) === 'No' && taxpayer.oregonIncome !== null && taxpayer.oregonIncome !== undefined && taxpayer.oregonIncome !== '' }"
 								x-text="getOKCQualification(taxpayer.oregonIncome)"></td>
@@ -1728,14 +1686,14 @@
 							<td class="inputfield dependent-of-header">
 								<div>Dependent of</div>
 								<div
-									x-text="taxpayer.confirmedName && taxpayer.confirmedName.trim() ? taxpayer.confirmedName : 'Taxpayer ' + (tpIndex + 1)">
+									x-text="taxpayer.name && taxpayer.name.trim() ? taxpayer.name : 'Taxpayer ' + (tpIndex + 1)">
 								</div>
 							</td>
 						</template>
 						<td class="inputfield">Include for Dependent Sharing</td>
 						<td class="inputfield">Potential OR Kids Credit</td>
 					</tr>
-					<template x-for="(dependent, depIndex) in dependents" :key="'dep-' + depIndex">
+					<template x-for="(dependent, depIndex) in dependents" :key="'dep-' + dependent.id">
 						<tr>
 							<td class="inputfield fixed-width-column dependent-remove-container">
 								<span x-text="'Dependent ' + (depIndex + 1)"></span>
@@ -1746,15 +1704,14 @@
 							</td>
 							<td class="taxpayer-name-cell">
 								<input type="text" class="inputdata dependent-names-input"
-									:tabindex="12 + (depIndex * (taxpayers.length + 3))" placeholder="Enter first name"
-									x-model="dependent.name" @focus="startEditingDependentName(depIndex)"
-									@input="isEditingDependentName = true; editingDependentIndex = depIndex; openDependentSelector = null;"
-									@blur="finishEditingDependentName()">
+									:tabindex="14 + (depIndex * (taxpayers.length + 3))" placeholder="Enter first name"
+									x-model="dependent.name"
+									@input="syncAllScenariosDisplayNames()">
 							</td>
 							<td>
 								<div class="tooltip-container">
 									<input x-model="dependent.birthDate" class="inputdata"
-										:tabindex="13 + (depIndex * (taxpayers.length + 3))" placeholder="mm/dd/yyyy"
+										:tabindex="15 + (depIndex * (taxpayers.length + 3))" placeholder="mm/dd/yyyy"
 										@input="clearError($event.target)" @paste="handleBirthDatePaste($event)"
 										@blur="handleBirthDateBlur($event.target.value, $event.target, depIndex)">
 									<span class="tooltip-text" x-show="false" x-text="''"></span>
@@ -1765,7 +1722,7 @@
 								:key="'checkbox-' + tpIndex + '-dep-' + depIndex">
 								<td>
 									<input type="checkbox" x-model="dependent.qualifiesFor[tpIndex]"
-										:tabindex="14 + (depIndex * (taxpayers.length + 3)) + tpIndex"
+										:tabindex="16 + (depIndex * (taxpayers.length + 3)) + tpIndex"
 										@change="generateScenarios(); reassignDependentsAfterQualificationChange()">
 								</td>
 							</template>
@@ -1783,7 +1740,7 @@
 										<template
 											x-if="dependents[depIndex].qualifiesFor[tpIndex] && getOKCQualification(taxpayer.oregonIncome) !== ''">
 											<div
-												x-text="(taxpayer.confirmedName && taxpayer.confirmedName.trim() ? taxpayer.confirmedName : 'Taxpayer ' + (tpIndex + 1)) + ': ' + getOKCQualification(taxpayer.oregonIncome)">
+												x-text="(taxpayer.name && taxpayer.name.trim() ? taxpayer.name : 'Taxpayer ' + (tpIndex + 1)) + ': ' + getOKCQualification(taxpayer.oregonIncome)">
 											</div>
 										</template>
 									</template>
@@ -1801,7 +1758,7 @@
 			<!-- Add Dependent Button -->
 			<div class="btn-container" x-show="scenarios.length > 0" x-cloak>
 				<button
-					@click="dependents.push({ name: '', birthDate: '', age: null, qualifiesFor: Array(taxpayers.length).fill(false), includeForSharing: false }); generateScenarios()"
+					@click="addDependent()"
 					class="add-btn">
 					+ Add Dependent
 				</button>
@@ -1839,26 +1796,26 @@
 						<table>
 							<tbody>
 								<tr class="section-header">
-									<th rowspan="2">Taxpayer</th>
-									<th rowspan="2">Filing Status</th>
-									<th rowspan="2">Number of Sharable Dependents</th>
+									<th rowspan="2" class="col-tp-name">Taxpayer</th>
+									<th rowspan="2" class="col-filing-status">Filing Status</th>
+									<th rowspan="2" class="col-dep-count">Number of Sharable Dependents</th>
 									<th colspan="2" class="dependent-names-header">Dependent Names</th>
-									<th rowspan="2">Federal Refund/Due</th>
-									<th x-show="anyTaxpayerFilesOR" rowspan="2">OR Refund/Due</th>
-									<th x-show="anyTaxpayerLivedInWA" rowspan="2">WA Refund/Due</th>
-									<th rowspan="2">Total Refund/Due</th>
+									<th rowspan="2" class="col-refund">Federal Refund/Due</th>
+									<th x-show="anyTaxpayerFilesOR" rowspan="2" class="col-refund">OR Refund/Due</th>
+									<th x-show="anyTaxpayerLivedInWA" rowspan="2" class="col-refund">WA Refund/Due</th>
+									<th rowspan="2" class="col-total-refund">Total Refund/Due</th>
 								</tr>
 								<tr class="section-header-sub">
-									<th>Sharable</th>
-									<th>Other</th>
+									<th class="col-shareable-names">Sharable</th>
+									<th class="col-other-names">Other</th>
 								</tr>
 								<template x-for="tpIndex in [1, 2]"
 									:key="'scenario-' + scenarioIndex + '-tp-' + tpIndex">
 									<tr>
-										<td class="inputfield taxpayer-name-cell"
-											x-text="taxpayers[tpIndex - 1].confirmedName && taxpayers[tpIndex - 1].confirmedName.trim() ? taxpayers[tpIndex - 1].confirmedName : 'Taxpayer ' + tpIndex">
+										<td class="inputfield taxpayer-name-cell col-tp-name"
+											x-text="taxpayers[tpIndex - 1].name && taxpayers[tpIndex - 1].name.trim() ? taxpayers[tpIndex - 1].name : 'Taxpayer ' + tpIndex">
 										</td>
-										<td>
+										<td class="col-filing-status">
 											<div class="tooltip-container">
 												<select x-model="scenario['tp' + tpIndex].filingStatus"
 													class="inputdata"
@@ -1873,7 +1830,7 @@
 												</select>
 											</div>
 										</td>
-										<td class="shareable-dependents-count">
+										<td class="shareable-dependents-count col-dep-count">
 											<template x-if="scenario.isCustom">
 												<span x-text="scenario['tp' + tpIndex].shareableKids"></span>
 											</template>
@@ -1881,7 +1838,7 @@
 												<span x-text="scenario['tp' + tpIndex].shareableKids"></span>
 											</template>
 										</td>
-										<td class="dependent-names-cell">
+										<td class="dependent-names-cell col-shareable-names">
 											<!-- Unified dependent selection for all scenarios -->
 											<div x-show="getAvailableDependentsForTaxpayer(tpIndex - 1, scenarioIndex, tpIndex).length > 0"
 												class="dependent-selection-container">
@@ -1895,14 +1852,14 @@
 													<div class="dependent-selector-dropdown">
 														<template
 															x-for="(dependent, displayIndex) in getAvailableDependentsForTaxpayer(tpIndex - 1, scenarioIndex, tpIndex)"
-															:key="'selector-dep-' + displayIndex">
+															:key="'selector-dep-' + dependent.id">
 															<div class="dependent-option"
-																@click="selectDependent(scenarioIndex, tpIndex, dependent.originalIndex)"
-																:class="{ 'selected': isDependentSelected(scenarioIndex, tpIndex, dependent.originalIndex) }">
+																@click="selectDependent(scenarioIndex, tpIndex, dependent.id)"
+																:class="{ 'selected': isDependentSelected(scenarioIndex, tpIndex, dependent.id) }">
 																<span
-																	x-text="getDependentDropdownName(dependent.originalIndex, dependent)"></span>
+																	x-text="getDependentDropdownName(dependent)"></span>
 																<span
-																	x-show="isDependentSelected(scenarioIndex, tpIndex, dependent.originalIndex)"
+																	x-show="isDependentSelected(scenarioIndex, tpIndex, dependent.id)"
 																	class="selected-indicator">✓</span>
 															</div>
 														</template>
@@ -1920,9 +1877,9 @@
 													No Dependents</div>
 											</div>
 										</td>
-										<td class="other-dependent-names-cell">
+										<td class="other-dependent-names-cell col-other-names">
 											<!-- Other dependent selection for non-sharable dependents -->
-											<div x-show="getOtherDependentNames(tpIndex - 1).length > 0"
+											<div x-show="getOtherDependentsForTaxpayer(tpIndex - 1).length > 0"
 												class="dependent-selection-container">
 												<div class="selected-dependents-display inputdata dependent-names-input dependent-names-display normal"
 													@click="showOtherDependentSelector(scenarioIndex, tpIndex)">
@@ -1933,27 +1890,27 @@
 												<template x-if="isOtherDependentSelectorOpen(scenarioIndex, tpIndex)">
 													<div class="dependent-selector-dropdown">
 														<template
-															x-for="(dependent, displayIndex) in getOtherDependentNames(tpIndex - 1)"
-															:key="'other-selector-dep-' + displayIndex">
+															x-for="(dependent, displayIndex) in getOtherDependentsForTaxpayer(tpIndex - 1)"
+															:key="'other-selector-dep-' + dependent.id">
 															<div class="dependent-option"
-																@click="selectOtherDependent(scenarioIndex, tpIndex, dependent)"
-																:class="{ 'selected': isOtherDependentSelected(scenarioIndex, tpIndex, dependent) }">
-																<span x-text="dependent"></span>
+																@click="selectOtherDependent(scenarioIndex, tpIndex, dependent.id)"
+																:class="{ 'selected': isDependentSelected(scenarioIndex, tpIndex, dependent.id) }">
+																<span x-text="getDependentDisplayName(dependent)"></span>
 																<span
-																	x-show="isOtherDependentSelected(scenarioIndex, tpIndex, dependent)"
+																	x-show="isDependentSelected(scenarioIndex, tpIndex, dependent.id)"
 																	class="selected-indicator">✓</span>
 															</div>
 														</template>
 													</div>
 												</template>
 											</div>
-											<div x-show="getOtherDependentNames(tpIndex - 1).length === 0">
+											<div x-show="getOtherDependentsForTaxpayer(tpIndex - 1).length === 0">
 												<div
 													class="inputdata dependent-names-input dependent-names-display no-dependents">
 													No Dependents</div>
 											</div>
 										</td>
-										<td>
+										<td class="col-refund col-fed-refund">
 											<div class="tooltip-container">
 												<input :value="scenario['tp' + tpIndex].fedRefund" class="inputdata"
 													placeholder="$0"
@@ -1966,7 +1923,7 @@
 													x-text="'Please enter a valid number. You can start with a minus sign for amounts owed.'"></span>
 											</div>
 										</td>
-										<td x-show="anyTaxpayerFilesOR">
+										<td x-show="anyTaxpayerFilesOR" class="col-refund col-or-refund">
 											<div class="tooltip-container" x-show="taxpayers[tpIndex - 1].willFileOR">
 												<input :value="scenario['tp' + tpIndex].orRefund" class="inputdata"
 													placeholder="$0"
@@ -1979,7 +1936,7 @@
 													x-text="'Please enter a valid number. You can start with a minus sign for amounts owed.'"></span>
 											</div>
 										</td>
-										<td x-show="anyTaxpayerLivedInWA">
+										<td x-show="anyTaxpayerLivedInWA" class="col-refund col-wa-refund">
 											<div class="tooltip-container"
 												x-show="taxpayers[tpIndex - 1].livedInWAOverHalfYear">
 												<input :value="scenario['tp' + tpIndex].waRefund" class="inputdata"
@@ -1993,7 +1950,7 @@
 													x-text="'Please enter a valid number. You can start with a minus sign for amounts owed.'"></span>
 											</div>
 										</td>
-										<td :class="{ 'result-positive': getTotalRefundValue(scenario['tp' + tpIndex], tpIndex) >= 0, 'result-negative': getTotalRefundValue(scenario['tp' + tpIndex], tpIndex) < 0 }"
+										<td class="col-total-refund" :class="{ 'result-positive': getTotalRefundValue(scenario['tp' + tpIndex], tpIndex) >= 0, 'result-negative': getTotalRefundValue(scenario['tp' + tpIndex], tpIndex) < 0 }"
 											x-text="calculateTotalRefund(scenario['tp' + tpIndex], tpIndex)"></td>
 									</tr>
 								</template>
@@ -2047,7 +2004,7 @@
 
 			<!-- Footer -->
 			<div class="footer" x-show="scenarios.length > 0" x-cloak>
-				<span class="versiondisplay">(Version TY2025.2 &nbsp &nbsp 11/02/2025)</span>
+				<span class="versiondisplay">(Version TY2026.0 &nbsp &nbsp 09/30/2026)</span>
 				<br>
 				<!-- Display email below version number, email is reversed by CSS to hide from scrapers -->
 				<span class="versiondisplay">Send feedback to: <span
@@ -2067,17 +2024,14 @@
 				},
 
 				taxpayers: [
-					{ name: '', confirmedName: '', oregonIncome: null, oregonIncomeConfirmed: null, willFileOR: true, livedInWAOverHalfYear: false },
-					{ name: '', confirmedName: '', oregonIncome: null, oregonIncomeConfirmed: null, willFileOR: true, livedInWAOverHalfYear: false }
+					{ name: '', oregonIncome: null, willFileOR: true, livedInWAOverHalfYear: false, preferYounger: false },
+					{ name: '', oregonIncome: null, willFileOR: true, livedInWAOverHalfYear: false, preferYounger: false }
 				],
 				taxYear: '', // Will be updated to latest year on init
-				dependents: Array(1).fill().map(() => ({
-					name: '',
-					birthDate: '',
-					age: null,
-					qualifiesFor: [false, false], // Initialize for 2 taxpayers (unchecked by default)
-					includeForSharing: false
-				})),
+				nextDependentId: 1,
+				dependents: [
+					{ id: 'dep_1', name: '', birthDate: '', age: null, qualifiesFor: [false, false] }
+				],
 				scenarios: [],
 				instructionsExpanded: false,
 
@@ -2098,6 +2052,16 @@
 				// Check if any taxpayer has WA checkbox checked
 				get anyTaxpayerLivedInWA() {
 					return this.taxpayers.some(tp => tp.livedInWAOverHalfYear);
+				},
+
+				setPreferYounger(index) {
+					if (this.taxpayers[index].preferYounger) {
+						const otherIndex = index === 0 ? 1 : 0;
+						if (this.taxpayers[otherIndex]) {
+							this.taxpayers[otherIndex].preferYounger = false;
+						}
+					}
+					this.generateScenarios();
 				},
 
 				// Get Oregon Kids Credit qualification based on income
@@ -2154,10 +2118,36 @@
 					}, 100);
 				},
 
+				createDependent(name = '', birthDate = '') {
+					this.nextDependentId++;
+					return {
+						id: 'dep_' + this.nextDependentId,
+						name: name,
+						birthDate: birthDate,
+						age: null,
+						qualifiesFor: Array(this.taxpayers.length).fill(false)
+					};
+				},
+
+				addDependent() {
+					this.dependents.push(this.createDependent());
+					this.generateScenarios();
+				},
+
 				// Remove dependent (only for dependents 2+)
 				removeDependent(index) {
-					if (index >= 1) {
-						this.dependents.splice(index, 1);
+					if (index >= 1 && index < this.dependents.length) {
+						const removed = this.dependents.splice(index, 1)[0];
+						if (removed) {
+							this.scenarios.forEach(s => {
+								['tp1', 'tp2'].forEach(tpKey => {
+									if (s[tpKey] && s[tpKey].assignedDependentIds) {
+										s[tpKey].assignedDependentIds = s[tpKey].assignedDependentIds.filter(id => id !== removed.id);
+									}
+								});
+								this.syncScenarioDisplayNames(s);
+							});
+						}
 						this.generateScenarios();
 					}
 				},
@@ -2165,15 +2155,14 @@
 				// Factory functions for creating scenario objects
 				createTaxpayerObject() {
 					return {
+						assignedDependentIds: [],
 						shareableKids: 0,
 						dependentNames: '',
+						otherDependentNames: '',
 						filingStatus: '',
 						fedRefund: null,
-						fedRefundConfirmed: null,
 						orRefund: null,
-						orRefundConfirmed: null,
-						waRefund: null,
-						waRefundConfirmed: null
+						waRefund: null
 					};
 				},
 
@@ -2208,34 +2197,73 @@
 					}
 				},
 
+				getDependentById(id) {
+					return this.dependents.find(d => d.id === id) || null;
+				},
+
+				getDependentIndex(id) {
+					return this.dependents.findIndex(d => d.id === id);
+				},
+
 				// Unified dependent name processing
-				getDependentDisplayName(depIndex, dependent = null) {
-					if (!dependent) {
-						dependent = this.dependents[depIndex];
+				getDependentDisplayName(depOrIndexOrId, dependent = null) {
+					let dep = dependent;
+					if (!dep) {
+						if (typeof depOrIndexOrId === 'object' && depOrIndexOrId !== null) {
+							dep = depOrIndexOrId;
+						} else if (typeof depOrIndexOrId === 'string') {
+							dep = depOrIndexOrId.startsWith('dep_') ? this.getDependentById(depOrIndexOrId) : this.dependents.find(d => d.name === depOrIndexOrId);
+						} else if (typeof depOrIndexOrId === 'number') {
+							dep = this.dependents[depOrIndexOrId];
+						}
 					}
-					return dependent.name.trim() || `Dependent ${depIndex + 1}`;
+					if (!dep) return '';
+					const index = this.getDependentIndex(dep.id);
+					return dep.name && dep.name.trim() ? dep.name.trim() : `Dependent ${index + 1}`;
 				},
 
-				// Get dependent display name for scenario generation (use actual name if available, otherwise placeholder)
-				getDependentPlaceholderName(depIndex, dependent = null) {
-					if (!dependent) {
-						dependent = this.dependents[depIndex];
+				getDependentPlaceholderName(depOrIndexOrId, dependent = null) {
+					let dep = dependent;
+					if (!dep) {
+						if (typeof depOrIndexOrId === 'object' && depOrIndexOrId !== null) {
+							dep = depOrIndexOrId;
+						} else if (typeof depOrIndexOrId === 'string') {
+							dep = depOrIndexOrId.startsWith('dep_') ? this.getDependentById(depOrIndexOrId) : null;
+						} else if (typeof depOrIndexOrId === 'number') {
+							dep = this.dependents[depOrIndexOrId];
+						}
 					}
-					return dependent.name && dependent.name.trim() ? dependent.name.trim() : `Dependent ${depIndex + 1}`;
+					if (!dep) return '';
+					const index = this.getDependentIndex(dep.id);
+					return `Dependent ${index + 1}`;
 				},
 
-				// Get dependent display name for dropdown options (always use placeholder)
-				getDependentDropdownName(depIndex, dependent = null) {
-					// During editing, always return placeholder names to prevent real-time updates
-					if (this.isEditingDependentName) {
-						return `Dependent ${depIndex + 1}`;
-					}
+				getDependentDropdownName(depOrIndexOrId, dependent = null) {
+					return this.getDependentDisplayName(depOrIndexOrId, dependent);
+				},
 
-					if (!dependent) {
-						dependent = this.dependents[depIndex];
-					}
+				syncScenarioDisplayNames(scenario) {
+					if (!scenario) return;
+					['tp1', 'tp2'].forEach((tpKey, idx) => {
+						const tp = scenario[tpKey];
+						if (!tp) return;
+						if (!tp.assignedDependentIds) tp.assignedDependentIds = [];
 
-					return dependent.name && dependent.name.trim() ? dependent.name.trim() : `Dependent ${depIndex + 1}`;
+						const assignedDeps = tp.assignedDependentIds
+							.map(id => this.getDependentById(id))
+							.filter(d => d !== null);
+
+						const shareableDeps = assignedDeps.filter(d => this.isDependentShareable(d));
+						const otherDeps = assignedDeps.filter(d => !this.isDependentShareable(d) && d.qualifiesFor[idx]);
+
+						tp.shareableKids = shareableDeps.length;
+						tp.dependentNames = shareableDeps.map(d => this.getDependentDisplayName(d)).join(', ');
+						tp.otherDependentNames = otherDeps.map(d => this.getDependentDisplayName(d)).join(', ');
+					});
+				},
+
+				syncAllScenariosDisplayNames() {
+					this.scenarios.forEach(s => this.syncScenarioDisplayNames(s));
 				},
 
 				// Unified dependent qualification utilities
@@ -2255,35 +2283,6 @@
 				getDependentSharingStatus(index) {
 					const dependent = this.dependents[index];
 					return this.isDependentShareable(dependent) ? 'Yes' : 'No';
-				},
-
-				// Get dependent OR Kids Credit qualification
-				getDependentOKCQualification(index) {
-					const dependent = this.dependents[index];
-
-					// Check if dependent is 6 years or older
-					if (dependent.age !== null && dependent.age >= 6) {
-						return 'No';
-					}
-
-					// Check if dependent qualifies for at least one taxpayer
-					return this.getQualifiedTaxpayerCount(dependent) >= 1 ? 'Yes' : 'No';
-				},
-
-				// Get OKC qualification display text for dependent
-				getOKCQualificationDisplay(depIndex) {
-					const dependent = this.dependents[depIndex];
-
-					// Check if dependent is 6 years or older - show "No"
-					if (dependent.age !== null && dependent.age >= 6) {
-						return 'No';
-					}
-
-					// Otherwise show the taxpayer qualifications
-					return this.taxpayers.map(taxpayer =>
-						(taxpayer.confirmedName && taxpayer.confirmedName.trim() ? taxpayer.confirmedName : 'Taxpayer ' + (this.taxpayers.indexOf(taxpayer) + 1)) +
-						': ' + this.getOKCQualification(taxpayer.oregonIncome)
-					).join('\n');
 				},
 
 				// Get OKC qualification styling class for dependent
@@ -2666,24 +2665,8 @@
 							// Update the input field's display value
 							inputElement.value = formattedValue;
 
-							// If this is an oregonIncome field, also update the confirmed value
 							if (fieldPath.includes('oregonIncome')) {
-								const match = fieldPath.match(/^taxpayers\[(\d+)\]\.oregonIncome$/);
-								if (match) {
-									const index = parseInt(match[1]);
-									this.taxpayers[index].oregonIncomeConfirmed = formattedValue;
-									this.generateScenarios();
-								}
-							}
-
-							// If this is a refund field, also update the confirmed value
-							if (fieldPath.includes('fedRefund') || fieldPath.includes('orRefund') || fieldPath.includes('waRefund')) {
-								const match = fieldPath.match(/^scenario(\d+)\.tp(\d+)\.(\w+)$/);
-								if (match) {
-									const [_, scenarioIndex, tpIndex, prop] = match;
-									const confirmedProp = prop + 'Confirmed';
-									this.scenarios[parseInt(scenarioIndex)]['tp' + tpIndex][confirmedProp] = formattedValue;
-								}
+								this.generateScenarios();
 							}
 						}
 						// Clear any error when successfully processing
@@ -2696,87 +2679,25 @@
 						const fieldPath = inputElement.getAttribute('data-field');
 						if (fieldPath) {
 							this.setFieldValue(fieldPath, null);
-
-							// If this is an oregonIncome field, also clear the confirmed value
 							if (fieldPath.includes('oregonIncome')) {
-								const match = fieldPath.match(/^taxpayers\[(\d+)\]\.oregonIncome$/);
-								if (match) {
-									const index = parseInt(match[1]);
-									this.taxpayers[index].oregonIncomeConfirmed = null;
-								}
-							}
-
-							// If this is a refund field, also clear the confirmed value
-							if (fieldPath.includes('fedRefund') || fieldPath.includes('orRefund') || fieldPath.includes('waRefund')) {
-								const match = fieldPath.match(/^scenario(\d+)\.tp(\d+)\.(\w+)$/);
-								if (match) {
-									const [_, scenarioIndex, tpIndex, prop] = match;
-									const confirmedProp = prop + 'Confirmed';
-									this.scenarios[parseInt(scenarioIndex)]['tp' + tpIndex][confirmedProp] = null;
-								}
+								this.generateScenarios();
 							}
 						}
 					}
 				},
-
-				// Get maximum number of dependents available for a taxpayer (truly sharable)
-				getMaxDependentsForTaxpayer(taxpayerIndex) {
-					// Count dependents that qualify for BOTH taxpayers (truly sharable)
-					const otherTaxpayerIndex = taxpayerIndex === 0 ? 1 : 0;
-					return this.dependents.filter(d => d.qualifiesFor[taxpayerIndex] && d.qualifiesFor[otherTaxpayerIndex]).length;
-				},
-
 
 
 				// Dependent selection state
 				openDependentSelector: null,
-				openOtherDependentSelector: null, // Track which other dependent selector is open
-				dropdownDependentSnapshot: null, // Snapshot of dependent names when dropdown opens
-				isEditingDependentName: false, // Track if any dependent name is being edited
-				editingDependentIndex: null, // Track which dependent index is being edited
-				validatedScenarios: new Set(), // Track which scenarios have been validated in current generation cycle
-				cachedAvailableDependents: {}, // Cache available dependents to prevent changes during editing
-
-
-				// Start editing dependent name
-				startEditingDependentName(depIndex) {
-					// Cache available dependents for all scenarios before editing starts
-					this.cachedAvailableDependents = {};
-					for (let scenarioIndex = 0; scenarioIndex < this.scenarios.length; scenarioIndex++) {
-						for (let tpIndex = 1; tpIndex <= 2; tpIndex++) {
-							const cacheKey = `${tpIndex - 1}-${scenarioIndex}-${tpIndex}`;
-							this.cachedAvailableDependents[cacheKey] = this.getAvailableDependentsForTaxpayer(tpIndex - 1, scenarioIndex, tpIndex);
-						}
-					}
-
-					this.isEditingDependentName = true;
-					this.editingDependentIndex = depIndex;
-				},
-
-				// Finish editing dependent name
-				finishEditingDependentName() {
-					// Update names in custom scenarios first
-					this.updateDependentNamesInCustomScenarios();
-					// Then regenerate generated scenarios to handle new combinations
-					this.regenerateGeneratedScenarios();
-
-					// Clear the cache
-					this.cachedAvailableDependents = {};
-
-					this.isEditingDependentName = false;
-					this.editingDependentIndex = null;
-				},
+				openOtherDependentSelector: null,
 
 				// Show dependent selector dropdown
 				showDependentSelector(scenarioIndex, tpIndex) {
 					const selectorKey = `${scenarioIndex}-${tpIndex}`;
 					if (this.openDependentSelector === selectorKey) {
-						this.openDependentSelector = null; // Close if already open
-						this.dropdownDependentSnapshot = null;
+						this.openDependentSelector = null;
 					} else {
-						this.openDependentSelector = selectorKey; // Open this selector
-						// Take a snapshot of dependent names when opening
-						this.dropdownDependentSnapshot = this.dependents.map(dep => ({ ...dep, name: dep.name }));
+						this.openDependentSelector = selectorKey;
 					}
 				},
 
@@ -2787,159 +2708,77 @@
 
 				// Get available dependents for a taxpayer
 				getAvailableDependentsForTaxpayer(taxpayerIndex, scenarioIndex, tpIndex) {
-					// Use cached result if we're currently editing a dependent name
-					const cacheKey = `${taxpayerIndex}-${scenarioIndex}-${tpIndex}`;
-					if (this.isEditingDependentName && this.cachedAvailableDependents[cacheKey]) {
-						return this.cachedAvailableDependents[cacheKey];
-					}
+					const scenario = this.scenarios[scenarioIndex];
+					if (!scenario) return [];
+					const otherTpKey = tpIndex === 1 ? 'tp2' : 'tp1';
+					const otherAssigned = scenario[otherTpKey]?.assignedDependentIds || [];
 
-					// Use snapshot if dropdown is open for this specific selector
-					const selectorKey = `${scenarioIndex}-${tpIndex}`;
-					const useSnapshot = this.openDependentSelector === selectorKey && this.dropdownDependentSnapshot;
-					const dependentsToUse = useSnapshot ? this.dropdownDependentSnapshot : this.dependents;
-
-					// Get dependents that qualify for BOTH taxpayers (truly sharable) and are not already selected by the other taxpayer
-					const availableDependents = [];
-
-					dependentsToUse.forEach((dependent, depIndex) => {
-						// Check if dependent qualifies for this taxpayer
-						if (!dependent.qualifiesFor[taxpayerIndex]) {
-							return;
-						}
-
-						// For sharable dependents, they must qualify for BOTH taxpayers
-						const otherTaxpayerIndex = taxpayerIndex === 0 ? 1 : 0;
-						if (!dependent.qualifiesFor[otherTaxpayerIndex]) {
-							return; // Not sharable if doesn't qualify for both taxpayers
-						}
-
-						// Check if dependent is already selected by the other taxpayer in this scenario
-						const otherTpIndex = tpIndex === 1 ? 2 : 1;
-						const otherTpKey = `tp${otherTpIndex}`;
-						const scenario = this.scenarios[scenarioIndex];
-
-						if (scenario && scenario[otherTpKey] && scenario[otherTpKey].dependentNames) {
-							const selectedNames = scenario[otherTpKey].dependentNames.split(', ').map(name => name.trim());
-							const placeholderName = this.getDependentPlaceholderName(depIndex, dependent);
-							const actualName = dependent.name && dependent.name.trim() ? dependent.name.trim() : null;
-
-							// Check if either placeholder or actual name is already selected by other taxpayer
-							if (selectedNames.includes(placeholderName) || (actualName && selectedNames.includes(actualName))) {
-								return; // Already selected by other taxpayer
-							}
-						}
-
-						// Add to available list with original index
-						availableDependents.push({
-							...dependent,
-							originalIndex: depIndex
-						});
+					return this.dependents.filter(dep => {
+						if (!dep.qualifiesFor[taxpayerIndex] || !this.isDependentShareable(dep)) return false;
+						return !otherAssigned.includes(dep.id);
 					});
-
-					return availableDependents;
 				},
 
 				// Check if a dependent is selected for a specific scenario/taxpayer
-				isDependentSelected(scenarioIndex, tpIndex, depIndex) {
+				isDependentSelected(scenarioIndex, tpIndex, depOrId) {
 					const scenario = this.scenarios[scenarioIndex];
-					const tpKey = `tp${tpIndex}`;
+					if (!scenario || !scenario['tp' + tpIndex]) return false;
+					const depId = typeof depOrId === 'string'
+						? (depOrId.startsWith('dep_') ? depOrId : this.dependents.find(d => this.getDependentDisplayName(d) === depOrId)?.id)
+						: depOrId?.id;
+					return (scenario['tp' + tpIndex].assignedDependentIds || []).includes(depId);
+				},
 
-					if (!scenario || !scenario[tpKey] || !scenario[tpKey].dependentNames) {
-						return false;
-					}
-
-					const selectedNames = scenario[tpKey].dependentNames.split(', ').map(name => name.trim());
-					const dependent = this.dependents[depIndex];
-					const placeholderName = this.getDependentPlaceholderName(depIndex, dependent);
-					const actualName = dependent.name && dependent.name.trim() ? dependent.name.trim() : null;
-
-					// Check if either the placeholder name or actual name is selected
-					const isSelected = selectedNames.includes(placeholderName) || (actualName && selectedNames.includes(actualName));
-
-					return isSelected;
+				// Get other dependents for taxpayer
+				getOtherDependentsForTaxpayer(taxpayerIndex) {
+					const otherTaxpayerIndex = taxpayerIndex === 0 ? 1 : 0;
+					return this.dependents.filter(dep => dep.qualifiesFor[taxpayerIndex] && !dep.qualifiesFor[otherTaxpayerIndex]);
 				},
 
 				// Get other dependent names (dependents that qualify for only this taxpayer)
 				getOtherDependentNames(taxpayerIndex) {
-					const otherDependentNames = [];
-
-					this.dependents.forEach((dependent, depIndex) => {
-						// Check if this dependent qualifies for only this taxpayer
-						let qualifiesForOnlyThisTaxpayer = true;
-
-						// Check if dependent qualifies for this taxpayer
-						if (!dependent.qualifiesFor[taxpayerIndex]) {
-							qualifiesForOnlyThisTaxpayer = false;
-						}
-
-						// Check if dependent also qualifies for the other taxpayer
-						const otherTaxpayerIndex = taxpayerIndex === 0 ? 1 : 0;
-						if (dependent.qualifiesFor[otherTaxpayerIndex]) {
-							qualifiesForOnlyThisTaxpayer = false;
-						}
-
-						// If dependent qualifies for only this taxpayer, add to the list
-						if (qualifiesForOnlyThisTaxpayer) {
-							const dependentName = this.getDependentPlaceholderName(depIndex, dependent);
-							otherDependentNames.push(dependentName);
-						}
-					});
-
-					return otherDependentNames;
+					return this.getOtherDependentsForTaxpayer(taxpayerIndex).map(d => this.getDependentDisplayName(d));
 				},
 
 				// Select/deselect a dependent
-				selectDependent(scenarioIndex, tpIndex, depIndex) {
+				selectDependent(scenarioIndex, tpIndex, depOrId) {
 					const scenario = this.scenarios[scenarioIndex];
-					const tpKey = `tp${tpIndex}`;
-					const dependent = this.dependents[depIndex];
+					if (!scenario || !scenario['tp' + tpIndex]) return;
 
-					if (!scenario || !scenario[tpKey]) {
-						return;
-					}
+					const depId = typeof depOrId === 'string'
+						? (depOrId.startsWith('dep_') ? depOrId : this.dependents.find(d => this.getDependentDisplayName(d) === depOrId)?.id)
+						: depOrId?.id;
+					if (!depId) return;
 
-					const currentNames = scenario[tpKey].dependentNames ? scenario[tpKey].dependentNames.split(', ').map(name => name.trim()) : [];
+					const tp = scenario['tp' + tpIndex];
+					if (!tp.assignedDependentIds) tp.assignedDependentIds = [];
 
-					// Check if this dependent is already selected (by either placeholder or actual name)
-					const placeholderName = this.getDependentPlaceholderName(depIndex, dependent);
-					const actualName = dependent.name && dependent.name.trim() ? dependent.name.trim() : null;
+					const otherTpKey = tpIndex === 1 ? 'tp2' : 'tp1';
+					const otherTp = scenario[otherTpKey];
 
-
-					// Find the existing name for this dependent in the scenario
-					let existingName = null;
-					if (currentNames.includes(placeholderName)) {
-						existingName = placeholderName;
-					} else if (actualName && currentNames.includes(actualName)) {
-						existingName = actualName;
-					}
-
-					if (existingName) {
-						// Remove dependent using the existing name
-						const newNames = currentNames.filter(name => name !== existingName);
-						scenario[tpKey].dependentNames = newNames.join(', ');
-						// Update the count based on the number of selected dependents
-						scenario[tpKey].shareableKids = newNames.length;
+					const idx = tp.assignedDependentIds.indexOf(depId);
+					if (idx !== -1) {
+						tp.assignedDependentIds.splice(idx, 1);
 					} else {
-						// Add dependent - always use actual name if available, otherwise use placeholder
-						const nameToAdd = actualName || placeholderName;
-						currentNames.push(nameToAdd);
-						scenario[tpKey].dependentNames = currentNames.join(', ');
-						// Update the count based on the number of selected dependents
-						scenario[tpKey].shareableKids = currentNames.length;
+						tp.assignedDependentIds.push(depId);
+						if (otherTp && otherTp.assignedDependentIds) {
+							const otherIdx = otherTp.assignedDependentIds.indexOf(depId);
+							if (otherIdx !== -1) otherTp.assignedDependentIds.splice(otherIdx, 1);
+						}
 					}
+
+					this.syncScenarioDisplayNames(scenario);
 
 					// Check if there are no more available dependents to select
 					const availableDependents = this.getAvailableDependentsForTaxpayer(tpIndex - 1, scenarioIndex, tpIndex);
 					const unselectedDependents = availableDependents.filter(dep => {
-						return !this.isDependentSelected(scenarioIndex, tpIndex, dep.originalIndex);
+						return !this.isDependentSelected(scenarioIndex, tpIndex, dep.id);
 					});
 
-					// If no unselected dependents remain, close the dropdown
 					if (unselectedDependents.length === 0) {
 						this.openDependentSelector = null;
 					}
 
-					// Clear the auto-reassigned flag when user manually changes the scenario
 					if (scenario.isCustom) {
 						this.clearAutoReassignedFlag(scenario);
 					}
@@ -2949,9 +2788,9 @@
 				showOtherDependentSelector(scenarioIndex, tpIndex) {
 					const selectorKey = `other-${scenarioIndex}-${tpIndex}`;
 					if (this.openOtherDependentSelector === selectorKey) {
-						this.openOtherDependentSelector = null; // Close if already open
+						this.openOtherDependentSelector = null;
 					} else {
-						this.openOtherDependentSelector = selectorKey; // Open this selector
+						this.openOtherDependentSelector = selectorKey;
 					}
 				},
 
@@ -2961,35 +2800,12 @@
 				},
 
 				// Select/deselect an other dependent
-				selectOtherDependent(scenarioIndex, tpIndex, dependentName) {
-					const scenario = this.scenarios[scenarioIndex];
-					const tpKey = `tp${tpIndex}`;
+				selectOtherDependent(scenarioIndex, tpIndex, depOrId) {
+					this.selectDependent(scenarioIndex, tpIndex, depOrId);
 
-					if (!scenario || !scenario[tpKey]) {
-						return;
-					}
-
-					// Initialize otherDependentNames if it doesn't exist
-					if (!scenario[tpKey].otherDependentNames) {
-						scenario[tpKey].otherDependentNames = '';
-					}
-
-					const currentNames = scenario[tpKey].otherDependentNames ? scenario[tpKey].otherDependentNames.split(', ').map(name => name.trim()) : [];
-
-					if (currentNames.includes(dependentName)) {
-						// Remove dependent
-						const newNames = currentNames.filter(name => name !== dependentName);
-						scenario[tpKey].otherDependentNames = newNames.join(', ');
-					} else {
-						// Add dependent
-						currentNames.push(dependentName);
-						scenario[tpKey].otherDependentNames = currentNames.join(', ');
-					}
-
-					// Close dropdown if no more dependents available
-					const availableDependents = this.getOtherDependentNames(tpIndex - 1);
+					const availableDependents = this.getOtherDependentsForTaxpayer(tpIndex - 1);
 					const unselectedDependents = availableDependents.filter(dep => {
-						return !this.isOtherDependentSelected(scenarioIndex, tpIndex, dep);
+						return !this.isOtherDependentSelected(scenarioIndex, tpIndex, dep.id);
 					});
 
 					if (unselectedDependents.length === 0) {
@@ -2998,81 +2814,34 @@
 				},
 
 				// Check if other dependent is selected
-				isOtherDependentSelected(scenarioIndex, tpIndex, dependentName) {
-					const scenario = this.scenarios[scenarioIndex];
-					const tpKey = `tp${tpIndex}`;
-
-					if (!scenario || !scenario[tpKey] || !scenario[tpKey].otherDependentNames) {
-						return false;
-					}
-
-					const currentNames = scenario[tpKey].otherDependentNames.split(', ').map(name => name.trim());
-					return currentNames.includes(dependentName);
+				isOtherDependentSelected(scenarioIndex, tpIndex, depOrId) {
+					return this.isDependentSelected(scenarioIndex, tpIndex, depOrId);
 				},
 
 				// Auto-select other dependents when they become qualified for only one taxpayer
 				autoSelectOtherDependents() {
 					this.scenarios.forEach(scenario => {
-						// Skip custom scenarios - users should manually specify dependents
-						if (scenario.isCustom) {
-							return;
-						}
-
-						['tp1', 'tp2'].forEach(tpKey => {
-							const tpIndex = parseInt(tpKey.substring(2));
-							const taxpayerIndex = tpIndex - 1;
+						if (scenario.isCustom) return;
+						['tp1', 'tp2'].forEach((tpKey, tpIdx) => {
 							const otherTpKey = tpKey === 'tp1' ? 'tp2' : 'tp1';
-
-							// Initialize otherDependentNames if it doesn't exist
-							if (!scenario[tpKey].otherDependentNames) {
-								scenario[tpKey].otherDependentNames = '';
-							}
-
-							// Get currently selected sharable dependents for both taxpayers
-							const currentSharable = scenario[tpKey].dependentNames ?
-								scenario[tpKey].dependentNames.split(', ').map(name => name.trim()) : [];
-							const otherTpSharable = scenario[otherTpKey].dependentNames ?
-								scenario[otherTpKey].dependentNames.split(', ').map(name => name.trim()) : [];
-
-							// Get other dependents that are not already sharable
-							const otherDependentNames = this.getOtherDependentNames(taxpayerIndex);
-							const validOtherDependents = otherDependentNames.filter(name =>
-								!currentSharable.includes(name) &&
-								!otherTpSharable.includes(name)
-							);
-
-							// Set the other dependents (clearing any existing incorrect selections)
-							scenario[tpKey].otherDependentNames = validOtherDependents.join(', ');
+							const otherTp = scenario[otherTpKey];
+							const onlyForThis = this.dependents.filter(d => d.qualifiesFor[tpIdx] && !d.qualifiesFor[tpIdx === 0 ? 1 : 0]);
+							onlyForThis.forEach(d => {
+								if (!scenario[tpKey].assignedDependentIds.includes(d.id) &&
+									!(otherTp && otherTp.assignedDependentIds && otherTp.assignedDependentIds.includes(d.id))) {
+									scenario[tpKey].assignedDependentIds.push(d.id);
+								}
+							});
 						});
+						this.syncScenarioDisplayNames(scenario);
 					});
-				},
-
-				getMaxDependentsForTaxpayer(taxpayerIndex) {
-					// Count dependents that qualify for this taxpayer
-					return this.dependents.filter(dependent => this.isDependentQualifiedForTaxpayer(dependent, taxpayerIndex)).length;
 				},
 
 				// Get total number of dependents assigned across both taxpayers in a scenario
 				getTotalAssignedDependents(scenarioIndex) {
 					const scenario = this.scenarios[scenarioIndex];
 					if (!scenario) return 0;
-
-					let totalAssigned = 0;
-					['tp1', 'tp2'].forEach(tpKey => {
-						// Count shareable dependents (dependentNames)
-						if (scenario[tpKey] && scenario[tpKey].dependentNames) {
-							const names = scenario[tpKey].dependentNames.split(', ').map(name => name.trim()).filter(name => name);
-							totalAssigned += names.length;
-						}
-
-						// Count non-shareable dependents (otherDependentNames)
-						if (scenario[tpKey] && scenario[tpKey].otherDependentNames) {
-							const otherNames = scenario[tpKey].otherDependentNames.split(', ').map(name => name.trim()).filter(name => name);
-							totalAssigned += otherNames.length;
-						}
-					});
-
-					return totalAssigned;
+					return (scenario.tp1?.assignedDependentIds?.length || 0) + (scenario.tp2?.assignedDependentIds?.length || 0);
 				},
 
 				// Get total number of available dependents from the dependent info table
@@ -3082,80 +2851,28 @@
 
 				// Reassign dependents when their qualifications change
 				reassignDependentsAfterQualificationChange() {
-					this.scenarios.forEach((scenario, scenarioIndex) => {
+					this.scenarios.forEach(scenario => {
 						let wasReassigned = false;
-
-						['tp1', 'tp2'].forEach(tpKey => {
-							if (scenario[tpKey] && scenario[tpKey].dependentNames) {
-								const currentNames = scenario[tpKey].dependentNames.split(', ').map(name => name.trim());
-								const tpIndex = parseInt(tpKey.substring(2));
-								const taxpayerIndex = tpIndex - 1;
-
-								// Check each dependent to see if it still qualifies for this taxpayer
-								const validNames = [];
-								const reassignedNames = [];
-
-								currentNames.forEach(name => {
-									// Find the dependent by name
-									const depIndex = this.dependents.findIndex(dep => {
-										const depName = dep.name.trim() || `Dependent ${this.dependents.indexOf(dep) + 1}`;
-										return depName === name;
-									});
-
-									if (depIndex !== -1) {
-										const dependent = this.dependents[depIndex];
-										if (dependent.qualifiesFor[taxpayerIndex]) {
-											// Dependent still qualifies for this taxpayer
-											validNames.push(name);
-										} else {
-											// Dependent no longer qualifies for this taxpayer
-											reassignedNames.push({ name, depIndex });
-											wasReassigned = true;
-										}
+						['tp1', 'tp2'].forEach((tpKey, tpIdx) => {
+							const tp = scenario[tpKey];
+							if (tp && tp.assignedDependentIds) {
+								const valid = [];
+								tp.assignedDependentIds.forEach(id => {
+									const dep = this.getDependentById(id);
+									if (dep && dep.qualifiesFor[tpIdx]) {
+										valid.push(id);
 									} else {
-										// Keep the name if we can't find the dependent
-										validNames.push(name);
+										wasReassigned = true;
 									}
 								});
-
-								// Update this taxpayer's dependent names
-								scenario[tpKey].dependentNames = validNames.join(', ');
-								scenario[tpKey].shareableKids = validNames.length;
-
-								// Try to reassign dependents to other taxpayers
-								reassignedNames.forEach(({ name, depIndex }) => {
-									const dependent = this.dependents[depIndex];
-									// Find which taxpayers this dependent still qualifies for
-									const eligibleTaxpayers = dependent.qualifiesFor.map((qualifies, index) => ({ qualifies, index })).filter(tp => tp.qualifies);
-
-									// Try to assign to the first eligible taxpayer that doesn't already have this dependent
-									for (const { index } of eligibleTaxpayers) {
-										const otherTpKey = `tp${index + 1}`;
-										if (scenario[otherTpKey] && scenario[otherTpKey].dependentNames) {
-											const otherNames = scenario[otherTpKey].dependentNames.split(', ').map(n => n.trim());
-											if (!otherNames.includes(name)) {
-												// Add to this taxpayer
-												otherNames.push(name);
-												scenario[otherTpKey].dependentNames = otherNames.join(', ');
-												scenario[otherTpKey].shareableKids = otherNames.length;
-												break;
-											}
-										}
-									}
-								});
+								tp.assignedDependentIds = valid;
 							}
 						});
-
-						// Set the auto-reassigned flag if any dependents were reassigned
-						if (wasReassigned) {
-							this.markAsAutoReassigned(scenario);
-						}
+						this.syncScenarioDisplayNames(scenario);
+						if (wasReassigned) this.markAsAutoReassigned(scenario);
 					});
-
-					// Auto-select other dependents after qualification changes
 					this.autoSelectOtherDependents();
 				},
-
 
 				setFieldValue(field, value) {
 					// Handle complex field paths like 'taxpayers[0].oregonIncome' or 'scenario0.tp1.fedRefund'
@@ -3208,109 +2925,10 @@
 					this.generateScenarios();
 				},
 
-				getNotShareableStatus(index, taxpayerNum) {
-					const dependent = this.dependents[index];
-					if (!dependent.name) return '';
-
-					const qualifies = dependent.qualifiesFor[taxpayerNum - 1];
-					const otherQualifies = taxpayerNum === 1 ? dependent.qualifiesFor[1] : dependent.qualifiesFor[0];
-
-					if (qualifies && !otherQualifies) {
-						return 'X';
-					}
-					return '';
-				},
-
-				getShareableName(index) {
-					const dependent = this.dependents[index];
-					if (!dependent.name) return '';
-
-					// Check if dependent is 6 years or older
-					if (dependent.age !== null && dependent.age >= 6) {
-						return '';
-					}
-
-					const qualifies1 = dependent.qualifiesFor[0];
-					const qualifies2 = dependent.qualifiesFor[1];
-
-					if (qualifies1 && qualifies2 && dependent.includeForSharing) {
-						return dependent.name;
-					}
-					return '';
-				},
-
-				getSummary() {
-					const activeDependents = this.dependents.filter(d => d.name);
-					const notShareable = activeDependents.filter(d => {
-						const qualifiedCount = d.qualifiesFor.filter(q => q).length;
-						return qualifiedCount === 1;
-					});
-					const shareable = activeDependents.filter(d =>
-						d.qualifiesFor.filter(q => q).length >= 2 &&
-						(d.age === null || d.age < 6) &&
-						d.includeForSharing
-					);
-
-					let summary = `Total Dependents: ${activeDependents.length}\n`;
-					summary += `Not Shareable: ${notShareable.length}\n`;
-					summary += `Shareable: ${shareable.length}\n\n`;
-
-					if (shareable.length > 0) {
-						summary += 'Shareable Dependents:\n';
-						shareable.forEach((d, i) => {
-							summary += `${i + 1}. ${d.name} (Age: ${d.age})\n`;
-						});
-						summary += '\nConsider testing different dependent sharing scenarios in TaxSlayer to optimize Oregon Kids Credit.';
-					}
-
-					// Generate scenarios based on shareable dependents
-					this.generateScenarios();
-
-					return summary;
-				},
-
-				generateScenarios() {
-					// Clear validation tracking for new generation cycle
-					this.validatedScenarios.clear();
-
-					const customScenarios = this.preserveCustomScenarios();
-					const existingRefundData = this.preserveExistingRefundData();
-					const activeDependents = this.getActiveDependents();
-
-					if (activeDependents.length === 0) {
-						this.scenarios = [this.createEmptyScenario()];
-					} else {
-						const categorizedDependents = this.categorizeDependents(activeDependents);
-						this.scenarios = this.generateValidScenarios(categorizedDependents.shareable, categorizedDependents.nonShareable);
-
-						if (this.scenarios.length === 0) {
-							this.scenarios = [this.createEmptyScenario()];
-						}
-					}
-
-					this.restoreCustomScenarios(customScenarios);
-					this.restoreExistingRefundData(existingRefundData);
-				},
-
-				// Generate only the non-custom scenarios (preserve custom scenarios)
-				regenerateGeneratedScenarios() {
-					const customScenarios = this.preserveCustomScenarios();
-					const existingRefundData = this.preserveExistingRefundData();
-					const activeDependents = this.getActiveDependents();
-
-					if (activeDependents.length === 0) {
-						this.scenarios = [this.createEmptyScenario()];
-					} else {
-						const categorizedDependents = this.categorizeDependents(activeDependents);
-						this.scenarios = this.generateValidScenarios(categorizedDependents.shareable, categorizedDependents.nonShareable);
-
-						if (this.scenarios.length === 0) {
-							this.scenarios = [this.createEmptyScenario()];
-						}
-					}
-
-					this.restoreCustomScenarios(customScenarios);
-					this.restoreExistingRefundData(existingRefundData);
+				getScenarioAllocationKey(scenario) {
+					const tp1Ids = (scenario.tp1.assignedDependentIds || []).slice().sort().join(',');
+					const tp2Ids = (scenario.tp2.assignedDependentIds || []).slice().sort().join(',');
+					return `tp1:[${tp1Ids}]__tp2:[${tp2Ids}]`;
 				},
 
 				preserveCustomScenarios() {
@@ -3318,62 +2936,46 @@
 				},
 
 				preserveExistingRefundData() {
-					// Preserve refund data from all existing scenarios (both custom and auto-generated)
-					const refundData = [];
-					this.scenarios.forEach((scenario, index) => {
-						const scenarioData = {
-							index: index,
-							tp1: {
-								fedRefund: scenario.tp1.fedRefund,
-								fedRefundConfirmed: scenario.tp1.fedRefundConfirmed,
-								orRefund: scenario.tp1.orRefund,
-								orRefundConfirmed: scenario.tp1.orRefundConfirmed,
-								waRefund: scenario.tp1.waRefund,
-								waRefundConfirmed: scenario.tp1.waRefundConfirmed,
-								filingStatus: scenario.tp1.filingStatus,
-								otherDependentNames: scenario.tp1.otherDependentNames
-							},
-							tp2: {
-								fedRefund: scenario.tp2.fedRefund,
-								fedRefundConfirmed: scenario.tp2.fedRefundConfirmed,
-								orRefund: scenario.tp2.orRefund,
-								orRefundConfirmed: scenario.tp2.orRefundConfirmed,
-								waRefund: scenario.tp2.waRefund,
-								waRefundConfirmed: scenario.tp2.waRefundConfirmed,
-								filingStatus: scenario.tp2.filingStatus,
-								otherDependentNames: scenario.tp2.otherDependentNames
-							}
-						};
-						refundData.push(scenarioData);
+					const refundData = new Map();
+					this.scenarios.forEach(scenario => {
+						if (!scenario.isCustom) {
+							const key = this.getScenarioAllocationKey(scenario);
+							refundData.set(key, {
+								tp1: {
+									fedRefund: scenario.tp1.fedRefund,
+									orRefund: scenario.tp1.orRefund,
+									waRefund: scenario.tp1.waRefund,
+									filingStatus: scenario.tp1.filingStatus
+								},
+								tp2: {
+									fedRefund: scenario.tp2.fedRefund,
+									orRefund: scenario.tp2.orRefund,
+									waRefund: scenario.tp2.waRefund,
+									filingStatus: scenario.tp2.filingStatus
+								}
+							});
+						}
 					});
 					return refundData;
 				},
 
 				restoreExistingRefundData(existingRefundData) {
-					// Restore refund data to scenarios at the same index positions
-					existingRefundData.forEach((scenarioData, index) => {
-						if (index < this.scenarios.length) {
-							const scenario = this.scenarios[index];
+					if (!existingRefundData || !(existingRefundData instanceof Map)) return;
 
-							// Restore TP1 data
-							if (scenarioData.tp1.fedRefund !== null) scenario.tp1.fedRefund = scenarioData.tp1.fedRefund;
-							if (scenarioData.tp1.fedRefundConfirmed !== null) scenario.tp1.fedRefundConfirmed = scenarioData.tp1.fedRefundConfirmed;
-							if (scenarioData.tp1.orRefund !== null) scenario.tp1.orRefund = scenarioData.tp1.orRefund;
-							if (scenarioData.tp1.orRefundConfirmed !== null) scenario.tp1.orRefundConfirmed = scenarioData.tp1.orRefundConfirmed;
-							if (scenarioData.tp1.waRefund !== null) scenario.tp1.waRefund = scenarioData.tp1.waRefund;
-							if (scenarioData.tp1.waRefundConfirmed !== null) scenario.tp1.waRefundConfirmed = scenarioData.tp1.waRefundConfirmed;
-							if (scenarioData.tp1.filingStatus !== '') scenario.tp1.filingStatus = scenarioData.tp1.filingStatus;
-							if (scenarioData.tp1.otherDependentNames !== undefined) scenario.tp1.otherDependentNames = scenarioData.tp1.otherDependentNames;
-
-							// Restore TP2 data
-							if (scenarioData.tp2.fedRefund !== null) scenario.tp2.fedRefund = scenarioData.tp2.fedRefund;
-							if (scenarioData.tp2.fedRefundConfirmed !== null) scenario.tp2.fedRefundConfirmed = scenarioData.tp2.fedRefundConfirmed;
-							if (scenarioData.tp2.orRefund !== null) scenario.tp2.orRefund = scenarioData.tp2.orRefund;
-							if (scenarioData.tp2.orRefundConfirmed !== null) scenario.tp2.orRefundConfirmed = scenarioData.tp2.orRefundConfirmed;
-							if (scenarioData.tp2.waRefund !== null) scenario.tp2.waRefund = scenarioData.tp2.waRefund;
-							if (scenarioData.tp2.waRefundConfirmed !== null) scenario.tp2.waRefundConfirmed = scenarioData.tp2.waRefundConfirmed;
-							if (scenarioData.tp2.filingStatus !== '') scenario.tp2.filingStatus = scenarioData.tp2.filingStatus;
-							if (scenarioData.tp2.otherDependentNames !== undefined) scenario.tp2.otherDependentNames = scenarioData.tp2.otherDependentNames;
+					this.scenarios.forEach(scenario => {
+						if (!scenario.isCustom) {
+							const key = this.getScenarioAllocationKey(scenario);
+							const data = existingRefundData.get(key);
+							if (data) {
+								['tp1', 'tp2'].forEach(tpKey => {
+									['fedRefund', 'orRefund', 'waRefund'].forEach(prop => {
+										if (data[tpKey][prop] !== null && data[tpKey][prop] !== undefined) {
+											scenario[tpKey][prop] = data[tpKey][prop];
+										}
+									});
+									if (data[tpKey].filingStatus !== '') scenario[tpKey].filingStatus = data[tpKey].filingStatus;
+								});
+							}
 						}
 					});
 				},
@@ -3385,212 +2987,31 @@
 				categorizeDependents(activeDependents) {
 					const shareable = [];
 					const nonShareable = [];
-
-					activeDependents.forEach((dependent, index) => {
-						const actualDependentNumber = this.dependents.findIndex(d => d === dependent) + 1;
-						const enrichedDependent = { ...dependent, originalIndex: index, dependentNumber: actualDependentNumber };
-
-						if (this.isDependentShareable(dependent)) {
-							shareable.push(enrichedDependent);
+					activeDependents.forEach(dep => {
+						if (this.isDependentShareable(dep)) {
+							shareable.push(dep);
 						} else {
-							nonShareable.push(enrichedDependent);
+							nonShareable.push(dep);
 						}
 					});
-
 					return { shareable, nonShareable };
 				},
 
 				restoreCustomScenarios(customScenarios) {
-					// Restore custom scenarios and validate their dependent assignments
 					customScenarios.forEach(scenario => {
-						// Validate and update dependent assignments for TP1
-						this.validateAndUpdateDependentAssignments(scenario, 1);
-						// Validate and update dependent assignments for TP2
-						this.validateAndUpdateDependentAssignments(scenario, 2);
+						['tp1', 'tp2'].forEach((tpKey, idx) => {
+							if (scenario[tpKey] && scenario[tpKey].assignedDependentIds) {
+								scenario[tpKey].assignedDependentIds = scenario[tpKey].assignedDependentIds.filter(id => {
+									const dep = this.getDependentById(id);
+									return dep && dep.qualifiesFor[idx];
+								});
+							}
+						});
+						this.syncScenarioDisplayNames(scenario);
 					});
 					this.scenarios.push(...customScenarios);
 				},
 
-				// Validate and update dependent assignments for a taxpayer in a scenario
-				validateAndUpdateDependentAssignments(scenario, tpIndex) {
-					const tpKey = `tp${tpIndex}`;
-					if (!scenario[tpKey] || !scenario[tpKey].dependentNames) {
-						return;
-					}
-
-					const currentNames = scenario[tpKey].dependentNames.split(', ').map(name => name.trim()).filter(name => name);
-					const validNames = [];
-
-					currentNames.forEach(dependentName => {
-						const dependentIndex = this.dependents.findIndex((dep, depIndex) => {
-							const actualName = dep.name && dep.name.trim() ? dep.name.trim() : null;
-							const placeholderName = `Dependent ${depIndex + 1}`;
-							return actualName === dependentName || placeholderName === dependentName;
-						});
-
-						if (dependentIndex !== -1) {
-							const dependent = this.dependents[dependentIndex];
-							if (dependent.qualifiesFor[tpIndex - 1]) {
-								const currentDisplayName = this.getDependentDisplayName(dependentIndex, dependent);
-								validNames.push(currentDisplayName);
-							}
-						}
-					});
-
-					// For custom scenarios, be more conservative - only update if we found all dependents
-					if (scenario.isCustom) {
-						if (validNames.length === currentNames.length && validNames.length > 0) {
-							scenario[tpKey].dependentNames = validNames.join(', ');
-							scenario[tpKey].shareableKids = validNames.length;
-						}
-						// If not all dependents found, keep the original names to preserve custom selections
-					} else {
-						// For generated scenarios, always update
-						scenario[tpKey].dependentNames = validNames.join(', ');
-						scenario[tpKey].shareableKids = validNames.length;
-					}
-				},
-
-				// Update dependent names in custom scenarios only
-				updateDependentNamesInCustomScenarios() {
-					this.scenarios.forEach((scenario, scenarioIndex) => {
-						if (scenario.isCustom) {
-							// Update TP1 dependent names
-							if (scenario.tp1 && scenario.tp1.dependentNames) {
-								const updatedNames = this.updateDependentNamesInStringForCustomScenario(scenario.tp1.dependentNames);
-								scenario.tp1.dependentNames = updatedNames;
-								scenario.tp1.shareableKids = updatedNames.split(', ').filter(name => name.trim()).length;
-							}
-
-							// Update TP2 dependent names
-							if (scenario.tp2 && scenario.tp2.dependentNames) {
-								const updatedNames = this.updateDependentNamesInStringForCustomScenario(scenario.tp2.dependentNames);
-								scenario.tp2.dependentNames = updatedNames;
-								scenario.tp2.shareableKids = updatedNames.split(', ').filter(name => name.trim()).length;
-							}
-						}
-					});
-				},
-
-				// Update dependent names in all existing scenarios (both custom and generated)
-				updateDependentNamesInAllScenarios() {
-					this.scenarios.forEach((scenario, scenarioIndex) => {
-						// Update TP1 dependent names
-						if (scenario.tp1 && scenario.tp1.dependentNames) {
-							const updatedNames = this.updateDependentNamesInString(scenario.tp1.dependentNames);
-							scenario.tp1.dependentNames = updatedNames;
-							scenario.tp1.shareableKids = updatedNames.split(', ').filter(name => name.trim()).length;
-						}
-
-						// Update TP2 dependent names
-						if (scenario.tp2 && scenario.tp2.dependentNames) {
-							const updatedNames = this.updateDependentNamesInString(scenario.tp2.dependentNames);
-							scenario.tp2.dependentNames = updatedNames;
-							scenario.tp2.shareableKids = updatedNames.split(', ').filter(name => name.trim()).length;
-						}
-					});
-				},
-
-				// Update dependent names in existing scenarios without regenerating them (legacy function)
-				updateDependentNamesInScenarios() {
-					// Update all scenarios (both custom and generated)
-					this.scenarios.forEach((scenario, scenarioIndex) => {
-						// Update TP1 dependent names
-						if (scenario.tp1 && scenario.tp1.dependentNames) {
-							const updatedNames = this.updateDependentNamesInString(scenario.tp1.dependentNames);
-							scenario.tp1.dependentNames = updatedNames;
-							scenario.tp1.shareableKids = updatedNames.split(', ').filter(name => name.trim()).length;
-						}
-
-						// Update TP2 dependent names
-						if (scenario.tp2 && scenario.tp2.dependentNames) {
-							const updatedNames = this.updateDependentNamesInString(scenario.tp2.dependentNames);
-							scenario.tp2.dependentNames = updatedNames;
-							scenario.tp2.shareableKids = updatedNames.split(', ').filter(name => name.trim()).length;
-						}
-					});
-				},
-
-				// Helper function to update dependent names in a comma-separated string for custom scenarios
-				updateDependentNamesInStringForCustomScenario(namesString) {
-					if (!namesString) return '';
-
-					const names = namesString.split(', ').map(name => name.trim()).filter(name => name);
-					const updatedNames = [];
-
-					names.forEach(name => {
-						// Check if this is a placeholder name like "Dependent 1"
-						const placeholderMatch = name.match(/^Dependent (\d+)$/);
-						if (placeholderMatch) {
-							const depIndex = parseInt(placeholderMatch[1]) - 1;
-							if (depIndex >= 0 && depIndex < this.dependents.length) {
-								const dependent = this.dependents[depIndex];
-								const actualName = dependent.name && dependent.name.trim() ? dependent.name.trim() : name;
-								updatedNames.push(actualName);
-							} else {
-								updatedNames.push(name);
-							}
-						} else {
-							// For custom scenarios, if we have an actual name, we need to update it to the current name
-							let dependentIndex = -1;
-							let currentName = name;
-
-							// First, try to find a dependent whose current name matches
-							dependentIndex = this.dependents.findIndex((dep, depIndex) => {
-								const actualName = dep.name && dep.name.trim() ? dep.name.trim() : null;
-								return actualName === name;
-							});
-
-							if (dependentIndex !== -1) {
-								// Found a dependent with this exact name, use its current name
-								const dependent = this.dependents[dependentIndex];
-								currentName = dependent.name && dependent.name.trim() ? dependent.name.trim() : `Dependent ${dependentIndex + 1}`;
-							} else {
-								// If no exact match, use the dependent that was being edited
-								if (this.editingDependentIndex !== null && this.editingDependentIndex < this.dependents.length) {
-									const dependent = this.dependents[this.editingDependentIndex];
-									currentName = dependent.name && dependent.name.trim() ? dependent.name.trim() : `Dependent ${this.editingDependentIndex + 1}`;
-								} else {
-									currentName = name;
-								}
-							}
-
-							updatedNames.push(currentName);
-						}
-					});
-
-					return updatedNames.join(', ');
-				},
-
-				// Helper function to update dependent names in a comma-separated string
-				updateDependentNamesInString(namesString) {
-					if (!namesString) return '';
-
-					const names = namesString.split(', ').map(name => name.trim()).filter(name => name);
-					const updatedNames = [];
-
-					names.forEach(name => {
-						// Check if this is a placeholder name like "Dependent 1"
-						const placeholderMatch = name.match(/^Dependent (\d+)$/);
-						if (placeholderMatch) {
-							const depIndex = parseInt(placeholderMatch[1]) - 1;
-							if (depIndex >= 0 && depIndex < this.dependents.length) {
-								const dependent = this.dependents[depIndex];
-								const actualName = dependent.name && dependent.name.trim() ? dependent.name.trim() : name;
-								updatedNames.push(actualName);
-							} else {
-								updatedNames.push(name);
-							}
-						} else {
-							// This is an actual name - keep it as is for generated scenarios
-							updatedNames.push(name);
-						}
-					});
-
-					return updatedNames.join(', ');
-				},
-
-				// State management utilities
 				markAsAutoReassigned(scenario) {
 					scenario.autoReassigned = true;
 				},
@@ -3599,83 +3020,61 @@
 					scenario.autoReassigned = false;
 				},
 
+				getOKCAdvantagedTaxpayer() {
+					if (!this.taxpayers || this.taxpayers.length < 2) {
+						return { isConditionMet: false, advantagedTpIndex: 0 };
+					}
+
+					const tp1 = this.taxpayers[0];
+					const tp2 = this.taxpayers[1];
+
+					const tp1FilesOR = !!tp1.willFileOR;
+					const tp2FilesOR = !!tp2.willFileOR;
+
+					const tp1RawIncome = tp1.oregonIncome;
+					const tp2RawIncome = tp2.oregonIncome;
+
+					const tp1AGI = this.getNumericValue(tp1RawIncome);
+					const tp2AGI = this.getNumericValue(tp2RawIncome);
+
+					const tp1HasIncome = tp1RawIncome !== null && tp1RawIncome !== undefined && tp1RawIncome !== '';
+					const tp2HasIncome = tp2RawIncome !== null && tp2RawIncome !== undefined && tp2RawIncome !== '';
+
+					const tp1Qual = (tp1FilesOR && tp1HasIncome) ? this.getOKCQualification(tp1RawIncome) : 'No';
+					const tp2Qual = (tp2FilesOR && tp2HasIncome) ? this.getOKCQualification(tp2RawIncome) : 'No';
+
+					const isTp1Eligible = (tp1Qual === 'Full' || tp1Qual === 'Partial');
+					const isTp2Eligible = (tp2Qual === 'Full' || tp2Qual === 'Partial');
+
+					// Condition One: Both qualify for OKC at different levels
+					if (isTp1Eligible && isTp2Eligible) {
+						if (tp1Qual === 'Full' && tp2Qual === 'Partial') {
+							return { isConditionMet: true, advantagedTpIndex: 0 };
+						}
+						if (tp2Qual === 'Full' && tp1Qual === 'Partial') {
+							return { isConditionMet: true, advantagedTpIndex: 1 };
+						}
+						if (tp1Qual === 'Partial' && tp2Qual === 'Partial' && tp1AGI !== tp2AGI) {
+							return { isConditionMet: true, advantagedTpIndex: tp1AGI < tp2AGI ? 0 : 1 };
+						}
+						// If both Full, or both Partial with identical AGI, Condition One is NOT met
+						return { isConditionMet: false, advantagedTpIndex: tp1AGI <= tp2AGI ? 0 : 1 };
+					}
+
+					// Condition Two: Exactly one qualifies for OKC
+					if (isTp1Eligible && !isTp2Eligible) {
+						return { isConditionMet: true, advantagedTpIndex: 0 };
+					}
+					if (!isTp1Eligible && isTp2Eligible) {
+						return { isConditionMet: true, advantagedTpIndex: 1 };
+					}
+
+					// Neither qualifies
+					return { isConditionMet: false, advantagedTpIndex: tp1AGI <= tp2AGI ? 0 : 1 };
+				},
+
 				generateValidScenarios(shareableDependents, nonShareableDependents) {
-					const scenarios = [];
-
-					// Handle non-shareable dependents first - they can only go to one taxpayer
-					const nonShareableAssignments = this.generateNonShareableAssignments(nonShareableDependents);
-
-					// Handle shareable dependents - they can be distributed between taxpayers
-					const shareableAssignments = this.generateShareableAssignments(shareableDependents);
-
-					// If no shareable dependents, just use non-shareable assignments
-					if (shareableDependents.length === 0) {
-						scenarios.push(...nonShareableAssignments);
-					}
-					// If no non-shareable dependents, just use shareable assignments
-					else if (nonShareableDependents.length === 0) {
-						scenarios.push(...shareableAssignments);
-					}
-					// If both types exist, combine them
-					else {
-						for (const nonShareableAssignment of nonShareableAssignments) {
-							for (const shareableAssignment of shareableAssignments) {
-								// Merge the assignments
-								const mergedAssignment = this.mergeAssignments(nonShareableAssignment, shareableAssignment);
-								if (mergedAssignment) {
-									scenarios.push(mergedAssignment);
-								}
-							}
-						}
-					}
-
-					return scenarios;
-				},
-
-				generateNonShareableAssignments(nonShareableDependents) {
-					if (nonShareableDependents.length === 0) {
-						return [this.createEmptyScenario()];
-					}
-
-					// Each non-shareable dependent can only go to one taxpayer
-					// We need to assign each dependent to the taxpayer they qualify for
-					const assignments = [];
-
-					// Create a base assignment
-					const baseAssignment = this.createEmptyScenario();
-
-					// Sort non-shareable dependents by dependent number
-					const sortedNonShareableDependents = [...nonShareableDependents].sort((a, b) => a.dependentNumber - b.dependentNumber);
-
-					// Assign each non-shareable dependent to their qualified taxpayer
-					sortedNonShareableDependents.forEach(dependent => {
-						const qualifiedTaxpayerIndex = dependent.qualifiesFor.findIndex(q => q);
-						if (qualifiedTaxpayerIndex !== -1) {
-							const tpKey = `tp${qualifiedTaxpayerIndex + 1}`;
-							// Don't increment shareableKids for non-shareable dependents
-							// They will appear in the "Other" column, not the "Sharable" column
-							const dependentName = this.getDependentPlaceholderName(dependent.originalIndex, dependent);
-							// Note: Non-shareable dependents are handled by the getOtherDependentNames function
-							// and don't need to be stored in dependentNames for the sharable column
-						}
-					});
-
-					assignments.push(baseAssignment);
-					return assignments;
-				},
-
-				generateShareableAssignments(shareableDependents) {
-					if (shareableDependents.length === 0) {
-						return [this.createEmptyScenario()];
-					}
-
-					// 1. Determine lower vs higher AGI taxpayer (default to TP1 if invalid or tied)
-					const tp1AGI = this.taxpayers && this.taxpayers[0] ? this.getNumericValue(this.taxpayers[0].oregonIncome) : null;
-					const tp2AGI = this.taxpayers && this.taxpayers[1] ? this.getNumericValue(this.taxpayers[1].oregonIncome) : null;
-					const isTp2Lower = (tp1AGI !== null && tp2AGI !== null && tp2AGI < tp1AGI);
-
-					// 2. Sort shareable dependents oldest-first (earliest birthDate comes first)
-					const sortedShareableDependents = [...shareableDependents].sort((a, b) => {
+					const sortOldestFirst = (a, b) => {
 						if (a.birthDate && b.birthDate) {
 							const dateA = new Date(a.birthDate);
 							const dateB = new Date(b.birthDate);
@@ -3685,59 +3084,74 @@
 						}
 						if (a.birthDate && !b.birthDate) return -1;
 						if (!a.birthDate && b.birthDate) return 1;
-						return (a.dependentNumber || 0) - (b.dependentNumber || 0);
-					});
+						return this.getDependentIndex(a.id) - this.getDependentIndex(b.id);
+					};
 
-					const assignments = [];
-					const totalShareable = sortedShareableDependents.length;
+					const okcAdvantage = this.getOKCAdvantagedTaxpayer();
+					const tp1AGI = this.taxpayers[0] ? this.getNumericValue(this.taxpayers[0].oregonIncome) : null;
+					const tp2AGI = this.taxpayers[1] ? this.getNumericValue(this.taxpayers[1].oregonIncome) : null;
+					const isTp2Lower = (tp1AGI !== null && tp2AGI !== null && tp2AGI < tp1AGI);
 
-					// 3. Generate scenarios: lower-AGI starts with all dependents, then moves oldest dependents to higher-AGI one by one
-					for (let moveCount = 0; moveCount <= totalShareable; moveCount++) {
-						const assignment = this.createEmptyScenario();
+					const hasManualOverride = this.taxpayers && (this.taxpayers[0]?.preferYounger || this.taxpayers[1]?.preferYounger);
 
-						const higherAGIDeps = sortedShareableDependents.slice(0, moveCount);
-						const lowerAGIDeps = sortedShareableDependents.slice(moveCount);
+					let sortedShareable;
+					let isTp2Advantaged;
 
-						const tp1Deps = isTp2Lower ? higherAGIDeps : lowerAGIDeps;
-						const tp2Deps = isTp2Lower ? lowerAGIDeps : higherAGIDeps;
-
-						assignment.tp1.shareableKids = tp1Deps.length;
-						if (tp1Deps.length > 0) {
-							assignment.tp1.dependentNames = tp1Deps.map(dep =>
-								this.getDependentPlaceholderName(dep.originalIndex, dep)
-							).join(', ');
-						}
-
-						assignment.tp2.shareableKids = tp2Deps.length;
-						if (tp2Deps.length > 0) {
-							assignment.tp2.dependentNames = tp2Deps.map(dep =>
-								this.getDependentPlaceholderName(dep.originalIndex, dep)
-							).join(', ');
-						}
-
-						assignments.push(assignment);
+					if (hasManualOverride) {
+						sortedShareable = [...shareableDependents].sort(sortOldestFirst);
+						isTp2Advantaged = !!this.taxpayers[1]?.preferYounger;
+					} else if (okcAdvantage.isConditionMet) {
+						const nonOKCDeps = shareableDependents.filter(d => !(d.age !== null && d.age < 6)).sort(sortOldestFirst);
+						const okcDeps = shareableDependents.filter(d => d.age !== null && d.age < 6).sort(sortOldestFirst);
+						sortedShareable = [...nonOKCDeps, ...okcDeps];
+						isTp2Advantaged = (okcAdvantage.advantagedTpIndex === 1);
+					} else {
+						sortedShareable = [...shareableDependents].sort(sortOldestFirst);
+						isTp2Advantaged = isTp2Lower;
 					}
 
-					return assignments;
+					const tp1NonShareable = nonShareableDependents.filter(d => d.qualifiesFor[0]).map(d => d.id);
+					const tp2NonShareable = nonShareableDependents.filter(d => d.qualifiesFor[1]).map(d => d.id);
+
+					const scenarios = [];
+					const totalShareable = sortedShareable.length;
+
+					for (let moveCount = 0; moveCount <= totalShareable; moveCount++) {
+						const scenario = this.createEmptyScenario();
+						const higherDeps = sortedShareable.slice(0, moveCount).map(d => d.id);
+						const lowerDeps = sortedShareable.slice(moveCount).map(d => d.id);
+
+						const tp1Shareable = isTp2Advantaged ? higherDeps : lowerDeps;
+						const tp2Shareable = isTp2Advantaged ? lowerDeps : higherDeps;
+
+						scenario.tp1.assignedDependentIds = [...tp1Shareable, ...tp1NonShareable];
+						scenario.tp2.assignedDependentIds = [...tp2Shareable, ...tp2NonShareable];
+
+						this.syncScenarioDisplayNames(scenario);
+						scenarios.push(scenario);
+					}
+
+					return scenarios.length > 0 ? scenarios : [this.createEmptyScenario()];
 				},
 
-				mergeAssignments(nonShareableAssignment, shareableAssignment) {
-					// Create a deep copy of the shareable assignment
-					const merged = JSON.parse(JSON.stringify(shareableAssignment));
+				generateScenarios() {
+					const customScenarios = this.preserveCustomScenarios();
+					const existingRefundData = this.preserveExistingRefundData();
+					const activeDependents = this.getActiveDependents();
 
-					// Merge non-shareable dependents into the assignment
-					['tp1', 'tp2'].forEach(tpKey => {
-						merged[tpKey].shareableKids += nonShareableAssignment[tpKey].shareableKids;
+					if (activeDependents.length === 0) {
+						this.scenarios = [this.createEmptyScenario()];
+					} else {
+						const categorized = this.categorizeDependents(activeDependents);
+						this.scenarios = this.generateValidScenarios(categorized.shareable, categorized.nonShareable);
+					}
 
-						// Merge dependent names
-						if (nonShareableAssignment[tpKey].dependentNames && shareableAssignment[tpKey].dependentNames) {
-							merged[tpKey].dependentNames = shareableAssignment[tpKey].dependentNames + ', ' + nonShareableAssignment[tpKey].dependentNames;
-						} else if (nonShareableAssignment[tpKey].dependentNames) {
-							merged[tpKey].dependentNames = nonShareableAssignment[tpKey].dependentNames;
-						}
-					});
+					this.restoreCustomScenarios(customScenarios);
+					this.restoreExistingRefundData(existingRefundData);
+				},
 
-					return merged;
+				regenerateGeneratedScenarios() {
+					this.generateScenarios();
 				},
 
 				// Unified refund calculation system
@@ -3747,25 +3161,18 @@
 
 					let total = 0;
 
-					// Add federal refund if valid
-					const fedRefund = taxpayer.fedRefundConfirmed !== null ? taxpayer.fedRefundConfirmed : taxpayer.fedRefund;
-					if (fedRefund !== null) {
-						total += this.getNumericValue(fedRefund);
+					if (taxpayer.fedRefund !== null) {
+						total += this.getNumericValue(taxpayer.fedRefund);
 					}
 
-					// Add OR refund if applicable
-					const orRefund = taxpayer.orRefundConfirmed !== null ? taxpayer.orRefundConfirmed : taxpayer.orRefund;
-					if (filesOR && orRefund !== null) {
-						total += this.getNumericValue(orRefund);
+					if (filesOR && taxpayer.orRefund !== null) {
+						total += this.getNumericValue(taxpayer.orRefund);
 					}
 
-					// Add WA refund if applicable
-					const waRefund = taxpayer.waRefundConfirmed !== null ? taxpayer.waRefundConfirmed : taxpayer.waRefund;
-					if (livedInWA && waRefund !== null) {
-						total += this.getNumericValue(waRefund);
+					if (livedInWA && taxpayer.waRefund !== null) {
+						total += this.getNumericValue(taxpayer.waRefund);
 					}
 
-					// If no valid data at all, return $0
 					if (total === 0 &&
 						(taxpayer.fedRefund === null || isNaN(taxpayer.fedRefund)) &&
 						(taxpayer.orRefund === null || isNaN(taxpayer.orRefund)) &&
@@ -3796,14 +3203,13 @@
 				},
 
 				calculateCombinedRefund(scenario, type) {
-					const tp1Fed = this.getNumericValue(scenario.tp1.fedRefundConfirmed !== null ? scenario.tp1.fedRefundConfirmed : (scenario.tp1.fedRefund || 0));
-					const tp1OR = this.getNumericValue(scenario.tp1.orRefundConfirmed !== null ? scenario.tp1.orRefundConfirmed : (scenario.tp1.orRefund || 0));
-					const tp1WA = this.getNumericValue(scenario.tp1.waRefundConfirmed !== null ? scenario.tp1.waRefundConfirmed : (scenario.tp1.waRefund || 0));
-					const tp2Fed = this.getNumericValue(scenario.tp2.fedRefundConfirmed !== null ? scenario.tp2.fedRefundConfirmed : (scenario.tp2.fedRefund || 0));
-					const tp2OR = this.getNumericValue(scenario.tp2.orRefundConfirmed !== null ? scenario.tp2.orRefundConfirmed : (scenario.tp2.orRefund || 0));
-					const tp2WA = this.getNumericValue(scenario.tp2.waRefundConfirmed !== null ? scenario.tp2.waRefundConfirmed : (scenario.tp2.waRefund || 0));
+					const tp1Fed = this.getNumericValue(scenario.tp1.fedRefund || 0);
+					const tp1OR = this.getNumericValue(scenario.tp1.orRefund || 0);
+					const tp1WA = this.getNumericValue(scenario.tp1.waRefund || 0);
+					const tp2Fed = this.getNumericValue(scenario.tp2.fedRefund || 0);
+					const tp2OR = this.getNumericValue(scenario.tp2.orRefund || 0);
+					const tp2WA = this.getNumericValue(scenario.tp2.waRefund || 0);
 
-					// Check if taxpayers file OR returns and lived in WA
 					const tp1FilesOR = this.taxpayers[0].willFileOR;
 					const tp2FilesOR = this.taxpayers[1].willFileOR;
 					const tp1LivedInWA = this.taxpayers[0].livedInWAOverHalfYear;
@@ -3817,17 +3223,14 @@
 					if (type === 'fed') {
 						combined = tp1Fed + tp2Fed;
 					} else if (type === 'or') {
-						// Only include OR refunds if taxpayers file OR returns
 						const tp1ORValid = tp1FilesOR && !isNaN(tp1OR);
 						const tp2ORValid = tp2FilesOR && !isNaN(tp2OR);
 						combined = (tp1ORValid ? tp1OR : 0) + (tp2ORValid ? tp2OR : 0);
 					} else if (type === 'wa') {
-						// Only include WA refunds if taxpayers lived in WA
 						const tp1WAValid = tp1LivedInWA && !isNaN(tp1WA);
 						const tp2WAValid = tp2LivedInWA && !isNaN(tp2WA);
 						combined = (tp1WAValid ? tp1WA : 0) + (tp2WAValid ? tp2WA : 0);
 					} else { // total
-						// For total, include all valid refunds
 						const tp1ORValid = tp1FilesOR && !isNaN(tp1OR);
 						const tp2ORValid = tp2FilesOR && !isNaN(tp2OR);
 						const tp1WAValid = tp1LivedInWA && !isNaN(tp1WA);
@@ -3856,8 +3259,8 @@
 
 					// Find the scenario with the highest total refund
 					const best = scenariosWithTotals.reduce((max, current) => {
-						const currentTotal = parseFloat(current.total.replace('$', '').replace('-', '-'));
-						const maxTotal = parseFloat(max.total.replace('$', '').replace('-', '-'));
+						const currentTotal = this.parseRefund(current.total);
+						const maxTotal = this.parseRefund(max.total);
 						return currentTotal > maxTotal ? current : max;
 					});
 
