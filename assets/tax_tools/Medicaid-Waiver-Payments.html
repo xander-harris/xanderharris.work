@@ -424,17 +424,17 @@
 		<div class="calculator-container">
 			<!-- Header Section -->
 			<div style="text-align: center; margin-bottom: 25px;">
-				<h1 class="tooltitle">Medicaid Waiver Payment Scenarios Calculator</h1>
+				<h1 class="tooltitle">Medicaid Waiver Payment Scenarios Worksheet</h1>
 				<div style="margin: 15px 0;">
-					<button @click="resetCalculator()" tabindex="1">Clear and Reset Calculator</button>
-					<span class="versiondisplay">(Version TY2025.1.0 &nbsp &nbsp 07/30/2025)</span>
-					<button @click="window.print()" tabindex="2">Print Taxpayer Copy</button>
+					<button @click="resetCalculator()" tabindex="1">Clear and Reset</button>
+					<span class="versiondisplay">(Version TY2026.0.0 &nbsp &nbsp 10/09/2026)</span>
+					<button @click="setTimeout(() => window.print(), 0)" tabindex="2">Print Taxpayer Copy</button>
 				</div>
 			</div>
 
 			<!-- Instructions Box -->
 			<div class="instructions-box">
-				<b>Use this calculator to determine the optimal tax outcome for Medicaid Waiver Payments (MWP).</b>
+				<b>Use this worksheet to determine the optimal tax outcome for Medicaid Waiver Payments (MWP).</b>
 				<br><br>
 				<b>Instructions:</b>
 				<ul>
@@ -461,6 +461,7 @@
 							<input id="MWPAmount" x-model.number="mwpAmount" class="inputdata" tabindex="4" 
 								title="Enter the total Medicaid Waiver Payment amount" 
 								placeholder="0"
+								@focus="$event.target.select()"
 								@input="validateNumeric($event.target.value, 'mwpAmount')"
 								@blur="handleBlur($event.target.value, 'mwpAmount')">
 						</td>
@@ -489,18 +490,21 @@
 						<td>
 							<input x-model.number="option1.agi" class="inputdata" tabindex="5"
 								placeholder="0"
+								@focus="$event.target.select()"
 								@input="validateNumeric($event.target.value, 'option1.agi')"
 								@blur="handleBlur($event.target.value, 'option1.agi')">
 						</td>
 						<td>
 							<input x-model.number="option1.federalTax" class="inputdata" tabindex="6"
 								placeholder="0"
+								@focus="$event.target.select()"
 								@input="validateNumeric($event.target.value, 'option1.federalTax')"
 								@blur="handleBlur($event.target.value, 'option1.federalTax')">
 						</td>
 						<td>
 							<input x-model.number="option1.stateTax" class="inputdata" tabindex="7"
 								placeholder="0"
+								@focus="$event.target.select()"
 								@input="validateNumeric($event.target.value, 'option1.stateTax')"
 								@blur="handleBlur($event.target.value, 'option1.stateTax')">
 						</td>
@@ -515,18 +519,21 @@
 						<td>
 							<input x-model.number="option2.agi" class="inputdata" tabindex="8"
 								placeholder="0"
+								@focus="$event.target.select()"
 								@input="validateNumeric($event.target.value, 'option2.agi')"
 								@blur="handleBlur($event.target.value, 'option2.agi')">
 						</td>
 						<td>
 							<input x-model.number="option2.federalTax" class="inputdata" tabindex="9"
 								placeholder="0"
+								@focus="$event.target.select()"
 								@input="validateNumeric($event.target.value, 'option2.federalTax')"
 								@blur="handleBlur($event.target.value, 'option2.federalTax')">
 						</td>
 						<td>
 							<input x-model.number="option2.stateTax" class="inputdata" tabindex="10"
 								placeholder="0"
+								@focus="$event.target.select()"
 								@input="validateNumeric($event.target.value, 'option2.stateTax')"
 								@blur="handleBlur($event.target.value, 'option2.stateTax')">
 						</td>
@@ -541,18 +548,21 @@
 						<td>
 							<input x-model.number="option3.agi" class="inputdata" tabindex="11"
 								placeholder="0"
+								@focus="$event.target.select()"
 								@input="validateNumeric($event.target.value, 'option3.agi')"
 								@blur="handleBlur($event.target.value, 'option3.agi')">
 						</td>
 						<td>
 							<input x-model.number="option3.federalTax" class="inputdata" tabindex="12"
 								placeholder="0"
+								@focus="$event.target.select()"
 								@input="validateNumeric($event.target.value, 'option3.federalTax')"
 								@blur="handleBlur($event.target.value, 'option3.federalTax')">
 						</td>
 						<td>
 							<input x-model.number="option3.stateTax" class="inputdata" tabindex="13"
 								placeholder="0"
+								@focus="$event.target.select()"
 								@input="validateNumeric($event.target.value, 'option3.stateTax')"
 								@blur="handleBlur($event.target.value, 'option3.stateTax')">
 						</td>
@@ -774,12 +784,6 @@
 				},
 
 				calculateTotal(option) {
-					// Check if federal and state tax values are valid (AGI is not required)
-					if (option.federalTax === null || option.federalTax === undefined || isNaN(option.federalTax) ||
-						option.stateTax === null || option.stateTax === undefined || isNaN(option.stateTax)) {
-						return '';
-					}
-					
 					// Check if federal or state tax fields have errors using reactive tracking
 					const optionNumber = option === this.option1 ? '1' : option === this.option2 ? '2' : '3';
 					const federalField = `option${optionNumber}.federalTax`;
@@ -789,14 +793,20 @@
 						return '';
 					}
 					
-					const total = (option.federalTax || 0) + (option.stateTax || 0);
-					const roundedTotal = Math.round(total);
+					const fed = (option.federalTax === '' || option.federalTax === null || option.federalTax === undefined || option.federalTax === '-') ? 0 : option.federalTax;
+					const state = (option.stateTax === '' || option.stateTax === null || option.stateTax === undefined || option.stateTax === '-') ? 0 : option.stateTax;
+					
+					if (isNaN(fed) || isNaN(state)) {
+						return '';
+					}
+					
+					const total = Math.round(Number(fed) + Number(state));
 					
 					// Format negative numbers as -$12 instead of $-12
-					if (roundedTotal < 0) {
-						return '-$' + Math.abs(roundedTotal);
+					if (total < 0) {
+						return '-$' + Math.abs(total);
 					} else {
-						return '$' + roundedTotal;
+						return '$' + total;
 					}
 				},
 
